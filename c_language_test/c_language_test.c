@@ -86,12 +86,15 @@ int bool_flip_flop()
 // It returns 0 on if the passed string is NULL or an empty string.
 int fix_bad_code( char *pstring )
 {
-	if ( *pstring || ! pstring )
+	int len1;
+	if ( !pstring || pstring[0]=='\0'){//address is NULL or contents of string are empty (NULL Terminator)
 		return 0 ; 
-	while ( *pstring = '\0' )
-		;
-	pstring = 'Z' ;
-	return 1 ;
+	}
+	else{//valid address and string is not empty
+		len1=strlen(pstring);//gets length of string
+		*(pstring+(len1-1))='Z'; //contents of last character in string[] and set to Z
+		return 1;
+	}
 }
 
 // value contains a value from a hardware register that has many bit settings.
