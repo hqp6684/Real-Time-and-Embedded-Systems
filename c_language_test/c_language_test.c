@@ -70,12 +70,12 @@ int same_array( int *pfirst, int *psecond )
 int bool_flip_flop()
 {
 	// your code here
-	static int timesCalled=0;
-	timesCalled=timesCalled+1;
-	if (timesCalled%2==1){
+	static int timesCalled=0;//initialize
+	timesCalled=timesCalled+1;//tally times called
+	if (timesCalled%2==1){//modulo to determin if even or odd times called, first returns 1 (return 1 every odd time called)
 		return 1;
 	}
-	else{
+	else{//even time called return 0
 		return 0;	// Fix this -- it is incorrect but allows the program to compile and run.
 	}
 }
