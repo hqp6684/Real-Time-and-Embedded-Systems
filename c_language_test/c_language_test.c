@@ -51,8 +51,13 @@ int convert_and_sum( int *px, int m, int b, int number_of_x_values )
 int same_array( int *pfirst, int *psecond )
 {
 	// your code here
-	if (pfirst & psecond){//valid pointers 
-
+	if (pfirst && psecond){//valid pointers 
+		if (pfirst == psecond){
+			return 1;
+		}
+		else{
+			return 0;
+		}
 	}
 	else{//one of the pointers=0,NULL
 		return 0 ;	// Fix this -- it is incorrect but allows the program to compile and run.
