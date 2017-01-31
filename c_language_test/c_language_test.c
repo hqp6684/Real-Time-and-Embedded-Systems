@@ -52,10 +52,10 @@ int same_array( int *pfirst, int *psecond )
 {
 	// your code here
 	if (pfirst && psecond){//valid pointers 
-		if (pfirst == psecond){
+		if (pfirst == psecond){//mem address much match - same location
 			return 1;
 		}
-		else{
+		else{//dont match
 			return 0;
 		}
 	}
@@ -70,7 +70,14 @@ int same_array( int *pfirst, int *psecond )
 int bool_flip_flop()
 {
 	// your code here
-	return 0 ;	// Fix this -- it is incorrect but allows the program to compile and run.
+	static int timesCalled;
+	timesCalled=timesCalled+1;
+	if (timesCalled%2==1){
+		return 1;
+	}
+	else{
+		return 0;	// Fix this -- it is incorrect but allows the program to compile and run.
+	}
 }
 
 // This function is implemented incorrectly. You need to correct it.
