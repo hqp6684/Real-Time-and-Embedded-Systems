@@ -70,7 +70,7 @@ int same_array( int *pfirst, int *psecond )
 int bool_flip_flop()
 {
 	// your code here
-	static int timesCalled;
+	static int timesCalled=0;
 	timesCalled=timesCalled+1;
 	if (timesCalled%2==1){
 		return 1;
