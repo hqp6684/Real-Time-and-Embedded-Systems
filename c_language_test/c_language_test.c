@@ -1,6 +1,6 @@
 // C language self test
 // SWEN-563
-// Larry Kiser Jan. 30, 2017
+// Zachary Weeden Jan. 30, 2017
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,7 +19,7 @@ char *get_pointer_at_position( char *pstring, int position )
 		return NULL;
 	}
 	else{
-		return (pstring+position);//return base address of string[] plus index
+		return (pstring+position);
 	}
 }
 
@@ -41,7 +41,7 @@ int convert_and_sum( int *px, int m, int b, int number_of_x_values )
 		return sumOfY;
 	}
 	else {//px=0, NULL
-		return 0 ;		// Fix this -- it is incorrect but allows the program to compile and run.
+		return 0 ;
 	}
 }
 
@@ -60,7 +60,7 @@ int same_array( int *pfirst, int *psecond )
 		}
 	}
 	else{//one of the pointers=0,NULL
-		return 0 ;	// Fix this -- it is incorrect but allows the program to compile and run.
+		return 0 ;
 	}
 }
 
@@ -76,7 +76,7 @@ int bool_flip_flop()
 		return 1;
 	}
 	else{//even time called return 0
-		return 0;	// Fix this -- it is incorrect but allows the program to compile and run.
+		return 0;
 	}
 }
 
