@@ -105,5 +105,14 @@ int fix_bad_code( char *pstring )
 // It returns 1 if the selected bit is a 1
 int get_bit_value( int value, int bit_position )
 {
-	return 0 ;
+	//0x05, 	   2
+	//0000 0101  100
+	//and the two and check the bit position =1 
+	//Scrap that. Lets shift it and get the LSB
+	if (value>>bit_position & 1){//shifting over the bit position all the way to LSB (bit 0) - bXXXXX1 & b1 
+		return 1;
+	}
+	else{
+		return 0;
+	}
 }
