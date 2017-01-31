@@ -150,7 +150,7 @@ int test()
 	printf( "\nTests for the get_bit_value function\n" ) ;
 	// Test 17
 	assert( 1 == get_bit_value( 0x100, 8 ),
-		"Expect 1 because bit 5 (0x100) is a one " )
+		"Expect 1 because bit 8 (0x100) is a one " )
 		? passcount++ : failcount++ ;
 	
 	// Test 18
