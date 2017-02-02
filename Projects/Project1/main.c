@@ -22,9 +22,8 @@ int main(void){
 	//Start prompt and wait for enter to begin
 	//Take 1000 measurements(1001 rising edges)
 	//DNon-zero histogram count in ascending on vTerminal
-	//Dont display 
-	
-	unsigned char *GPIOA_ptr = GPIOA_BASE; //GPIO pin A
+	//Dont display 	
+	unsigned char *GPIOA_ptr = (unsigned char *) GPIOA_BASE; //GPIO pin A
 	int pass;
 	pass=POST(GPIOA_ptr); //POST function on GPIO pin A
 	if (pass==0){
