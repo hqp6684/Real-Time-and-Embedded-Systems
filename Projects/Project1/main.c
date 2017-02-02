@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DEFAULT_LOW 950
+#define DEFAULT_HIGH 1050 
+#define SAMPLES 1000
+
 int POST(unsigned char *PIN); //prototype for Power On Self Test
 int main(void){
 	//POST - Power on self test
