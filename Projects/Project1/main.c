@@ -26,10 +26,14 @@ int main(void){
 	if (pass==0){
 		return(0);
 	}
+	else{
+		//Capture 1000 measurements here - implement interupts
+	}
 }
 
 int POST(unsigned char *PIN){
 	//80MHZ clk - .0000000125 sec poll
+	//implement static delcaration for original GPIO pin discover and if on toggle/difference
 	int counter=0;
 	char input;
 	while(counter<8000000){ // (.100/.0000000125)
@@ -48,5 +52,6 @@ int POST(unsigned char *PIN){
 				return 0;
 			}
 		}
+		counter++;
 	}
 }
