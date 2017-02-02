@@ -20,7 +20,7 @@ int main(void){
 	//DNon-zero histogram count in ascending on vTerminal
 	//Dont display 
 	
-	unsigned char *GPIOA_ptr = (unsigned char *) 0x48000000; //GPIO pin A
+	unsigned char *GPIOA_ptr = GPIOA_BASE; //GPIO pin A
 	int pass;
 	pass=POST(GPIOA_ptr); //POST function on GPIO pin A
 	if (pass==0){
