@@ -41,8 +41,9 @@ int POST(unsigned char *PIN){
 	char input;
 	while(counter<8000000){ // (.100/.0000000125)
 		if(*PIN==1){ //pulse see
-			break; //add functionality to see the resulkt of when pulse was seen
 			return(1);
+			break; //add functionality to see the resulkt of when pulse was seen
+
 		}
 		counter++;
 	}
