@@ -44,17 +44,15 @@ int POST(unsigned char *PIN){
 			break; //add functionality to see the resulkt of when pulse was seen
 			return(1);
 		}
-		else{
-			printf("POST failed! Pulse not seen in 100ms. Rerun? (Y or N): ");
-			scanf("%c",&input);
-			if (input == 'Y'||input=='y'){
-				POST(PIN);
-				return 0;
-			}
-			else{ //input wasn't y or Y
-				return 0;
-			}
-		}
 		counter++;
+	}
+	printf("POST failed! Pulse not seen in 100ms. Rerun? (Y or N): ");
+	scanf("%c",&input);
+	if (input == 'Y'||input=='y'){
+		POST(PIN);
+		return 0;
+	}
+	else{ //input wasn't y or Y
+		return 0;
 	}
 }
