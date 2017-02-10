@@ -7,7 +7,7 @@
 // Turn on the peripheral clock for GPIOA
 // and set PA0 to be input mode
 void init_pa0( void )
-{
+{ //GPIOA MODE R page 278 - as an input pin GPIO_idr used can use bottom 16
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN ;		// enable clock for A group of GPIO
 	GPIOA->MODER &= ~3 ;										// clear out bits 0 and 1 for PA0
 																					// PA0 is now in input mode
