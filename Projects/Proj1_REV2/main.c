@@ -70,9 +70,10 @@ void run( void ){
 	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){
 		//detect pulse and duration (multiply by 2 for total period?)
 		start_timer();
+		beginSampleTime = timer_now();
 		while( 1 ){
 			if ( captured() ){
-				measurements[numOfSample] = timer_now(); //(possibly multiplied by 2)
+				measurements[numOfSample] = (timer_now() - beginSampleTime); //(possibly multiplied by 2)
 				break;
 			}
 			else{
