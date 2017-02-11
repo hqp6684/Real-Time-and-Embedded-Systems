@@ -64,12 +64,23 @@ int POST( void ) {
 	stop_timer();
 }
 
-int run( void ){
+void run( void ){
 	//capture 1000 pulses
 	//Return time it took - store in array in main
 	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){
 		//detect pulse and duration (multiply by 2 for total period?)
-		//measurements[numOfSample]=value in register (possibly multiplied by 2)
+		start_timer();
+		while( 1 ){
+			if ( captured() ){
+				measurements[numOfSample] = timer_now(); //(possibly multiplied by 2)
+				break;
+			}
+			else{
+				//edge not detected
+				;
+			}
+		}
+		stop_timer(); // might need to reset
 	}
 
 }
@@ -93,10 +104,7 @@ int main( void )
 		// display default bounds and prompt user for upper and lower bounds
 		// 50micro<=lower<-9950micro
 		// upper >=lower + 100micro
-		//for (int i = 0; i < SAMPLES + 1; i++){
-		//TAKE SAMPLE
 		run(); //store return value into (global) array
-		//}
 		UART_graph();
 	}
 	else{
