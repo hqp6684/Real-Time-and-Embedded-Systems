@@ -5,7 +5,6 @@
 #include "TIMER.h"       //TIMER
 #include "input_pa0_test.h"
 
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,6 +43,7 @@ int POST( void ) {
 	while( 1 ){
 		if ( captured() ) {	// received edge TIM2->CCR1
 			if ( ( timer_now() - beginPostTime ) <= POST_REQ_TIME ){ // test received an edge before 100000micro (100ms)
+				//DISPLAY success on UART/Time seen
 				return 1;
 				break;
 			}
