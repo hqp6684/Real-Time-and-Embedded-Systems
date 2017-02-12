@@ -90,6 +90,11 @@ void run( void ){
 
 void UART_graph( void ){
 	//maybe take in array as param instead of using global
+	int n;
+	for ( int i = 0; i < SAMPLES; i++ ){
+		n = sprintf((char *)buffer, "%d\r\n", measurements[i]);
+		USART_Write(USART2, buffer, n);	
+	}
 }
 
 int main( void )
