@@ -15,6 +15,8 @@
 #define POST_REQ_TIME 100000		//100000 microseconds = 100ms
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
+char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
+
 int measurements[SAMPLES]; // initialize array of 1000 elements
 
 int FAIL( void ){
@@ -67,6 +69,23 @@ int POST( void ) {
 }
 
 void run( void ){
+	char rxByte;
+	int		n ;
+	USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
+	rxByte = USART_Read(USART2);
+	if (rxByte == 'N' || rxByte == 'n'){
+		USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
+		//RUN AS USUAL
+	}
+	else if (rxByte == 'Y' || rxByte == 'y'){
+		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
+		//Change bounds handle user input 
+	}
+	else {
+		USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
+		run();
+	}
+
 	//capture 1000 pulses
 	//Return time it took - store in array in main
 	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){
