@@ -10,14 +10,14 @@
 #include <stdlib.h>
 
 #define SAMPLES 1000				//Number of samples to be taken
-#define DEFAULT_LOW 950				//Default Low boundary micro
-#define DEFAULT_HIGH 1050			//Default High boundry micro
 #define POST_REQ_TIME 100000		//100000 microseconds = 100ms
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
 
-int measurements[SAMPLES]; // initialize array of 1000 elements
+int measurements[SAMPLES];	// initialize array of 1000 elements
+int defaultLow = 950;		//Default Low boundary micro
+int defaultHigh = 1050;		//Default High boundry micro
 
 int FAIL( void ){
 	char rxByte;
