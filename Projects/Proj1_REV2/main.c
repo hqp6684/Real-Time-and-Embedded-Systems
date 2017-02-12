@@ -41,7 +41,7 @@ int POST( void ) {
 	start_timer();			// start capture
 	beginPostTime = timer_now();
 	while( 1 ){
-		if ( captured() ) {	// received edge TIM2->CCR1
+		if ( is_event() ) {	// received edge TIM2->CCR1
 			if ( ( timer_now() - beginPostTime ) <= POST_REQ_TIME ){ // test received an edge before 100000micro (100ms)
 				//DISPLAY success on UART/Time seen
 				return 1;
@@ -74,7 +74,7 @@ void run( void ){
 		start_timer();
 		beginSampleTime = timer_now();
 		while( 1 ){
-			if ( captured() ){
+			if ( is_event() ){
 				measurements[numOfSample] = (timer_now() - beginSampleTime); //(possibly multiplied by 2)
 				break;
 			}
