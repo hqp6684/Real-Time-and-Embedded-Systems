@@ -4,6 +4,7 @@
 #include "UART.h"        //UART
 #include "TIMER.h"       //TIMER
 #include "input_pa0_test.h"
+#include "binSearch.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -114,6 +115,36 @@ void UART_graph( void ){
 		n = sprintf((char *)buffer, "%d\r\n", measurements[i]);
 		USART_Write(USART2, buffer, n);	
 	}
+
+	/* Example of enumerating instances
+	int arr[] = {1, 2, 2, 3, 3, 3, 3};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	int x;
+	int c;
+	for (int p=0;p<n;p++)
+	{
+	  x = arr[p]; // Element to be counted in arr[]
+	  if (p==0){
+		  //first element
+		  c = count(arr, x, n);
+		  printf(" %d occurs %d times\n", x, c);
+	  }
+	  else{
+		  //not first element
+		  if (x==arr[p-1]){
+			  //current element is the same as the last element
+			  ;;
+		  }
+		  else{
+			  c = count(arr, x, n);
+			  printf(" %d occurs %d times\n", x, c);
+		  }
+	  }
+	}
+	Output  1 occurs 1 times
+ 	2 occurs 2 times
+ 	3 occurs 4 times
+	*/
 }
 
 int main( void )

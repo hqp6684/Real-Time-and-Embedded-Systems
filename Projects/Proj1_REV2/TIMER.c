@@ -1,5 +1,6 @@
 #include "stm32l476xx.h"
 #include "SysClock.h"    //Sysclock
+#include "TIMER.h"    //Sysclock
 #include <string.h>
 #include <stdio.h>
 
@@ -28,6 +29,6 @@ void stop_timer( void ) {
 	TIM2->CR1 = 0x0;						// control register counter diabled
 }
 
-int captured( void ) {
+int is_event( void ) {
 	return (TIM2->SR & 0x2);				// return flag indicating capture/compare interrupt flag
 }
