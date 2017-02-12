@@ -29,6 +29,9 @@ int read_pa0( void )
 										// returns 1 if high, 0 if low.
 }
 
+
+
+
 // This is an infinite loop that will show if PA0 is changing state
 void monitor_pa0( void )
 {

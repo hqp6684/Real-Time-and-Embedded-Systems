@@ -2,7 +2,9 @@
 #include "SysClock.h"    //Sysclock
 #include "LED.h"         //LED
 #include "UART.h"        //UART
-#include "POST.h"        //POST
+#include "TIMER.h"       //TIMER
+#include "input_pa0_test.h"
+
 
 #include <string.h>
 #include <stdio.h>
