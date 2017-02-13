@@ -95,13 +95,13 @@ void run( void ){
 		while( 1 ){
 			if ( is_event() ){
 				measurements[numOfSample] = (timer_now() - beginSampleTime); //(possibly multiplied by 2)
+				stop_timer(); // might need to reset
 				break;
 			}
 			else{//edge not detected
 				;
 			}
 		}
-		stop_timer(); // might need to reset
 	}
 
 }
