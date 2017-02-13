@@ -76,7 +76,6 @@ void run( void ){
 	rxByte = USART_Read(USART2);
 	if (rxByte == 'N' || rxByte == 'n'){
 		USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
-		//RUN AS USUAL
 	}
 	else if (rxByte == 'Y' || rxByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
@@ -89,8 +88,7 @@ void run( void ){
 
 	//capture 1000 pulses
 	//Return time it took - store in array in main
-	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){
-		//detect pulse and duration (multiply by 2 for total period?)
+	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){//detect pulse and duration (multiply by 2 for total period?)
 		start_timer();
 		beginSampleTime = timer_now();
 		while( 1 ){
@@ -98,8 +96,7 @@ void run( void ){
 				measurements[numOfSample] = (timer_now() - beginSampleTime); //(possibly multiplied by 2)
 				break;
 			}
-			else{
-				//edge not detected
+			else{//edge not detected
 				;
 			}
 		}
@@ -109,42 +106,45 @@ void run( void ){
 }
 
 void UART_graph( void ){
-	//maybe take in array as param instead of using global
+	USART_Write(USART2, (uint8_t *)"Number || Tally\r\n\r\n", 21);
+	USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 21);
+
 	int n;
-	for ( int i = 0; i < SAMPLES; i++ ){
+	/*for ( int i = 0; i < SAMPLES; i++ ){ //prints all elements on 1 line
 		n = sprintf((char *)buffer, "%d\r\n", measurements[i]);
 		USART_Write(USART2, buffer, n);	
-	}
-
-	/* Example of enumerating instances
-	int arr[] = {1, 2, 2, 3, 3, 3, 3};
-	int n = sizeof(arr)/sizeof(arr[0]);
+	}*/
+	int occurences[(defaultHigh-defaultLow)]; //array for numbers 950 to 1050
+	int hits[(defaultHigh-defaultLow)];
+	int n = sizeof(measurements)/sizeof(measurements[0]);
 	int x;
 	int c;
-	for (int p=0;p<n;p++)
+	int j = 0;
+	for (int clear=0; clear<sizeof(occurences)/sizeof(occurences[0]);clear++){
+		occurences[clear]=0;
+  	}
+  	for (int clear=0; clear<sizeof(hits)/sizeof(hits[0]);clear++){
+		hits[clear]=0;
+  	}
+	for (int p=0; p<n; p++)
 	{
-	  x = arr[p]; // Element to be counted in arr[]
-	  if (p==0){
-		  //first element
-		  c = count(arr, x, n);
-		  printf(" %d occurs %d times\n", x, c);
-	  }
-	  else{
-		  //not first element
-		  if (x==arr[p-1]){
-			  //current element is the same as the last element
-			  ;;
-		  }
-		  else{
-			  c = count(arr, x, n);
-			  printf(" %d occurs %d times\n", x, c);
-		  }
-	  }
+		x = measurements[p]; // Element to be counted in measurements[]
+		if (p==0){//first element
+			c = count(measurements, x, n);
+			n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
+			USART_Write(USART2, buffer, n);	
+		}
+		else{//not first element
+			if (x==measurements[p-1]){//current element is the same as the last element
+				;
+			}
+			else{
+				c = count(measurements, x, n);
+				n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
+				USART_Write(USART2, buffer, n);	
+			}
+	  	}
 	}
-	Output  1 occurs 1 times
- 	2 occurs 2 times
- 	3 occurs 4 times
-	*/
 }
 
 int main( void )
@@ -164,6 +164,7 @@ int main( void )
 		// upper >=lower + 100micro
 		run(); //store return value into (global) array
 		UART_graph();
+		//prompt for rerun
 	}
 	else{
 		//RECEIVED SOMETHING NOT 1
