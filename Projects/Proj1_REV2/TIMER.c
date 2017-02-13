@@ -1,3 +1,4 @@
+// Z. Weeden Feb. 12, 2017
 #include "stm32l476xx.h"
 #include "SysClock.h"    //Sysclock
 #include "TIMER.h"    //Sysclock

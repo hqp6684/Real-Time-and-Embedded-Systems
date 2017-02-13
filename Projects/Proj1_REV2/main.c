@@ -1,3 +1,4 @@
+// Z. Weeden Feb. 12, 2017
 #include "stm32l476xx.h" //board
 #include "SysClock.h"    //Sysclock
 #include "LED.h"         //LED
@@ -114,18 +115,10 @@ void UART_graph( void ){
 		n = sprintf((char *)buffer, "%d\r\n", measurements[i]);
 		USART_Write(USART2, buffer, n);	
 	}*/
-	int occurences[(defaultHigh-defaultLow)]; //array for numbers 950 to 1050
-	int hits[(defaultHigh-defaultLow)];
 	int n = sizeof(measurements)/sizeof(measurements[0]);
 	int x;
 	int c;
 	int j = 0;
-	for (int clear=0; clear<sizeof(occurences)/sizeof(occurences[0]);clear++){
-		occurences[clear]=0;
-  	}
-  	for (int clear=0; clear<sizeof(hits)/sizeof(hits[0]);clear++){
-		hits[clear]=0;
-  	}
 	for (int p=0; p<n; p++)
 	{
 		x = measurements[p]; // Element to be counted in measurements[]

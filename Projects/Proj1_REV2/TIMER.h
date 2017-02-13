@@ -1,4 +1,4 @@
-// Zachary Weeden
+// Z. Weeden Feb. 12, 2017
 // function prototypes for Timer
 void init_timer( void ) ;
 void start_timer( void ) ;
