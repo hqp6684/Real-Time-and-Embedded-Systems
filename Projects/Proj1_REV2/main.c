@@ -16,7 +16,7 @@
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
-
+char rerun[] = "Rerun? (Y or N):\r\n";
 int measurements[SAMPLES];	// initialize array of 1000 elements
 int defaultLow = 950;		//Default Low boundary micro
 int defaultHigh = 1050;		//Default High boundry micro
@@ -140,6 +140,26 @@ void UART_graph( void ){
 	}
 }
 
+
+int rerun( void ){
+	char rxByte;
+	int		n ;
+	USART_Write(USART2, (uint8_t *)rerun, strlen(rerun));
+	rxByte = USART_Read(USART2);
+	if (rxByte == 'N' || rxByte == 'n'){
+		USART_Write(USART2, (uint8_t *)"Exitting\r\n\r\n", 14);
+		return 0;
+	}
+	else if (rxByte == 'Y' || rxByte == 'y'){
+		USART_Write(USART2, (uint8_t *)"Rerunning Program\r\n\r\n", 23);
+		return 1;
+	}
+	else {
+		USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
+		return rerun();
+	}
+}
+
 int main( void )
 {
 	
@@ -155,14 +175,23 @@ int main( void )
 		// display default bounds and prompt user for upper and lower bounds
 		// 50micro<=lower<-9950micro
 		// upper >=lower + 100micro
-		run(); //store return value into (global) array
-		UART_graph();
-		//prompt for rerun
+		while(1){
+			run(); //store return value into (global) array
+			UART_graph();
+			//prompt for rerun
+			int rerunProgram=rerun();
+			if (rerunProgram==1){//Choose to rerun
+				;
+			}
+			else{//Exit program
+				break;
+			}
+			
+		}
 	}
 	else{
 		//RECEIVED SOMETHING NOT 1
-		//EXIT PROGRAM
-		return 0;
+		;
 	}
-	//monitor_pa0();		// spin forever
+	return EXIT_SUCCESS;
 }
