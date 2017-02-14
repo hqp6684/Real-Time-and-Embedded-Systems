@@ -15,11 +15,12 @@
 #define SAMPLES 1000				//Number of samples to be taken
 #define POST_REQ_TIME 100000		//100000 microseconds = 100ms
 uint8_t buffer[BufferSize]; 
+uint8_t bounds[BufferSize]; 
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
 char rerun[] = "Rerun? (Y or N):\r\n";
-int measurements[SAMPLES];	// initialize array of 1000 elements
+int measurements[SAMPLES];	//initialize array of 1000 elements
 int defaultLow = 950;		//Default Low boundary micro
 int defaultHigh = 1050;		//Default High boundry micro
 
@@ -76,15 +77,21 @@ int POST( void ) {
 }
 
 void run( void ){
-	char rvByte;
+	char rxByte;
+	int c;
+	int n;
     int numOfSample=0;
     int beginSampleTime=0;
+    defaultLow = 950;
+	defaultHigh = 1050;
 	USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
-	rvByte = USART_Read(USART2);
-	if (rvByte == 'N' || rvByte == 'n'){//print with bounds, use var in write method
-		USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
+	rxByte = USART_Read(USART2);
+	if (rxByte == 'N' || rxByte == 'n'){//print with bounds, use var in write method
+		//USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
+		n = sprintf((char *)bounds, "Running with [%d] and [%d]\r\n\r\n", defaultLow, defaultHigh);
+		USART_Write(USART2, bounds, n);	
 	}
-	else if (rvByte == 'Y' || rvByte == 'y'){
+	else if (rxByte == 'Y' || rxByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
 		//Change bounds handle user input 
 		//get input
@@ -117,8 +124,8 @@ void run( void ){
 
 void UART_graph( void ){
     int size = sizeof(measurements)/sizeof(measurements[0]);
-	int x; //individual element of the array for a pass
-	int c; //count of the individual element
+    int x; //individual element of the array for a pass
+    int c; //count of the individual element
     int p;//counter for the measurements loop
     int n;
     int sorted[SAMPLES];
