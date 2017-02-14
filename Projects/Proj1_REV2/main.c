@@ -14,6 +14,7 @@
 
 #define SAMPLES 1000				//Number of samples to be taken
 #define POST_REQ_TIME 100000		//100000 microseconds = 100ms
+
 uint8_t buffer[BufferSize]; 
 uint8_t bounds[BufferSize]; 
 
@@ -78,7 +79,6 @@ int POST( void ) {
 
 void run( void ){
 	char rxByte;
-	int c;
 	int n;
     int numOfSample=0;
     int beginSampleTime=0;
@@ -131,8 +131,6 @@ void UART_graph( void ){
     int c; //count of the individual element
     int p; //counter for the measurements loop
     int n;
-    int sorted[SAMPLES];
-    char rxByte;
     sort_array(measurements);
 
     //int zack=0;
