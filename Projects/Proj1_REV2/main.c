@@ -62,14 +62,14 @@ int POST( void ) {
 				break;
 			}
 		}
-		else { // nothing seen yet TIM2->CNT
-			if ( ( timer_now() - beginPostTime ) > POST_REQ_TIME ){ // exceeded 100ms 
-				//TEST FAILED!
-				//OPTION TO RUN AGAIN
-                USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
-				return FAIL();
-				break;
-			}
+		//else { // nothing seen yet TIM2->CNT - ADJUST for no sig on pin
+		if ( ( timer_now() - beginPostTime ) > POST_REQ_TIME ){ // exceeded 100ms 
+			//TEST FAILED!
+			//OPTION TO RUN AGAIN
+            USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
+			return FAIL();
+			break;
+		//	}
 		}
 	}
 	stop_timer();
@@ -81,12 +81,15 @@ void run( void ){
     int beginSampleTime=0;
 	USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
 	rvByte = USART_Read(USART2);
-	if (rvByte == 'N' || rvByte == 'n'){
+	if (rvByte == 'N' || rvByte == 'n'){//print with bounds, use var in write method
 		USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
 	}
 	else if (rvByte == 'Y' || rvByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
 		//Change bounds handle user input 
+		//get input
+		//defaultLow = 
+		//defaultHigh = 
 	}
 	else {
 		USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
@@ -120,9 +123,9 @@ void UART_graph( void ){
     int n;
     int sorted[SAMPLES];
     char rxByte;
-    int zack=0;
     sort_array(measurements);
 
+    //int zack=0;
     /*
     for (zack=0;zack<size;zack++){
         n = sprintf((char *)buffer, "%d \r\n", measurements[zack]);
@@ -136,23 +139,28 @@ void UART_graph( void ){
 	{
         c=0;
 		x = measurements[p]; // Element to be counted in measurements[]
-		if (p==0){//first element
-			c = count(measurements, x, size);
-			n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
-			USART_Write(USART2, buffer, n);	
-            //c=0;
-		}
-		else{//not first element
-			if (x==measurements[p-1]){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
-				;
-			}
-			else{
+		if (x>=defaultLow && x<=defaultHigh){//within defined bounds
+			if (p==0){//first element
 				c = count(measurements, x, size);
 				n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
-				USART_Write(USART2, buffer, n);
-                //c=0;
+				USART_Write(USART2, buffer, n);	
+	            //c=0;
 			}
-	  	}
+			else{//not first element
+				if (x==measurements[p-1]){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
+					;
+				}
+				else{
+					c = count(measurements, x, size);
+					n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
+					USART_Write(USART2, buffer, n);
+	                //c=0;
+				}
+		  	}
+		}
+		else{//measure time out of bounds, do not show
+			;
+		}
 	}
 }
 
