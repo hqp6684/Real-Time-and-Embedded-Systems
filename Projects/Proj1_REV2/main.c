@@ -94,11 +94,11 @@ void run( void ){
 	else if (rxByte == 'Y' || rxByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
 		USART_Write(USART2, (uint8_t *)"Enter New Lower Bound: \r\n\r\n", 29);
-		//take input/wait for enter and store in var
+		//take input/wait for enter and store in var - 50-9950 micro
 		//defaultLow = 
 		USART_Write(USART2, (uint8_t *)"Enter New Upper Bound: \r\n\r\n", 29);
 		//take input/wait for enter and store in var
-		//ENSURE that this is at least 100 more than lower set
+		//ENSURE that this is at least 100 micro more than lower set
 		//defaultHigh = 
 	}
 	else {
