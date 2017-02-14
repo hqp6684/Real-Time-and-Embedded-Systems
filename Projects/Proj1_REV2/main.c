@@ -98,6 +98,7 @@ void run( void ){
 		//defaultLow = 
 		USART_Write(USART2, (uint8_t *)"Enter New Upper Bound: \r\n\r\n", 29);
 		//take input/wait for enter and store in var
+		//ENSURE that this is at least 100 more than lower set
 		//defaultHigh = 
 	}
 	else {
@@ -128,7 +129,7 @@ void UART_graph( void ){
     int size = sizeof(measurements)/sizeof(measurements[0]);
     int x; //individual element of the array for a pass
     int c; //count of the individual element
-    int p;//counter for the measurements loop
+    int p; //counter for the measurements loop
     int n;
     int sorted[SAMPLES];
     char rxByte;
