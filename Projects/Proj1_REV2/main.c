@@ -17,6 +17,8 @@
 
 uint8_t buffer[BufferSize]; 
 uint8_t bounds[BufferSize]; 
+uint8_t nbounds[BufferSize]; 
+char boundBuff[5]; //TEST
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
@@ -53,15 +55,15 @@ int POST( void ) {
             if ( ( timer_now() - beginPostTime ) <= POST_REQ_TIME ){ // test received an edge before 100000micro (100ms)
                 //DISPLAY success on UART/Time seen
                 USART_Write(USART2, (uint8_t *)"POST passed!\r\n\r\n", 18);
+                stop_timer();
                 return 1;
-                break;
             }
             else{ // test received edge but too long
                 //TEST FAILED!
                 //OPTION TO RUN AGAIN
                 USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
+                stop_timer();
                 return FAIL();
-                break;
             }
         }
         //else { // nothing seen yet TIM2->CNT - ADJUST for no sig on pin
@@ -69,17 +71,17 @@ int POST( void ) {
             //TEST FAILED!
             //OPTION TO RUN AGAIN
             USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
+            stop_timer();
             return FAIL();
-            break;
         //  }
         }
     }
-    stop_timer();
 }
 
 void run( void ){
     char rxByte;
     int n;
+    int index=0;
     int numOfSample = 0;
     int beginSampleTime = 0;
     defaultLow = 950;
@@ -87,21 +89,31 @@ void run( void ){
     USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
     rxByte = USART_Read(USART2);
     if (rxByte == 'N' || rxByte == 'n'){//print with bounds, use var in write method
-        //USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
         n = sprintf((char *)bounds, "Running with [%d] and [%d]\r\n\r\n", defaultLow, defaultHigh);
         USART_Write(USART2, bounds, n); 
     }
     else if (rxByte == 'Y' || rxByte == 'y'){
-        USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
-        USART_Write(USART2, (uint8_t *)"Enter New Lower Bound: \r\n\r\n", 29);
-        //take input/wait for enter and store in var - 50-9950 micro
-        //defaultLow = 
-        //atoi() maybe?
+        USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n", 17);
+        USART_Write(USART2, (uint8_t *)"Enter New Lower Bound between 50 and 9950: ", 43);
+
+        rxByte = USART_Read(USART2);
+        while((rxByte != 0xD)){
+            memset( buffer, '\0', sizeof(buffer));
+            sprintf((char *)buffer, "%c", rxByte);
+            USART_Write(USART2, buffer, sizeof(buffer));
+            boundBuff[index] = rxByte;
+            index++;
+            rxByte = USART_Read(USART2);
+        }
+        sscanf(boundBuff, "%d", &defaultLow);
+
         if ( defaultLow <= 50 || defaultLow >=9950 ) {
-            USART_Write(USART2, (uint8_t *)"Please enter a number between 50 and 9950\r\n\r\n", 47);
-            //receive here - loop to ensure
+            USART_Write(USART2, (uint8_t *)"\r\nPlease enter a number between 50 and 9950\r\n\r\n", 47);
+            run();
         }
         defaultHigh = defaultLow + 100;
+        n = sprintf((char *)nbounds, "\r\nNow running with [%d] and [%d]\r\n\r\n", defaultLow, defaultHigh);
+        USART_Write(USART2, nbounds, n); 
         //Display new bounds and wait for enter
     }
     else {
@@ -134,16 +146,9 @@ void UART_graph( void ){
     int p; //counter for the measurements loop
     int n;
     sort_array(measurements);
-
-    //int zack=0;
-    /*
-    for (zack=0;zack<size;zack++){
-        n = sprintf((char *)buffer, "%d \r\n", measurements[zack]);
-        USART_Write(USART2, buffer, n);
-    }*/
     
-    USART_Write(USART2, (uint8_t *)"Number || Tally\r\n\r\n", 21);
-    USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 21);
+    USART_Write(USART2, (uint8_t *)"Number || Tally\r\n", 17);
+    USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 19);
     
     for ( p = 0; p < size; p++ )
     {
