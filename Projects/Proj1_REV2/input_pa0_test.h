@@ -2,4 +2,3 @@
 // Contributor: Zachary Weeden
 // function prototypes
 void init_pa0( void ) ;
-int read_pa0( void ) ;

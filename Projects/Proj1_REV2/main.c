@@ -6,6 +6,7 @@
 #include "TIMER.h"       //TIMER
 #include "input_pa0_test.h"
 #include "binSearch.h"
+#include "sort.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -13,6 +14,7 @@
 
 #define SAMPLES 1000				//Number of samples to be taken
 #define POST_REQ_TIME 100000		//100000 microseconds = 100ms
+uint8_t buffer[BufferSize]; 
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
@@ -23,7 +25,6 @@ int defaultHigh = 1050;		//Default High boundry micro
 
 int FAIL( void ){
 	char rxByte;
-	int		n ;
 	USART_Write(USART2, (uint8_t *)str, strlen(str));
 	rxByte = USART_Read(USART2);
 	if (rxByte == 'N' || rxByte == 'n'){
@@ -42,18 +43,21 @@ int FAIL( void ){
 }
 
 int POST( void ) {
-	start_timer();			// start capture
+	int beginPostTime=0;
+    start_timer();			// start capture
 	beginPostTime = timer_now();
 	while( 1 ){
 		if ( is_event() ) {	// received edge TIM2->CCR1
 			if ( ( timer_now() - beginPostTime ) <= POST_REQ_TIME ){ // test received an edge before 100000micro (100ms)
 				//DISPLAY success on UART/Time seen
+                USART_Write(USART2, (uint8_t *)"POST passed!\r\n\r\n", 18);
 				return 1;
 				break;
 			}
 			else{ // test received edge but too long
 				//TEST FAILED!
 				//OPTION TO RUN AGAIN
+                USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
 				return FAIL();
 				break;
 			}
@@ -62,6 +66,7 @@ int POST( void ) {
 			if ( ( timer_now() - beginPostTime ) > POST_REQ_TIME ){ // exceeded 100ms 
 				//TEST FAILED!
 				//OPTION TO RUN AGAIN
+                USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
 				return FAIL();
 				break;
 			}
@@ -71,14 +76,15 @@ int POST( void ) {
 }
 
 void run( void ){
-	char rxByte;
-	int		n ;
+	char rvByte;
+    int numOfSample=0;
+    int beginSampleTime=0;
 	USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
-	rxByte = USART_Read(USART2);
-	if (rxByte == 'N' || rxByte == 'n'){
+	rvByte = USART_Read(USART2);
+	if (rvByte == 'N' || rvByte == 'n'){
 		USART_Write(USART2, (uint8_t *)"Running with defaults\r\n\r\n", 27);
 	}
-	else if (rxByte == 'Y' || rxByte == 'y'){
+	else if (rvByte == 'Y' || rvByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
 		//Change bounds handle user input 
 	}
@@ -89,7 +95,7 @@ void run( void ){
 
 	//capture 1000 pulses
 	//Return time it took - store in array in main
-	for ( int numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){//detect pulse and duration (multiply by 2 for total period?)
+	for ( numOfSample = 0; numOfSample < SAMPLES; numOfSample++ ){//detect pulse and duration (multiply by 2 for total period?)
 		start_timer();
 		beginSampleTime = timer_now();
 		while( 1 ){
@@ -107,43 +113,52 @@ void run( void ){
 }
 
 void UART_graph( void ){
+    int size = sizeof(measurements)/sizeof(measurements[0]);
+	int x; //individual element of the array for a pass
+	int c; //count of the individual element
+    int p;//counter for the measurements loop
+    int n;
+    int sorted[SAMPLES];
+    char rxByte;
+    int zack=0;
+    sort_array(measurements);
+
+    /*
+    for (zack=0;zack<size;zack++){
+        n = sprintf((char *)buffer, "%d \r\n", measurements[zack]);
+        USART_Write(USART2, buffer, n);
+    }*/
+    
 	USART_Write(USART2, (uint8_t *)"Number || Tally\r\n\r\n", 21);
 	USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 21);
-
-	int n;
-	/*for ( int i = 0; i < SAMPLES; i++ ){ //prints all elements on 1 line
-		n = sprintf((char *)buffer, "%d\r\n", measurements[i]);
-		USART_Write(USART2, buffer, n);	
-	}*/
-	int n = sizeof(measurements)/sizeof(measurements[0]);
-	int x;
-	int c;
-	int j = 0;
-	for (int p=0; p<n; p++)
+    
+	for (p=0; p<size; p++)
 	{
+        c=0;
 		x = measurements[p]; // Element to be counted in measurements[]
 		if (p==0){//first element
-			c = count(measurements, x, n);
+			c = count(measurements, x, size);
 			n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
 			USART_Write(USART2, buffer, n);	
+            //c=0;
 		}
 		else{//not first element
-			if (x==measurements[p-1]){//current element is the same as the last element
+			if (x==measurements[p-1]){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
 				;
 			}
 			else{
-				c = count(measurements, x, n);
+				c = count(measurements, x, size);
 				n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
-				USART_Write(USART2, buffer, n);	
+				USART_Write(USART2, buffer, n);
+                //c=0;
 			}
 	  	}
 	}
 }
 
 
-int rerun( void ){
+int rerunFunc( void ){
 	char rxByte;
-	int		n ;
 	USART_Write(USART2, (uint8_t *)rerun, strlen(rerun));
 	rxByte = USART_Read(USART2);
 	if (rxByte == 'N' || rxByte == 'n'){
@@ -156,13 +171,14 @@ int rerun( void ){
 	}
 	else {
 		USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
-		return rerun();
+		return rerunFunc();
 	}
 }
 
 int main( void )
 {
-	
+	int pass;
+    int rerunProgram;
 	System_Clock_Init();	// System Clock = 80 MHz
 	LED_Init();
 	UART2_Init();
@@ -179,7 +195,7 @@ int main( void )
 			run(); //store return value into (global) array
 			UART_graph();
 			//prompt for rerun
-			int rerunProgram=rerun();
+			rerunProgram=rerunFunc();
 			if (rerunProgram==1){//Choose to rerun
 				;
 			}
