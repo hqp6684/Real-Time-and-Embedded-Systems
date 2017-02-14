@@ -102,6 +102,7 @@ void run( void ){
             //receive here - loop to ensure
         }
         defaultHigh = defaultLow + 100;
+        //Display new bounds and wait for enter
     }
     else {
         USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
