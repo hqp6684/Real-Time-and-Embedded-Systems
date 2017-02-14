@@ -131,7 +131,6 @@ void run( void ){
             }
         }
     }
-
 }
 
 void UART_graph( void ){
@@ -178,7 +177,6 @@ void UART_graph( void ){
         }
     }
 }
-
 
 int rerunFunc( void ){
     char rxByte;
