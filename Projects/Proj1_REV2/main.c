@@ -96,10 +96,19 @@ void run( void ){
 		USART_Write(USART2, (uint8_t *)"Enter New Lower Bound: \r\n\r\n", 29);
 		//take input/wait for enter and store in var - 50-9950 micro
 		//defaultLow = 
+		//atoi() maybe?
+		if ( defaultLow <= 50 || defaultLow >=9950 ) {
+			USART_Write(USART2, (uint8_t *)"Please enter a number between 50 and 9950\r\n\r\n", 47);
+			//receive here - loop to ensure
+		}
 		USART_Write(USART2, (uint8_t *)"Enter New Upper Bound: \r\n\r\n", 29);
 		//take input/wait for enter and store in var
 		//ENSURE that this is at least 100 micro more than lower set
 		//defaultHigh = 
+		if ( defaultHigh < (defaultLow + 100) ) {
+			USART_Write(USART2, (uint8_t *)"Please enter a number 100 higher than the lower bound\r\n\r\n", 59);
+			//receive here - loop to ensure
+		}
 	}
 	else {
 		USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
