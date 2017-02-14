@@ -45,7 +45,7 @@ int FAIL( void ){
 }
 
 int POST( void ) {
-	int beginPostTime=0;
+	int beginPostTime = 0;
     start_timer();			// start capture
 	beginPostTime = timer_now();
 	while( 1 ){
@@ -80,8 +80,8 @@ int POST( void ) {
 void run( void ){
 	char rxByte;
 	int n;
-    int numOfSample=0;
-    int beginSampleTime=0;
+    int numOfSample = 0;
+    int beginSampleTime = 0;
     defaultLow = 950;
 	defaultHigh = 1050;
 	USART_Write(USART2, (uint8_t *)defaultBounds, strlen(defaultBounds));
@@ -143,18 +143,18 @@ void UART_graph( void ){
 	USART_Write(USART2, (uint8_t *)"Number || Tally\r\n\r\n", 21);
 	USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 21);
     
-	for (p=0; p<size; p++)
+	for ( p = 0; p < size; p++ )
 	{
-        c=0;
+        c = 0;
 		x = measurements[p]; // Element to be counted in measurements[]
-		if (x>=defaultLow && x<=defaultHigh){//within defined bounds
-			if (p==0){//first element
+		if ( x >= defaultLow && x <= defaultHigh ){//within defined bounds
+			if ( p == 0 ){//first element
 				c = count(measurements, x, size);
 				n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
 				USART_Write(USART2, buffer, n);	
 			}
 			else{//not first element
-				if (x==measurements[p-1]){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
+				if ( x == measurements[p-1] ){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
 					;
 				}
 				else{
@@ -205,12 +205,12 @@ int main( void )
 		// display default bounds and prompt user for upper and lower bounds
 		// 50micro<=lower<-9950micro
 		// upper >=lower + 100micro
-		while(1){
+		while( 1 ){
 			run(); //store return value into (global) array
 			UART_graph();
 			//prompt for rerun
 			rerunProgram=rerunFunc();
-			if (rerunProgram==1){//Choose to rerun
+			if ( rerunProgram == 1 ){//Choose to rerun
 				;
 			}
 			else{//Exit program
