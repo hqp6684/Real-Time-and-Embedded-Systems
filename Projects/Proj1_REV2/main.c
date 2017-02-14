@@ -93,9 +93,11 @@ void run( void ){
 	}
 	else if (rxByte == 'Y' || rxByte == 'y'){
 		USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n\r\n", 21);
-		//Change bounds handle user input 
-		//get input
+		USART_Write(USART2, (uint8_t *)"Enter New Lower Bound: \r\n\r\n", 29);
+		//take input/wait for enter and store in var
 		//defaultLow = 
+		USART_Write(USART2, (uint8_t *)"Enter New Upper Bound: \r\n\r\n", 29);
+		//take input/wait for enter and store in var
 		//defaultHigh = 
 	}
 	else {
@@ -151,7 +153,6 @@ void UART_graph( void ){
 				c = count(measurements, x, size);
 				n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
 				USART_Write(USART2, buffer, n);	
-	            //c=0;
 			}
 			else{//not first element
 				if (x==measurements[p-1]){//current element is the same as the last element //make sure there is no other occurence of the element in the entire array noit just the previous element
@@ -161,7 +162,6 @@ void UART_graph( void ){
 					c = count(measurements, x, size);
 					n = sprintf((char *)buffer, "%d || %d\r\n", x, c);
 					USART_Write(USART2, buffer, n);
-	                //c=0;
 				}
 		  	}
 		}
