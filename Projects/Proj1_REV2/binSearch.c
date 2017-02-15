@@ -6,8 +6,7 @@
 
 /* if x is present in arr[] then returns the count of occurrences of x,
    otherwise returns -1. */
-int count(int arr[], int x, int n)
-{
+int count(int arr[], int x, int n){
   int i; // index of first occurrence of x in arr[0..n-1]
   int j; // index of last occurrence of x in arr[0..n-1]
 
@@ -28,8 +27,7 @@ int count(int arr[], int x, int n)
 
 /* if x is present in arr[] then returns the index of FIRST occurrence
    of x in arr[0..n-1], otherwise returns -1 */
-int first(int arr[], int low, int high, int x, int n)
-{
+int first(int arr[], int low, int high, int x, int n){
   if(high >= low)
   {
     int mid = (low + high)/2;  /*low + (high - low)/2;*/
@@ -46,8 +44,7 @@ int first(int arr[], int low, int high, int x, int n)
 
 /* if x is present in arr[] then returns the index of LAST occurrence
    of x in arr[0..n-1], otherwise returns -1 */
-int last(int arr[], int low, int high, int x, int n)
-{
+int last(int arr[], int low, int high, int x, int n){
   if(high >= low)
   {
     int mid = (low + high)/2;  /*low + (high - low)/2;*/
