@@ -149,7 +149,8 @@ void UART_graph( void ){
     char rxByte;//
     sort_array(measurements);
     for (TEST=0;TEST<SAMPLES;TEST++){
-        n = sprintf((char *)buffer, "%d\r\n", measurements[TEST]);
+        c = count(measurements, x, size);
+        n = sprintf((char *)buffer, "%d || %d\r\n", measurements[TEST],c);
         USART_Write(USART2, buffer, n);
     }
     rxByte = USART_Read(USART2);
