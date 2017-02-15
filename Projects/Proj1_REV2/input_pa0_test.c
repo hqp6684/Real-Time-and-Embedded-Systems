@@ -7,16 +7,13 @@
 #include <string.h>
 #include <stdio.h>
 
-#define HIGH_PULSES 1000 //want 1001 rising edges
-#define WAVE_TIME 1000 //Should be 1ms between seen high pulses
-
 // Turn on the peripheral clock for GPIOA
 // and set PA0 to be input mode
 void init_pa0( void )
 {
-	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN ;		// enable clock for A group of GPIO
-	GPIOA->MODER &= ~3 ;						// clear out bits 0 and 1 for PA0
-												// PA0 is now in input mode
-	GPIOA->MODER |= 2 ;							// Enable alternate function mode (binary 10) for PA0
-	init_timer();								// AF for pin and configure timer
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN ;       // enable clock for A group of GPIO
+    GPIOA->MODER &= ~3 ;                        // clear out bits 0 and 1 for PA0
+                                                // PA0 is now in input mode
+    GPIOA->MODER |= 2 ;                         // Enable alternate function mode (binary 10) for PA0
+    init_timer();                               // AF for pin and configure timer
 }

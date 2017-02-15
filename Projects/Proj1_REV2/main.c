@@ -66,14 +66,12 @@ int POST( void ) {
                 return FAIL();
             }
         }
-        //else { // nothing seen yet TIM2->CNT - ADJUST for no sig on pin
         if ( ( timer_now() - beginPostTime ) > POST_REQ_TIME ){ // exceeded 100ms 
             //TEST FAILED!
             //OPTION TO RUN AGAIN
             USART_Write(USART2, (uint8_t *)"POST failed!\r\n\r\n", 17);
             stop_timer();
             return FAIL();
-        //  }
         }
     }
 }
@@ -114,7 +112,6 @@ void run( void ){
         defaultHigh = defaultLow + 100;
         n = sprintf((char *)nbounds, "\r\nNow running with [%d] and [%d]\r\n\r\n", defaultLow, defaultHigh);
         USART_Write(USART2, nbounds, n); 
-        //Display new bounds and wait for enter
     }
     else {
         USART_Write(USART2, (uint8_t *)"Invalid Response\r\n\r\n", 22);
@@ -145,18 +142,8 @@ void UART_graph( void ){
     int c; //count of the individual element
     int p; //counter for the measurements loop
     int n;
-		//int TEST;
-    //char rxByte;
-		sort_array(measurements);
-		/*
-    for (TEST=0;TEST<SAMPLES;TEST++){
-        c = count(measurements, measurements[TEST], size);
-        n = sprintf((char *)buffer, "%d || %d\r\n", measurements[TEST],c);
-        USART_Write(USART2, buffer, n);
-    }
-    rxByte = USART_Read(USART2);*///HANG
-
-
+    
+    sort_array(measurements);
     USART_Write(USART2, (uint8_t *)"Number || Tally\r\n", 17);
     USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 19);
     
@@ -214,13 +201,9 @@ int main( void )
     UART2_Init();
     init_pa0();
     
-    //Implement indefinite loop here
     pass = POST();          // Power On Self Test
     if ( pass == 1 ){
         // POST PASSED! - continue operation
-        // display default bounds and prompt user for upper and lower bounds
-        // 50micro<=lower<-9950micro
-        // upper >=lower + 100micro
         while( 1 ){
             run(); //store return value into (global) array
             UART_graph();
