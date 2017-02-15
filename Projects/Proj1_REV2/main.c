@@ -145,8 +145,17 @@ void UART_graph( void ){
     int c; //count of the individual element
     int p; //counter for the measurements loop
     int n;
+    int TEST://
+    char rxByte;//
     sort_array(measurements);
-    
+    for (TEST=0;TEST<SAMPLES;TEST++){
+        c = count(measurements, x, size);
+        n = sprintf((char *)buffer, "%d || %d\r\n", measurements[TEST],c);
+        USART_Write(USART2, buffer, n);
+    }
+    rxByte = USART_Read(USART2);
+
+
     USART_Write(USART2, (uint8_t *)"Number || Tally\r\n", 17);
     USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 19);
     
