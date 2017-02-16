@@ -74,9 +74,11 @@ int POST( void ) {
     }
 }
 /* This function is the acutal sampling of measurements. Nothing is returned but rather measurements 
-are stored in an array for further use. User is prompted whether they should change bounds. After bounds 
+are stored in an array for further use. User is prompted whether they should change bounds. An array 
+was then filled with null terminators to act as padding/breakpoints of input. After bounds 
 are set, 1000 samples of event captures are taken with each result stored in an array. */
 void run( void ){
+    int j;
     char rxByte;
     int n;
     int index = 0;
@@ -94,8 +96,11 @@ void run( void ){
         USART_Write(USART2, (uint8_t *)"Changing Bounds\r\n", 17);
         USART_Write(USART2, (uint8_t *)"Enter New Lower Bound between 50 and 9950: ", 43);
         rxByte = USART_Read(USART2);
-        while((rxByte != 0xD)){ // No carriage return seen - oxD is hex ascii equivalent of \r - keep appending input to buffer
-            memset( buffer, '\0', sizeof(buffer));
+        for (j = 0; j < sizeof(boundBuff)/sizeof(boundBuff[0]); j++){ // Populate array with null terminators
+            boundBuff[j] = '\0';
+        }
+        while(rxByte != 0xD){ // No carriage return seen - oxD is hex ascii equivalent of \r - keep appending input to buffer
+            memset( buffer, '\0', sizeof(buffer)); // Null terminator to indicate end of string
             sprintf((char *)buffer, "%c", rxByte);
             USART_Write(USART2, buffer, sizeof(buffer));
             boundBuff[index] = rxByte;
@@ -103,7 +108,7 @@ void run( void ){
             rxByte = USART_Read(USART2);
         }
         sscanf(boundBuff, "%d", &defaultLow);
-        if ( defaultLow <= 50 || defaultLow >= 9950 ) { // Ensure that the new lower bound satisfies requirements (between 50 and 9950 micro)
+        if ( defaultLow < 50 || defaultLow > 9950 ) { // Ensure that the new lower bound satisfies requirements (between 50 and 9950 micro)
             USART_Write(USART2, (uint8_t *)"\r\nPlease enter a number between 50 and 9950\r\n\r\n", 47);
             run();
         }
