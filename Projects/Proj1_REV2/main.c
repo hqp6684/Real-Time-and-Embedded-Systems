@@ -17,7 +17,7 @@
 uint8_t buffer[BufferSize]; 
 uint8_t bounds[BufferSize]; 
 uint8_t nbounds[BufferSize]; 
-char boundBuff[5];
+char boundBuff[5]; // User input number buffer space
 
 char str[] = "POST failed! Pulse not seen in 100ms. Rerun? (Y or N):\r\n";
 char defaultBounds[] = "Using default bounds! (950 micro & 1050 micro) Change? (Y or N):\r\n";
