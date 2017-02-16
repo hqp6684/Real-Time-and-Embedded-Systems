@@ -1,6 +1,6 @@
 Dependencies for Project 'proj1', Target 'Target 1': (DO NOT MODIFY !)
-F (.\binSearch.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\binsearch.o --omf_browse .\binsearch.crf --depend .\binsearch.d)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\binSearch.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\binsearch.o --omf_browse .\binsearch.crf --depend .\binsearch.d)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -8,11 +8,11 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-I (binSearch.h)(0x58A3819D)
+I (binSearch.h)(0x58A4F88E)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574EE6E6)
-F (.\input_pa0_test.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\input_pa0_test.o --omf_browse .\input_pa0_test.crf --depend .\input_pa0_test.d)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\input_pa0_test.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\input_pa0_test.o --omf_browse .\input_pa0_test.crf --depend .\input_pa0_test.d)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -20,14 +20,14 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-I (input_pa0_test.h)(0x58A3819D)
-I (UART.h)(0x58A3819D)
-I (TIMER.h)(0x58A3819D)
+I (input_pa0_test.h)(0x58A4F88E)
+I (UART.h)(0x58A4F88E)
+I (TIMER.h)(0x58A4F88E)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574EE6E6)
-F (.\LED.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\led.o --omf_browse .\led.crf --depend .\led.d)
-I (LED.h)(0x58A3819D)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\LED.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\led.o --omf_browse .\led.crf --depend .\led.d)
+I (LED.h)(0x58A4F88E)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -35,8 +35,8 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-F (.\main.c)(0x58A3AC9E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\main.o --omf_browse .\main.crf --depend .\main.d)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\main.c)(0x58A4FA91)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -44,18 +44,18 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-I (SysClock.h)(0x58A3819D)
-I (LED.h)(0x58A3819D)
-I (UART.h)(0x58A3819D)
-I (TIMER.h)(0x58A3819D)
-I (input_pa0_test.h)(0x58A3819D)
-I (binSearch.h)(0x58A3819D)
-I (sort.h)(0x58A3819D)
+I (SysClock.h)(0x58A4F88E)
+I (LED.h)(0x58A4F88E)
+I (UART.h)(0x58A4F88E)
+I (TIMER.h)(0x58A4F88E)
+I (input_pa0_test.h)(0x58A4F88E)
+I (binSearch.h)(0x58A4F88E)
+I (sort.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x574EE6E6)
-F (.\sort.c)(0x58A38DDC)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\sort.o --omf_browse .\sort.crf --depend .\sort.d)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\sort.c)(0x58A4F88F)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\sort.o --omf_browse .\sort.crf --depend .\sort.d)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -63,14 +63,14 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-I (SysClock.h)(0x58A3819D)
-I (UART.h)(0x58A3819D)
-I (sort.h)(0x58A3819D)
+I (SysClock.h)(0x58A4F88E)
+I (UART.h)(0x58A4F88E)
+I (sort.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574EE6E6)
-F (.\SysClock.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\sysclock.o --omf_browse .\sysclock.crf --depend .\sysclock.d)
-I (SysClock.h)(0x58A3819D)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\SysClock.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\sysclock.o --omf_browse .\sysclock.crf --depend .\sysclock.d)
+I (SysClock.h)(0x58A4F88E)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -78,8 +78,8 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-F (.\TIMER.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\timer.o --omf_browse .\timer.crf --depend .\timer.d)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\TIMER.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\timer.o --omf_browse .\timer.crf --depend .\timer.d)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -87,13 +87,13 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-I (SysClock.h)(0x58A3819D)
-I (TIMER.h)(0x58A3819D)
+I (SysClock.h)(0x58A4F88E)
+I (TIMER.h)(0x58A4F88E)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574EE6E6)
-F (.\UART.c)(0x58A3819D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\uart.o --omf_browse .\uart.crf --depend .\uart.d)
-I (UART.h)(0x58A3819D)
-I (stm32l476xx.h)(0x58A3819D)
+F (.\UART.c)(0x58A4F88E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork --split_sections-IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="521" -D_RTE_ -DSTM32L476xx-o .\uart.o --omf_browse .\uart.crf --depend .\uart.d)
+I (UART.h)(0x58A4F88E)
+I (stm32l476xx.h)(0x58A4F88F)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h)(0x56265FCC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574EE6E6)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x56264C10)
@@ -101,12 +101,12 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h)(0x56264C10)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h)(0x56D449DC)
-F (.\binSearch.h)(0x58A3819D)()
-F (.\input_pa0_test.h)(0x58A3819D)()
-F (.\LED.h)(0x58A3819D)()
-F (.\sort.h)(0x58A3819D)()
-F (.\startup_stm32l476xx.s)(0x58A3819D)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork -IZ:\Documents\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include--pd "__UVISION_VERSION SETA 521" --pd "_RTE_ SETA 1" --pd "STM32L476xx SETA 1"--list .\startup_stm32l476xx.lst --xref -o .\startup_stm32l476xx.o --depend .\startup_stm32l476xx.d)
-F (.\stm32l476xx.h)(0x58A3819D)()
-F (.\SysClock.h)(0x58A3819D)()
-F (.\TIMER.h)(0x58A3819D)()
-F (.\UART.h)(0x58A3819D)()
+F (.\binSearch.h)(0x58A4F88E)()
+F (.\input_pa0_test.h)(0x58A4F88E)()
+F (.\LED.h)(0x58A4F88E)()
+F (.\sort.h)(0x58A4F88F)()
+F (.\startup_stm32l476xx.s)(0x58A4F88F)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork -IZ:\Real-Time-and-Embedded-Systems\Projects\Proj1_REV2\RTE-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include--pd "__UVISION_VERSION SETA 521" --pd "_RTE_ SETA 1" --pd "STM32L476xx SETA 1"--list .\startup_stm32l476xx.lst --xref -o .\startup_stm32l476xx.o --depend .\startup_stm32l476xx.d)
+F (.\stm32l476xx.h)(0x58A4F88F)()
+F (.\SysClock.h)(0x58A4F88E)()
+F (.\TIMER.h)(0x58A4F88E)()
+F (.\UART.h)(0x58A4F88E)()

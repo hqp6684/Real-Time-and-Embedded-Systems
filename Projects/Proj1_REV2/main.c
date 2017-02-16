@@ -144,20 +144,20 @@ void UART_graph( void ){
     USART_Write(USART2, (uint8_t *)"===============\r\n\r\n", 19);
     for ( i = 0; i < sizeOfArray; i++ ){ // Loop through entire array and print out sample and the enumeration of the element
         countOfSample = 0;
-        sizeOfArray = measurements[i]; // Element to be counted in measurements[]
-        if ( sizeOfArray >= defaultLow && sizeOfArray <= defaultHigh ){ // Sample is within defined bounds
+        individualSample = measurements[i]; // Element to be counted in measurements[]
+        if ( individualSample >= defaultLow && individualSample <= defaultHigh ){ // Sample is within defined bounds
             if ( i == 0 ){ // First element in array
-                countOfSample = count(measurements, sizeOfArray, sizeOfArray);
-                n = sprintf((char *)buffer, "%d || %d\r\n", sizeOfArray, countOfSample);
+                countOfSample = count(measurements, individualSample, sizeOfArray);
+                n = sprintf((char *)buffer, "%d || %d\r\n", individualSample, countOfSample);
                 USART_Write(USART2, buffer, n); 
             }
             else{ // Not first element in array
-                if ( sizeOfArray == measurements[i-1] ){ // Current element is the same as the last element in sorted array - duplicate element - skip display
+                if ( individualSample == measurements[i-1] ){ // Current element is the same as the last element in sorted array - duplicate element - skip display
                     ;
                 }
                 else{ // Current element has not occurred before - display
-                    countOfSample = count(measurements, sizeOfArray, sizeOfArray);
-                    n = sprintf((char *)buffer, "%d || %d\r\n", sizeOfArray, countOfSample);
+                    countOfSample = count(measurements, individualSample, sizeOfArray);
+                    n = sprintf((char *)buffer, "%d || %d\r\n", individualSample, countOfSample);
                     USART_Write(USART2, buffer, n);
                 }
             }
