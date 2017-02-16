@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SAMPLES 1000                // Number of samples to be taken
+#define SAMPLES 1001                // Number of samples to be taken
 #define POST_REQ_TIME 100000        // 100000 microseconds = 100ms
 
 uint8_t buffer[BufferSize]; 

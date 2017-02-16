@@ -5,7 +5,7 @@
 #include "sort.h"
 #include <string.h>
 #include <stdio.h>
-#define SAMPLES 1000
+#define SAMPLES 1001
 
 /* This function traverses a passed integer type array and sorts elements in
 ascending order. There is no return value. The array passed is directly maniuplated. */
