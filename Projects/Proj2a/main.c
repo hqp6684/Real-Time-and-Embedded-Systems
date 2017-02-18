@@ -4,7 +4,7 @@
 #include "LED.h"         // LED
 #include "UART.h"        // UART
 #include "TIMER.h"       // TIMER
-#include "input_pa0_test.h"
+#include "input_pa0_pa1_test.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
