@@ -5,7 +5,11 @@
 #include <stdlib.h>
 
 // Define all of the commands that are valid
-#define MOV (0x20)
+#define MOV (0x20) //001x xxxx
+#define WAIT (0x40)//010x xxxx
+#define LOOP (0x80)//100x xxxx
+#define END_LOOP (0xA0)//101x xxxx
+
 #define RECIPE_END (0)
 
 // Examples of simple recipes

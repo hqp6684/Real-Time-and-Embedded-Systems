@@ -9,14 +9,14 @@
 
 /* This is the initial confiuguration of the timer. */
 void init_timer( void ) {
-    GPIOA->AFR[0] |= 17;                    // (0001 0001) PA0 and PA1 alternate function 1 (TIM2_CH1)
+    GPIOA->AFR[0] |= 0x11;                    // (0001 0001) PA0 and PA1 alternate function 1 (TIM2_CH1)
     RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;   // TIM2 timer clock enable
     TIM2->PSC = SYSTEM_CLK;                 // Prescaler value
     TIM2->CCMR1 &= ~(0xFFFFFFFF);           // clear 0011 0000 0011
-    TIM2->CCMR1 |= 0b0110 1000 0110 1000;   // CC1 and CC2 as outputs with preload enables and output compare mode in PWM
-    TIM2->CR1 |= 0b1000 0000;               // autoreload register is buffered (preload enabled)
+    TIM2->CCMR1 |= 0x6868;                  // CC1 and CC2 as outputs with preload enables and output compare mode in PWM (0110 1000 0110 1000)
+    TIM2->CR1 |= 0x80;                      // autoreload register is buffered (preload enabled) (1000 0000)
     TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
-    TIM2->CCER |= 0b0001 0001;              // enable capture input cc1e and cc2e - signal is output on pin
+    TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
     TIM2->ARR = 16;                         // 16/800=.020 (20ms)
 
     //NEED TO MODIFY - initial conditions and load new vals and start timer
