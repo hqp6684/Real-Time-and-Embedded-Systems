@@ -1,7 +1,7 @@
 // L. Kiser Feb. 8, 2017
 // Contributor: Zachary Weeden
 #include "stm32l476xx.h"
-#include "input_pa0_test.h"
+#include "input_pa0_pa1_test.h"
 #include "UART.h"
 #include "TIMER.h"
 #include <string.h>
