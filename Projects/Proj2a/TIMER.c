@@ -14,7 +14,7 @@ void init_timer( void ) {
     TIM2->PSC = SYSTEM_CLK;                 // Prescaler value
     TIM2->CCMR1 &= ~(0xFFFFFFFF);           // clear 0011 0000 0011
     TIM2->CCMR1 |= 0b0110 1000 0110 1000;   // CC1 and CC2 as outputs with preload enables and output compare mode in PWM
-    TIM2->CR1 = 0b1000 0000;                // autoreload register is buffered (preload enabled)
+    TIM2->CR1 |= 0b1000 0000;                // autoreload register is buffered (preload enabled)
     TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
     TIM2->CCER |= 0b0001 0001;              // enable capture input cc1e and cc2e - signal is output on pin
     TIM2->ARR = 200;                        // 1100 1000
