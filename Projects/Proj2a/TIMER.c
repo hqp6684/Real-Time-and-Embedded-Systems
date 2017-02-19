@@ -11,15 +11,17 @@
 void init_timer( void ) {
     GPIOA->AFR[0] |= 17;                    // (0001 0001) PA0 and PA1 alternate function 1 (TIM2_CH1)
     RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;   // TIM2 timer clock enable
-    TIM2->PSC = SYSTEM_CLK;                 // 80MHZ 80/80=1MHZ prescale
+    TIM2->PSC = SYSTEM_CLK;                 // Prescaler value
     TIM2->CCMR1 &= ~(0xFFFFFFFF);           // clear 0011 0000 0011
     TIM2->CCMR1 |= 0b0110 1000 0110 1000;   // CC1 and CC2 as outputs with preload enables and output compare mode in PWM
-
-
-    //NEED TO MODIFY - need reload and enable of channels
-    TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
+    TIM2->CR1 = 0b1000 0000;                // autoreload register is buffered (preload enabled)
     TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
-    TIM2->CCER |= 0x1;                      // enable capture input
+    TIM2->CCER |= 0b0001 0001;              // enable capture input cc1e and cc2e - signal is output on pin
+    TIM2->ARR = 200;                        // 1100 1000
+
+    //NEED TO MODIFY - initial conditions and load new vals and start timer
+    TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
+    start_timer();
 
 }
 /* This starts the timer by setting the enable flag of the control reg. */
