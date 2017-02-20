@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define SYSTEM_CLK 800   // STM 80MHZ
+#define SYSTEM_CLK 80000   // STM 80MHZ
 
 /* This is the initial confiuguration of the timer. */
 void init_timer( void ) {
@@ -17,7 +17,7 @@ void init_timer( void ) {
     TIM2->CR1 |= 0x80;                      // autoreload register is buffered (preload enabled) (1000 0000)
     TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
     TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
-    TIM2->ARR = 16;                         // 16/800=.020 (20ms)
+    TIM2->ARR = 1600;                         // 16/800=.020 (20ms)
 
     //NEED TO MODIFY - initial conditions and load new vals and start timer
     TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
