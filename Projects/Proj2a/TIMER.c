@@ -1,12 +1,17 @@
 // Z. Weeden Feb. 18, 2017
 #include "stm32l476xx.h"
+#include "input_pa0_pa1_test.h"
 #include "SysClock.h"    //Sysclock
 #include "TIMER.h"
 #include <string.h>
 #include <stdio.h>
 
-#define SYSTEM_CLK 80000   // STM 80MHZ
+#define SYSTEM_CLK 8000   // STM 80MHZ
 
+/* This starts the timer by setting the enable flag of the control reg. */
+void start_timer( void ) {
+    TIM2->CR1 = 0x1;                        // control register counter enabled
+}
 /* This is the initial confiuguration of the timer. */
 void init_timer( void ) {
     GPIOA->AFR[0] |= 0x11;                  // (0001 0001) PA0 and PA1 alternate function 1 (TIM2_CH1)
@@ -15,18 +20,16 @@ void init_timer( void ) {
     TIM2->CCMR1 &= ~(0xFFFFFFFF);           // clear 0011 0000 0011
     TIM2->CCMR1 |= 0x6868;                  // CC1 and CC2 as outputs with preload enables and output compare mode in PWM (0110 1000 0110 1000)
     TIM2->CR1 |= 0x80;                      // autoreload register is buffered (preload enabled) (1000 0000)
-    TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
+    //TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
     TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
-    TIM2->ARR = 1600;                       // 1600/80000=.020 (20ms)
+    TIM2->ARR = 200;                        
+		TIM2->CCR1 = 0x4;
+		TIM2->CCR2 = 0x4;
 
-    //NEED TO MODIFY - initial conditions and load new vals and start timer
+    //NEED TO MODIFY - initial conditions 
     TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
     start_timer();
 
-}
-/* This starts the timer by setting the enable flag of the control reg. */
-void start_timer( void ) {
-    TIM2->CR1 = 0x1;                        // control register counter enabled
 }
 /* This fetches the value in the capt/compare reg (the timer's current value). The
 value returned is the time elapsed since enabled in microseconds. */

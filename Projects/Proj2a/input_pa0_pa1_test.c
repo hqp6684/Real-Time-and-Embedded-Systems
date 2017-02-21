@@ -9,7 +9,7 @@
 
 // Turn on the peripheral clock for GPIOA
 // and set PA0 to be input mode
-void init_pa0( void ){
+void init_pa0_pa1( void ){
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN ;       // enable clock for A group of GPIO
     GPIOA->MODER &= ~15 ;                       // clear out bits 0 and 1 for PA0 and bits 2 and 3 for PA1 (xxxx)
                                                 // PA0 is now in input mode

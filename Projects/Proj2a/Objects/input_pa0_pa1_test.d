@@ -1,0 +1,14 @@
+.\objects\input_pa0_pa1_test.o: input_pa0_pa1_test.c
+.\objects\input_pa0_pa1_test.o: stm32l476xx.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm4.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmSimd.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\1.2.0\Device\Include\system_stm32l4xx.h
+.\objects\input_pa0_pa1_test.o: input_pa0_pa1_test.h
+.\objects\input_pa0_pa1_test.o: UART.h
+.\objects\input_pa0_pa1_test.o: TIMER.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\input_pa0_pa1_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
