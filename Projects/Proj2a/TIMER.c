@@ -23,8 +23,8 @@ void init_timer( void ) {
     //TIM2->CCER &= ~(0xFFFFFFFF);            // turn off capture input until we're ready with updates
     TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
     TIM2->ARR = 200;                        
-		TIM2->CCR1 = 0x4;
-		TIM2->CCR2 = 0x4;
+    TIM2->CCR1 = 0x4;
+    TIM2->CCR2 = 0x4;
 
     //NEED TO MODIFY - initial conditions 
     TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
