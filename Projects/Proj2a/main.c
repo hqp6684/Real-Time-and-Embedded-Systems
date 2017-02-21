@@ -10,8 +10,8 @@
 #include <stdlib.h>
 
 int main (void){
-	System_Clock_Init();    // System Clock = 80 MHz
-	LED_Init();
-	UART2_Init();
-	init_pa0_pa1();
+    System_Clock_Init();    // System Clock = 80 MHz
+    LED_Init();
+    UART2_Init();
+    init_pa0_pa1();
 }
