@@ -12,18 +12,27 @@
 
 uint8_t bounds[BufferSize]; 
 
+/* Does not return a value - more of initial setup/configuration.
+Visually inspect that the servos move 1 position to the left and then all 
+the way to the right.*/
+void POST(void){
+    //Move 1 to the left and then 5 to the right
+    
+}
+
 int main (void){
-	  int i = 0;
-	  int n;
-		int hit;
+	int i = 0;
+	int n;
+	int hit;
     System_Clock_Init();    // System Clock = 80 MHz
     LED_Init();
     UART2_Init();
     init_pa0_pa1();
-		while (i<test){
-			hit = (GPIOA->IDR & 1);	
-			n = sprintf((char *)bounds, "[%d]\r\n", hit);
-      USART_Write(USART2, bounds, n); 
-			i++;
-		}
+    //POST();
+    while (i<test){
+        hit = (GPIOA->IDR & 1);	
+		n = sprintf((char *)bounds, "[%d]\r\n", hit);
+        USART_Write(USART2, bounds, n); 
+		i++;
+	}
 }
