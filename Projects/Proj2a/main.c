@@ -21,12 +21,12 @@ void POST(void){
     //Move 1 to the left and then 5 to the right.
     //This starts us in a known position
 }
-
+ 
 void handle_input(void){ //Maybe return array of the input or individually parsed chars for motor1cmd motor2cmd 
     int j;
     char rxByte;
-    int index = 0;
     int typo = 0;
+    int index = 0;
     int cancel = 0;
     char motor1Cmd;
     char motor2Cmd;
@@ -40,8 +40,8 @@ void handle_input(void){ //Maybe return array of the input or individually parse
             cancel = 1;
             break;
         }
-        //Characters P p  C c  R r  L l  N n  B b
-        if (rxByte != 0x50 || rxByte != 0x70 || rxByte != 0x43 || rxByte != 63 || rxByte != 0x52 || rxByte != 0x72 || rxByte != 0x4C || rxByte != 0x6C || rxByte != 0x4E || rxByte != 0x6E || rxByte != 0x42 || rxByte != 0x62){
+        //Valid characters:  Pp Cc Rr Ll Nn Bb
+        if (rxByte != 0x50 || rxByte != 0x70 || rxByte != 0x43 || rxByte != 0x63 || rxByte != 0x52 || rxByte != 0x72 || rxByte != 0x4C || rxByte != 0x6C || rxByte != 0x4E || rxByte != 0x6E || rxByte != 0x42 || rxByte != 0x62){
             typo = 1;
             break;
         }
