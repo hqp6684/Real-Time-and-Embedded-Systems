@@ -36,12 +36,11 @@ void handle_input(void){ //Maybe return array of the input or individually parse
         overrideCmd[j] = '\0';
     }
     while(rxByte != 0xD){ // No carriage return seen - oxD is hex ascii equivalent of \r - keep appending input to buffer
-        if (rxByte == 0x78 || rxByte == 0x58){ //if input is 'x' or 'X'
+        if (rxByte == 'X' || rxByte == 'x'){
             cancel = 1;
             break;
         }
-        //Valid characters:  Pp Cc Rr Ll Nn Bb
-        if (rxByte != 0x50 || rxByte != 0x70 || rxByte != 0x43 || rxByte != 0x63 || rxByte != 0x52 || rxByte != 0x72 || rxByte != 0x4C || rxByte != 0x6C || rxByte != 0x4E || rxByte != 0x6E || rxByte != 0x42 || rxByte != 0x62){
+        if (rxByte != 'P' || rxByte != 'p' || rxByte != 'C' || rxByte != 'c' || rxByte != 'R' || rxByte != 'r' || rxByte != 'L' || rxByte != 'l' || rxByte != 'N' || rxByte != 'n' || rxByte != 'B' || rxByte != 'b'){
             typo = 1;
             break;
         }
