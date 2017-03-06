@@ -48,27 +48,27 @@ void motor1_position5 ( void)
 
 void motor2_position1 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle1; 
+    TIM2 -> CCR2 = Duty_cycle1; 
 }
 
 void motor2_position2 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle2; 
+    TIM2 -> CCR2 = Duty_cycle2; 
 }
 
 void motor2_position3 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle3; 
+    TIM2 -> CCR2 = Duty_cycle3; 
 }
 
 void motor2_position4 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle4; 
+    TIM2 -> CCR2 = Duty_cycle4; 
 }
 
 void motor2_position5 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle5; 
+    TIM2 -> CCR2 = Duty_cycle5; 
 }
 
 

@@ -106,7 +106,7 @@ void parse_override_cmd(char *commandArray){
     }
 }
 
-void handle_input(void){ //Maybe return array of the input or individually parsed chars for motor1cmd motor2cmd 
+void handle_input(void){ // Maybe return array of the input or individually parsed chars for motor1cmd motor2cmd 
     int j;
     char rxByte;
     int typo = 0;
@@ -135,24 +135,24 @@ void handle_input(void){ //Maybe return array of the input or individually parse
         index++;
         rxByte = USART_Read(USART2);
     }
-    if (cancel == 0 && typo == 0){ //maybe return overrideCmd array
+    if (cancel == 0 && typo == 0){ // Maybe return overrideCmd array
         sscanf(overrideCmd[0], "%c", &motor1Cmd); // UNUSED
         sscanf(overrideCmd[1], "%c", &motor2Cmd); // UNUSED      
     }
-    else if (cancel == 1){//x was entered do not process '>' override char written
+    else if (cancel == 1){// x was entered do not process '>' override char written
         USART_Write(USART2, (uint8_t *)">\r\n", 3);
-        cancel = 0; //reset cancel flag
+        cancel = 0; // Reset cancel flag
         handle_input();
     }
-    else if (typo == 1){//x was entered do not process '>' override char written
+    else if (typo == 1){// x was entered do not process '>' override char written
         USART_Write(USART2, (uint8_t *)"Invalid command seen!\r\n", 23);
-        typo = 0; //reset cancel flag
+        typo = 0; // Reset cancel flag
         handle_input();
     }
     else{ //check this condition
         handle_input();
     }
-    parse_override_cmd(overrideCmd); //Need interrupt  
+    parse_override_cmd(overrideCmd); // Need interrupt  
 }
 
 int main (void){
