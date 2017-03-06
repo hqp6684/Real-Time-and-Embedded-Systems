@@ -76,7 +76,7 @@ void motor2_position5 ( void)
 /* setting up the position of the servo motor 1 and 2  to the a unsigned character */
 /***************************************/
 // void Currentposition ( uint8_t position1, uint8_t position 2);      // defined current position of servo motors 1 and 2 
-void position_setup_motor1 ( uint8_t position);
+void position_setup_motor1 ( uint8_t position );
 {
    uint8_t Position_motor1;       // char that holds the current position of the motor 1
    {
@@ -108,7 +108,7 @@ void position_setup_motor1 ( uint8_t position);
 }
 
 
-void position_setup_motor2 ( uint8_t position);
+void position_setup_motor2 ( uint8_t position );
 {
    uint8_t Position_motor2;   // char that holds the current position of the motor 2
    

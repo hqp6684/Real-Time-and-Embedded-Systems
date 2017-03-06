@@ -5,6 +5,7 @@
 #include "UART.h"        // UART
 #include "TIMER.h"       // TIMER
 #include "input_pa0_pa1_test.h"
+#include "motor_control.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +22,90 @@ void POST(void){
     //Move 1 to the left and then 5 to the right.
     //This starts us in a known position
 }
- 
+
+void parse_override_cmd(char *commandArray){
+    switch(commandArray[0]){ //motor1Cmd
+        case 'P':
+            pauseMotor1();
+            break;
+        case 'p':
+            pauseMotor1();
+            break;
+        case 'C':
+            continueMotor1();
+            break;
+        case 'c':
+            continueMotor1();
+            break;
+        case 'R':
+            moveRightMotor1();
+            break;
+        case 'r':
+            moveRightMotor1();
+            break;
+        case 'L':
+            moveLeftMotor1();
+            break;
+        case 'l':
+            moveLeftMotor1();
+            break;
+        case 'N':
+            noOpMotor1();
+            break;
+        case 'n':
+            noOpMotor1();
+            break;
+        case 'B':
+            restartMotor1();
+            break;
+        case 'b':
+            restartMotor1();
+            break;
+        default:
+            noOpMotor1(); //noOp for case that doesnt match
+    }
+    switch(commandArray[1]){ //motor2Cmd
+        case 'P':
+            pauseMotor2();
+            break;
+        case 'p':
+            pauseMotor2();
+            break;
+        case 'C':
+            continueMotor2();
+            break;
+        case 'c':
+            continueMotor2();
+            break;
+        case 'R':
+            moveRightMotor2();
+            break;
+        case 'r':
+            moveRightMotor2();
+            break;
+        case 'L':
+            moveLeftMotor2();
+            break;
+        case 'l':
+            moveLeftMotor2();
+            break;
+        case 'N':
+            noOpMotor2();
+            break;
+        case 'n':
+            noOpMotor2();
+            break;
+        case 'B':
+            restartMotor2();
+            break;
+        case 'b':
+            restartMotor2();
+            break;
+        default:
+            noOpMotor2(); //noOp for case that doesnt match
+    }
+}
+
 void handle_input(void){ //Maybe return array of the input or individually parsed chars for motor1cmd motor2cmd 
     int j;
     char rxByte;
@@ -52,8 +136,8 @@ void handle_input(void){ //Maybe return array of the input or individually parse
         rxByte = USART_Read(USART2);
     }
     if (cancel == 0 && typo == 0){ //maybe return overrideCmd array
-        sscanf(overrideCmd[0], "%c", &motor1Cmd);
-        sscanf(overrideCmd[1], "%c", &motor2Cmd);        
+        sscanf(overrideCmd[0], "%c", &motor1Cmd); // UNUSED
+        sscanf(overrideCmd[1], "%c", &motor2Cmd); // UNUSED      
     }
     else if (cancel == 1){//x was entered do not process '>' override char written
         USART_Write(USART2, (uint8_t *)">\r\n", 3);
@@ -68,6 +152,7 @@ void handle_input(void){ //Maybe return array of the input or individually parse
     else{ //check this condition
         handle_input();
     }
+    parse_override_cmd(overrideCmd); //Need interrupt  
 }
 
 int main (void){
