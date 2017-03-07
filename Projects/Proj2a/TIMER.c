@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define SYSTEM_CLK 80000   // STM 80MHZ
+#define SYSTEM_CLK 8000   // STM 80MHZ
 
 /* This starts the timer by setting the enable flag of the control reg. */
 void start_timer( void ) {
@@ -21,9 +21,9 @@ void init_timer( void ) {
     TIM2->CCMR1 |= 0x6868;                  // CC1 and CC2 as outputs with preload enables and output compare mode in PWM (0110 1000 0110 1000)
     TIM2->CR1 |= 0x80;                      // autoreload register is buffered (preload enabled) (1000 0000)
     TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
-    TIM2->ARR = 110; 												// 20 ms                      
-    TIM2->CCR1 = 0x4;
-    TIM2->CCR2 = 0x4;
+    TIM2->ARR = 200;                        // 20 ms                      
+    TIM2->CCR1 = 4;                         // .4ms
+    TIM2->CCR2 = 4;                         // .4ms
 
     //NEED TO MODIFY - initial conditions 
     TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force

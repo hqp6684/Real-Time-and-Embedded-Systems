@@ -161,6 +161,8 @@ int main (void){
     UART2_Init();
     init_pa0_pa1();
     //POST(); 
+    //mnemonicControl(35, 0);  // example (MOV) 0010 (3) 0011 motor0
+    //mnemonicControl(34, 1);  // example (MOV) 0010 (2) 0010 motor1
     while (1){
         handle_input();
 	}
