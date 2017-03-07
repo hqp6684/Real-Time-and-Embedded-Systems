@@ -7,8 +7,8 @@
 #define LOOP (0x80)     //100x xxxx
 #define END_LOOP (0xA0) //101x xxxx
 #define RECIPE_END (0)
-#define PARAM_BITMASK (31)	//0001 1111
-#define OP_BITMASK (224)	//1110 0000
+#define PARAM_BITMASK (0x1F)	//0001 1111
+#define OP_BITMASK (0xE0)		//1110 0000
 
 void mnemonicControl(int command, int motor) {
 	int commandOpCode = command & OP_BITMASK;
