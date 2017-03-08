@@ -12,15 +12,22 @@
 
 /*This part defines the 5 different duty cycles which defines the 5 different position of servo motors*/
 /********************************************************/
-#define Duty_cycle_1 xxxx ;  // replace the value of xxxx with 5 different duty cycles in the 20ms range
-#define Duty_cycle_2 xxxx ; 
-#define Duty_cycle_3 xxxx ; 
-#define Duty_cycle_4 xxxx ; 
-#define Duty_cycle_5 xxxx ; 
+#define Duty_cycle_0 (4)  // replace the value of xxxx with 5 different duty cycles in the 20ms range
+#define Duty_cycle_1 (7) 
+#define Duty_cycle_2 (10) 
+#define Duty_cycle_3 (13) 
+#define Duty_cycle_4 (17) 
+#define Duty_cycle_5 (21) 
 
 /********************************************************/
 /*setting the duty cycles to the server motor 1 and 2 */
 /***********************************************************/
+
+void motor1_position0 ( void)
+{
+    TIM2 -> CCR1 = Duty_cycle_0; 
+}
+
 void motor1_position1 ( void)
 {
     TIM2 -> CCR1 = Duty_cycle1; 
@@ -44,6 +51,11 @@ void motor1_position4 ( void)
 void motor1_position5 ( void)
 {
     TIM2 -> CCR1 = Duty_cycle5; 
+}
+
+void motor2_position0 ( void)
+{
+    TIM2 -> CCR1 = Duty_cycle_0; 
 }
 
 void motor2_position1 ( void)
@@ -79,21 +91,26 @@ void motor2_position5 ( void)
 void position_setup_motor1 ( uint8_t position );
 {
    uint8_t Position_motor1;       // char that holds the current position of the motor 1
-   {
+   switch (position) {
+	   case 0: 
+        motor1_position0();
+        Position_motor1 =0; 
+        break ; 
+	   
        case 1: 
         motor1_position1();
         Position_motor1 =1; 
-       break ; 
+        break ; 
        
        case 2: 
         motor1_position2();
         Position_motor1 =2; 
-       break ;  
+        break ;  
        
        case 3: 
         motor1_position3();
         Position_motor1 =3; 
-       break ; 
+        break ; 
        
        case 4: 
         motor1_position4();
@@ -103,7 +120,7 @@ void position_setup_motor1 ( uint8_t position );
         case 5: 
          motor1_position5();
          Position_motor1 =5; 
-        break ; 
+         break ; 
    }
 }
 
@@ -111,22 +128,26 @@ void position_setup_motor1 ( uint8_t position );
 void position_setup_motor2 ( uint8_t position );
 {
    uint8_t Position_motor2;   // char that holds the current position of the motor 2
-   
-   {
+   switch (position) {
+	   case 0: 
+        motor2_position0();
+        Position_motor2 =0; 
+        break ;
+	   
        case 1: 
         motor2_position1();
         Position_motor2 =1; 
-       break ; 
+        break ; 
        
        case 2: 
         motor2_position2();
         Position_motor2 =2; 
-       break ;  
+        break ;  
        
        case 3: 
         motor2_position3();
         Position_motor2 =3; 
-       break ; 
+        break ; 
        
        case 4: 
         motor2_position4();
@@ -136,7 +157,7 @@ void position_setup_motor2 ( uint8_t position );
         case 5: 
          motor2_position5();
          Position_motor2 =5; 
-        break ;        
+         break ;        
    }
 }
 
