@@ -38,22 +38,20 @@ void parse_override_cmd(char *commandArray){
             continueMotor1();
             break;
         case 'R':
-            moveRightMotor1();
+            servo_motor1_right();
             break;
         case 'r':
-            moveRightMotor1();
+            servo_motor1_right();
             break;
         case 'L':
-            moveLeftMotor1();
+            servo_motor1_left();
             break;
         case 'l':
-            moveLeftMotor1();
+            servo_motor1_left();
             break;
-        case 'N':
-            noOpMotor1();
+        case 'N': //pass - no op
             break;
-        case 'n':
-            noOpMotor1();
+        case 'n': //pass - no op
             break;
         case 'B':
             restartMotor1();
@@ -61,8 +59,6 @@ void parse_override_cmd(char *commandArray){
         case 'b':
             restartMotor1();
             break;
-        default:
-            noOpMotor1(); //noOp for case that doesnt match
     }
     switch(commandArray[1]){ //motor2Cmd
         case 'P':
@@ -78,22 +74,20 @@ void parse_override_cmd(char *commandArray){
             continueMotor2();
             break;
         case 'R':
-            moveRightMotor2();
+            servo_motor2_right();
             break;
         case 'r':
-            moveRightMotor2();
+            servo_motor2_right();
             break;
         case 'L':
-            moveLeftMotor2();
+            servo_motor2_left();
             break;
         case 'l':
-            moveLeftMotor2();
+            servo_motor2_left();
             break;
-        case 'N':
-            noOpMotor2();
+        case 'N': //pass - no op
             break;
-        case 'n':
-            noOpMotor2();
+        case 'n': //pass - no op
             break;
         case 'B':
             restartMotor2();
@@ -101,8 +95,6 @@ void parse_override_cmd(char *commandArray){
         case 'b':
             restartMotor2();
             break;
-        default:
-            noOpMotor2(); //noOp for case that doesnt match
     }
 }
 
@@ -165,5 +157,5 @@ int main (void){
     //mnemonicControl(34, 1);  // example (MOV) 0010 (2) 0010 motor1
     while (1){
         handle_input();
-	}
+    }
 }

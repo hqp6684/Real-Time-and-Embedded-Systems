@@ -55,7 +55,7 @@ void motor1_position5 ( void)
 
 void motor2_position0 ( void)
 {
-    TIM2 -> CCR1 = Duty_cycle_0; 
+    TIM2 -> CCR2 = Duty_cycle_0; 
 }
 
 void motor2_position1 ( void)
