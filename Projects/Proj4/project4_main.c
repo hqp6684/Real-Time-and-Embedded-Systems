@@ -5,7 +5,6 @@
 #include <math.h>
 #include <pthread.h>
 
-
 #define MIN_ARRIVAL (60)        // 1 minute
 #define MAX_ARRIVAL (240)       // 4 minutes
 #define MIN_TRANSACTION (30)    // 30 seconds
@@ -61,10 +60,10 @@ int main(void) {
     pthread_join(tid3, NULL);
 
     while(1){
-        arrivalTime = getRandomWithRange(MIN_ARRIVAL,MAX_ARRIVAL);                  // generate random arrival time of customer
+        arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                 // generate random arrival time of customer
         if (arrivalTime + currentTime) < closingTime{                               // pseudo code for checking hours of operations condition
             arrivalTimeArray[i] = arrivalTime;                                      // append the arrival time to the array because it is valid in within hours of operation
-            transactionTime = getRandomWithRange(MIN_TRANSACTION,MAX_TRANSACTION);  // generate random transaction time of customer
+            transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION); // generate random transaction time of customer
             sleep(arrivalTimeArray[i]);                                             // dont append to queue until after sleep
             transactionQueueArray[i] = transactionTime;                             // queue will be array of customer transaction times
             i++;
