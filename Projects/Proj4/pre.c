@@ -9,8 +9,8 @@
 #define MIN_TRANSACTION (30) //30 seconds
 #define MAX_TRANSACTION (480)//8 minutes
 
-
-int array[]; //Need this to be dynamic - keep appended customers to queue - initialize dont specify size
+int arrivalTimeArray[];		//Need this to be dynamic - keep appended customers to queue - initialize dont specify size
+int transactionQueueArray[];	//Need this to be dynamic - keep appended customers to queue - initialize dont specify size
 
 int randMToN(int M, int N)
 {
@@ -24,9 +24,10 @@ int main(void) {
 	while(1){
 		arrivalTime=randMToN(MIN_ARRIVAL,MAX_ARRIVAL);					//generate random arrival time of customer
 		if (arrivalTime+currentTime)<closingTime{						//pseudo code for checking hours of operations condition
+			arrivalTimeArray[i]=arrivalTime;							//append the arrival time to the array because it is valid in within hours of operation
 			transactionTime=randMToN(MIN_TRANSACTION,MAX_TRANSACTION);	//generate random transaction time of customer
-			sleep(arrivalTime); 										//dont append to queue until after sleep
-			array[i]=transactionTime; 									//queue will be array of customer transaction times
+			sleep(arrivalTimeArray[i]);									//dont append to queue until after sleep
+			transactionQueueArray[i]=transactionTime; 					//queue will be array of customer transaction times
 			i++;
 		}
 		else{
@@ -34,6 +35,6 @@ int main(void) {
 			break;
 		}
 	}
-	report();//report function here to display metrics
+	report(arrivalTimeArray, transactionQueueArray); //parameterized report function here to display metrics
 	return EXIT_SUCCESS;
 }
