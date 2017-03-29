@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <pthread.h>
+
 
 #define MIN_ARRIVAL (60) //1 minute
 #define MAX_ARRIVAL (240)//4 minutes
@@ -12,15 +14,50 @@
 int arrivalTimeArray[];		//Need this to be dynamic - keep appended customers to queue - initialize dont specify size
 int transactionQueueArray[];	//Need this to be dynamic - keep appended customers to queue - initialize dont specify size
 
-int randMToN(int M, int N)
-{
+int randMToN(int M, int N){
 	return M + (rand() / ( RAND_MAX / (N+1-M) ) ) ;
+}
+
+//Pulled from my example of sleep prints see 'thread_dummy.c'
+//In each thread make sure to handle initial condition - while queue is empty do nothing
+void *tellerThread1(void *vargp){
+    sleep(5);
+    printf("From teller1 \n");
+    return NULL;
+}
+
+void *tellerThread2(void *vargp){
+    sleep(7);
+    printf("From teller2 \n");
+    return NULL;
+}
+
+void *tellerThread3(void *vargp){
+    sleep(1);
+    printf("From teller3 \n");
+    return NULL;
 }
 
 int main(void) {
 	int i=0;
 	int arrivalTime=0;
 	int transactionTime=0;
+
+	//Thread Ids
+    pthread_t tid1;
+    pthread_t tid2;
+    pthread_t tid3;
+
+    //Creating threads
+    pthread_create(&tid1, NULL, tellerThread1, NULL);
+    pthread_create(&tid2, NULL, tellerThread2, NULL);
+    pthread_create(&tid3, NULL, tellerThread3, NULL);
+
+    //Joining to Pool 
+    pthread_join(tid1, NULL);
+    pthread_join(tid2, NULL);
+    pthread_join(tid3, NULL);
+
 	while(1){
 		arrivalTime=randMToN(MIN_ARRIVAL,MAX_ARRIVAL);					//generate random arrival time of customer
 		if (arrivalTime+currentTime)<closingTime{						//pseudo code for checking hours of operations condition
