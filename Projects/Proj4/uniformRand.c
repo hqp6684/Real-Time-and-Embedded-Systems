@@ -7,7 +7,7 @@
 #define MAX (50)
 #define size (200)
 
-int array[size];
+int array[size]; //Need this to be dynamic - keep appended customers to queue - initialize dont specify size
 
 int randMToN(int M, int N)
 {
@@ -15,30 +15,37 @@ int randMToN(int M, int N)
 }
 
 int main(void) {
+	
 	int i, j, bigCount, temp;
 	int myNum=0;
 	for (i=0;i<size;i++){
 		myNum=randMToN(MIN,MAX);
-		printf("%d\n",myNum);
+		//printf("%d\n",myNum);
 		array[i]=myNum;
 	}
+
 	bigCount = array[0];
-	  for (i = 0; i < size; ++i)
-	    if(array[i] > bigCount)
-	      bigCount = array[i];
-	  temp = bigCount;
-	  printf("\n\n");
+	for (i = 0; i < size; ++i){
+		if(array[i] > bigCount){
+			bigCount = array[i];
+		}
+		temp = bigCount;
+		printf("\n\n");
+	}
 
 	for (i = 0; i < bigCount; ++i) {
-	    printf("\n%3d|", bigCount - i);
-	     for (j = 0; j < size; ++j)
-	       if (array[j] < temp)
-	     printf("   ");
-	       else {
-	     printf("  #");
-	     --array[j];
-	       }
-	     --temp;
-	  }
+		printf("\n%3d|", bigCount - i);
+		for (j = 0; j < size; ++j){
+			if (array[j] < temp){
+	     		printf("   ");
+			}
+			else {
+				printf("  #");
+	     		--array[j];
+	       	}
+	     	--temp;
+	     }
+	}
+
 	return EXIT_SUCCESS;
 }
