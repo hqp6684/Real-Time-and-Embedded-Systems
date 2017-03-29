@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
+#include <time.h>
 
 #define MIN_ARRIVAL (60)        // 1 minute
 #define MAX_ARRIVAL (240)       // 4 minutes
@@ -12,6 +13,24 @@
 
 int arrivalTimeArray[];
 int transactionQueueArray[];
+
+/* This will sleep for a parameter of milliseconds. Parameter should have 
+math to convert from world time to system perceived time. (100ms = 60seconds) */
+void msSleep(int milliseconds){
+    int ms = milliseconds; // length of time to sleep, in miliseconds
+    struct timespec req = {0};
+    req.tv_sec = 0;
+    req.tv_nsec = ms * 1000000L;
+    nanosleep(&req, (struct timespec *)NULL);
+} 
+
+/* Unused function as of now - used to convert the randomly generated time to a 
+value that can be used with our system's scaling. (60seconds => 100ms)*/
+int convertToSimulationTime(int seconds){
+    int convertedTimeInMS = 0;
+    convertedTimeInMS = ((seconds)/600)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
+    return convertedTimeInMS;
+}
 
 /* This generates a random number within range of the passed parameters inclusively, while overall 
 producing a uniform distribution of generated values. */
