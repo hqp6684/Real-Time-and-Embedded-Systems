@@ -106,12 +106,12 @@ int main(void) {
     pthread_join(tid3, NULL);
 
     while(1){
-        arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                 // generate random arrival time of customer
-        if (arrivalTime + currentTime) < closingTime{                               // pseudo code for checking hours of operations condition
-            arrivalTimeArray[i] = arrivalTime;                                      // append the arrival time to the array because it is valid in within hours of operation
-            transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION); // generate random transaction time of customer
-            sleep(arrivalTimeArray[i]);                                             // dont append to queue until after sleep
-            transactionQueueArray[i] = transactionTime;                             // queue will be array of customer transaction times
+        arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                         // generate random arrival time of customer
+        if ((arrivalTime + currentTime) >= openingTime) && ((arrivalTime + currentTime) <= closingTime){    // pseudo code for checking hours of operations condition
+            arrivalTimeArray[i] = arrivalTime;                                                              // append the arrival time to the array because it is valid in within hours of operation
+            transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
+            sleep(arrivalTimeArray[i]);                                                                     // dont append to queue until after sleep
+            transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
             i++;
         }
         else{
