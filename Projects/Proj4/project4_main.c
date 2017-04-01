@@ -50,31 +50,37 @@ int getRandomWithRange(int lower, int upper){
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
 void *tellerThread1(void *vargp){
-    //dequeue from array
     sleep(5);
+    //dequeue from array
+    //need while here
+
     printf("From teller1 \n");
     teller1Customers+=1;
     return NULL;
 }
 
 void *tellerThread2(void *vargp){
-    //dequeue from array
     sleep(7);
+    //dequeue from array
+    //need while here
+
     printf("From teller2 \n");
     teller2Customers+=1;
     return NULL;
 }
 
 void *tellerThread3(void *vargp){
-    //dequeue from array
     sleep(1);
+    //dequeue from array
+    //need while here
+
     printf("From teller3 \n");
     teller3Customers+=1;
     return NULL;
 }
 
 /* This function takes in an int array and calculates the average of all elements. */
-double getAverage(int *myArray, int length) {
+double arrayAverage(int *myArray, int length) {
    int i;
    int sum = 0;
    double average = 0.0;
@@ -112,7 +118,11 @@ int main(void) {
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
             sleep(arrivalTimeArray[i]);                                                                     // dont append to queue until after sleep
             transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
-            i++;
+            i++; //# OF CUSTOMER TOTAL
+            queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
+            if (queueDepth > maxDepth){
+                maxDepth = queueDepth;
+            }    
         }
         else{
             // Customer cant be seen because it is past hours - bank is closed
@@ -120,10 +130,6 @@ int main(void) {
             arrivalArrayLength = sizeof(arrivalTimeArray)/sizeof(arrivalTimeArray[0]);
             averageArrival = arrayAverage(arrivalTimeArray, arrivalArrayLength);
             break;
-        }
-        queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
-        if (queueDepth > maxDepth){
-            maxDepth = queueDepth;
         }
     }
 
