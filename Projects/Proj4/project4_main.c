@@ -5,6 +5,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <time.h>
+#include "queue.h"
 
 #define MIN_ARRIVAL (60)        // 1 minute
 #define MAX_ARRIVAL (240)       // 4 minutes
