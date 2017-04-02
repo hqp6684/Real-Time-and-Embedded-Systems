@@ -139,3 +139,35 @@ int main(void) {
     report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
 }
+
+
+/******EXAMPLE OF QUEUE INTEGRATION
+int main(){
+    int i=0;
+    Queue *Q = createQueue(50);
+    Enqueue(Q,1);
+    Enqueue(Q,2);
+    Enqueue(Q,3);
+    Enqueue(Q,4); //[1,2,3,4]
+    printf("Front element is %d\n",front(Q)); //1
+    Enqueue(Q,5); //[1,2,3,4,5]
+    Dequeue(Q);   //[2,3,4,5]
+    Enqueue(Q,6); //[2,3,4,5,6]
+    printf("Front element is %d\n",front(Q)); //2
+
+    printf("Capacity: %d\n",Q->capacity);
+
+    printf("Size: %d\n",Q->size);
+    printf("rear: %d\n",rear(Q));  //6
+
+    for (i = 0; i < Q->size; i++ ) {
+      printf( "item at position %d is %d\n", i, (Q->elements[Q->elements[i]]));
+    }
+    printf("\n");
+    Dequeue(Q);   //[3,4,5,6]
+    Dequeue(Q);   //[4,5,6]
+    for (i = 0; i < Q->size; i++ ) {
+          printf( "item at position %d is %d\n", i, (Q->elements[Q->elements[Q->elements[Q->elements[i]]]]));
+    }
+}
+*****/
