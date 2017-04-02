@@ -7,10 +7,12 @@
 #include <time.h>
 #include "queue.h"
 
-#define MIN_ARRIVAL (60)        // 1 minute
-#define MAX_ARRIVAL (240)       // 4 minutes
-#define MIN_TRANSACTION (30)    // 30 seconds
-#define MAX_TRANSACTION (480)   // 8 minutes
+#define MIN_ARRIVAL (60)                                    // 1 minute
+#define MAX_ARRIVAL (240)                                   // 4 minutes
+#define MIN_TRANSACTION (30)                                // 30 seconds
+#define MAX_TRANSACTION (480)                               // 8 minutes
+#define SECONDS_OPEN (25200)                                // 7 hours (9am to 4pm)
+#define MAX_AMOUNT_OF_CUSTOMERS (SECONDS_OPEN/MIN_ARRIVAL)  // (25200/60) = 420 customers - this assumes that customers come every 60 seconds which is the quickest arrival time for consecutive customers
 
 int arrivalTimeArray[];
 int transactionQueueArray[];
