@@ -48,7 +48,7 @@ int convertToSimulationTime(int seconds){
 producing a uniform distribution of generated values. */
 int getRandomWithRange(int lower, int upper){
     return lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
-}
+} 
 
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
