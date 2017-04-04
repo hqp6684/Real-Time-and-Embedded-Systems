@@ -28,6 +28,7 @@ double averageArrival = 0.0;
 int currentCustomerTeller1 = 0;
 int currentCustomerTeller2 = 0;
 int currentCustomerTeller3 = 0;
+Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
 
 
 /* This will sleep for a parameter of milliseconds. Parameter should have 
@@ -117,8 +118,6 @@ int main(void) {
     int i=0;
     int arrivalTime=0;
     int transactionTime=0;
-
-    Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
 
     // Thread Ids
     pthread_t tid1;
