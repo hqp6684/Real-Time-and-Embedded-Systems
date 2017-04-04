@@ -25,6 +25,10 @@ int teller3Customers = 0;
 int arrivalArrayLength = 0;
 double averageTransaction = 0.0;
 double averageArrival = 0.0;
+int currentCustomerTeller1 = 0;
+int currentCustomerTeller2 = 0;
+int currentCustomerTeller3 = 0;
+
 
 /* This will sleep for a parameter of milliseconds. Parameter should have 
 math to convert from world time to system perceived time. (100ms = 60seconds) */
@@ -53,30 +57,42 @@ int getRandomWithRange(int lower, int upper){
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
 void *tellerThread1(void *vargp){
-    sleep(5);
+    //sleep(5);
     //dequeue from array
     //need while here
-
+    while (Q->size==0){
+        //If the queue is empty wait
+    }
+    currentCustomerTeller1 = front(Q);
+    Dequeue(Q);
     printf("From teller1 \n");
     teller1Customers+=1;
     return NULL;
 }
 
 void *tellerThread2(void *vargp){
-    sleep(7);
+    //sleep(7);
     //dequeue from array
     //need while here
-
+    while (Q->size==0){
+        //If the queue is empty wait
+    }
+    currentCustomerTeller2 = front(Q);
+    Dequeue(Q);
     printf("From teller2 \n");
     teller2Customers+=1;
     return NULL;
 }
 
 void *tellerThread3(void *vargp){
-    sleep(1);
+    //sleep(1);
     //dequeue from array
     //need while here
-
+    while (Q->size==0){
+        //If the queue is empty wait
+    }
+    currentCustomerTeller3 = front(Q);
+    Dequeue(Q);
     printf("From teller3 \n");
     teller3Customers+=1;
     return NULL;
@@ -99,6 +115,8 @@ int main(void) {
     int arrivalTime=0;
     int transactionTime=0;
 
+    Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
+    
     // Thread Ids
     pthread_t tid1;
     pthread_t tid2;
@@ -121,8 +139,10 @@ int main(void) {
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
             sleep(arrivalTimeArray[i]);                                                                     // dont append to queue until after sleep
             transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
+            Enqueue(Q,transactionTime);
             i++; //# OF CUSTOMER TOTAL
-            queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
+            //queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
+            queueDepth = Q->size;
             if (queueDepth > maxDepth){
                 maxDepth = queueDepth;
             }    
