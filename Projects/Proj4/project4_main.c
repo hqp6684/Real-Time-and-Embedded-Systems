@@ -65,6 +65,7 @@ void *tellerThread1(void *vargp){
     }
     currentCustomerTeller1 = front(Q);
     Dequeue(Q);
+    msSleep(convertToSimulationTime(currentCustomerTeller1));
     printf("From teller1 \n");
     teller1Customers+=1;
     return NULL;
@@ -79,6 +80,7 @@ void *tellerThread2(void *vargp){
     }
     currentCustomerTeller2 = front(Q);
     Dequeue(Q);
+    msSleep(convertToSimulationTime(currentCustomerTeller2));
     printf("From teller2 \n");
     teller2Customers+=1;
     return NULL;
@@ -93,6 +95,7 @@ void *tellerThread3(void *vargp){
     }
     currentCustomerTeller3 = front(Q);
     Dequeue(Q);
+    msSleep(convertToSimulationTime(currentCustomerTeller3));
     printf("From teller3 \n");
     teller3Customers+=1;
     return NULL;
@@ -116,7 +119,7 @@ int main(void) {
     int transactionTime=0;
 
     Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
-    
+
     // Thread Ids
     pthread_t tid1;
     pthread_t tid2;
@@ -149,6 +152,7 @@ int main(void) {
         }
         else{
             // Customer cant be seen because it is past hours - bank is closed
+            // Maks sure Q->size==0
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
             arrivalArrayLength = sizeof(arrivalTimeArray)/sizeof(arrivalTimeArray[0]);
             averageArrival = arrayAverage(arrivalTimeArray, arrivalArrayLength);
