@@ -14,8 +14,8 @@
 #define SECONDS_OPEN (25200)                                // 7 hours (9am to 4pm)
 #define MAX_AMOUNT_OF_CUSTOMERS (SECONDS_OPEN/MIN_ARRIVAL)  // (25200/60) = 420 customers - this assumes that customers come every 60 seconds which is the quickest arrival time for consecutive customers
 
-int arrivalTimeArray[];
-int transactionQueueArray[];
+int arrivalTimeArray[MAX_AMOUNT_OF_CUSTOMERS];
+int transactionQueueArray[MAX_AMOUNT_OF_CUSTOMERS];
 int totalCustomers = 0;
 int queueDepth = 0;
 int maxDepth = 0;
@@ -29,10 +29,9 @@ int currentCustomerTeller1 = 0;
 int currentCustomerTeller2 = 0;
 int currentCustomerTeller3 = 0;
 int bankOpen = 0;
-Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
+Queue *Q;
 
-
-/* This will sleep for a parameter of milliseconds. Parameter should have 
+/* This will sleep for a parameter of milliseconds. Parameter should have
 math to convert from world time to system perceived time. (100ms = 60seconds) */
 void msSleep(int milliseconds){
     int ms = milliseconds; // length of time to sleep, in miliseconds
@@ -40,9 +39,9 @@ void msSleep(int milliseconds){
     req.tv_sec = 0;
     req.tv_nsec = ms * 1000000L;
     nanosleep(&req, (struct timespec *)NULL);
-} 
+}
 
-/* Unused function as of now - used to convert the randomly generated time to a 
+/* Unused function as of now - used to convert the randomly generated time to a
 value that can be used with our system's scaling. (60seconds => 100ms)*/
 int convertToSimulationTime(int seconds){
     int convertedTimeInMS = 0;
@@ -50,11 +49,11 @@ int convertToSimulationTime(int seconds){
     return convertedTimeInMS;
 }
 
-/* This generates a random number within range of the passed parameters inclusively, while overall 
+/* This generates a random number within range of the passed parameters inclusively, while overall
 producing a uniform distribution of generated values. */
 int getRandomWithRange(int lower, int upper){
     return lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
-} 
+}
 
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
@@ -62,6 +61,7 @@ void *tellerThread1(void *vargp){
     //sleep(5);
     //dequeue from array
     //need while here
+    printf("teller1\n");
     while (Q->size == 0){
         //If the queue is empty wait
     }
@@ -78,6 +78,7 @@ void *tellerThread2(void *vargp){
     //sleep(7);
     //dequeue from array
     //need while here
+    printf("teller2\n");
     while (Q->size == 0){
         //If the queue is empty wait
     }
@@ -94,6 +95,7 @@ void *tellerThread3(void *vargp){
     //sleep(1);
     //dequeue from array
     //need while here
+    printf("teller3\n");
     while (Q->size == 0){
         //If the queue is empty wait
     }
@@ -120,6 +122,10 @@ double arrayAverage(int *myArray, int length) {
 
 
 void *queueThread(void *vargp){
+    int i = 0;
+    int arrivalTime = 0;
+    int transactionTime = 0;
+    printf("queue\n");
     while(1){
         arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                         // generate random arrival time of customer
         if (bankOpen == 1){                                                                                 // checking hours of operations condition
@@ -133,7 +139,7 @@ void *queueThread(void *vargp){
             queueDepth = Q->size;
             if (queueDepth > maxDepth){
                 maxDepth = queueDepth;
-            }    
+            }
         }
         else{
             // ARRIVING ustomer cant be seen because it is past hours - bank is closed
@@ -147,20 +153,16 @@ void *queueThread(void *vargp){
     return NULL;
 }
 
-
 int main(void) {
-    int i = 0;
-    int arrivalTime = 0;
-    int transactionTime = 0;
-
-    bankOpen = 1; // Bank is now Open
-    printf("Bank is now open!\n");
-
+    Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
     // Thread Ids
     pthread_t tid0;
     pthread_t tid1;
     pthread_t tid2;
     pthread_t tid3;
+
+    printf("Bank is now open!\n");
+    bankOpen = 1; // Bank is now Open
 
     // Creating threads
     pthread_create(&tid0, NULL, queueThread, NULL);
@@ -168,17 +170,18 @@ int main(void) {
     pthread_create(&tid2, NULL, tellerThread2, NULL);
     pthread_create(&tid3, NULL, tellerThread3, NULL);
 
-    // Joining to Pool 
+    // Joining to Pool
     pthread_join(tid0, NULL);
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
     pthread_join(tid3, NULL);
 
     //sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
-    msSleep(convertToSimulationTime(SECONDS_OPEN));
+    sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
     printf("Bank is now closed!\n");
 
-    report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
+    //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
 }
+
