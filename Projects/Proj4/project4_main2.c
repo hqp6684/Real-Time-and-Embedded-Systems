@@ -170,7 +170,8 @@ int main(void) {
     pthread_join(tid2, NULL);
     pthread_join(tid3, NULL);
 
-    sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
+    //sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
+    msSleep(convertToSimulationTime(SECONDS_OPEN));
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
     report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
