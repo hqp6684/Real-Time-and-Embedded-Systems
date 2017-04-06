@@ -70,6 +70,7 @@ void *tellerThread1(void *vargp){
         pthread_mutex_lock( &mutex );
         while(!(Q->size)){
             //bank open but queue empty
+            pthread_mutex_unlock( &mutex );
         }
         currentCustomerTeller1 = front(Q);
         printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
@@ -94,6 +95,7 @@ void *tellerThread2(void *vargp){
         pthread_mutex_lock( &mutex );
         while(!(Q->size)){
             //bank open but queue empty
+            pthread_mutex_unlock( &mutex );
         }
         currentCustomerTeller2 = front(Q);
         printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
@@ -118,6 +120,7 @@ void *tellerThread3(void *vargp){
         pthread_mutex_lock( &mutex );
         while(!(Q->size)){
             //bank open but queue empty
+            pthread_mutex_unlock( &mutex );
         }
         currentCustomerTeller3 = front(Q);
         printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
@@ -158,6 +161,7 @@ void *queueThread(void *vargp){
             transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
             Enqueue(Q,transactionTime);
             printf("Size of line: %d\n",Q->size);
+            printf("Customer Added to Queue: %d\n",rear(Q));
             i++; //# OF CUSTOMER TOTAL
             //queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
             queueDepth = Q->size;
@@ -167,7 +171,7 @@ void *queueThread(void *vargp){
             pthread_mutex_unlock( &mutex );
         }
         else{
-            // ARRIVING ustomer cant be seen because it is past hours - bank is closed
+            // ARRIVING customer cant be seen because it is past hours - bank is closed
             // Make sure Q->size==0 - customers in queue can still be seen
             printf("Bank closed\n");
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
