@@ -57,10 +57,6 @@ int getRandomWithRange(int lower, int upper){
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
 void *tellerThread1(void *vargp){
-    //sleep(5);
-    //dequeue from array
-    //need while here
-    printf("teller1\n");
     while(1){
         pthread_mutex_lock( &mutex );
         if (bankOpen==1){ //bank open
@@ -98,10 +94,6 @@ void *tellerThread1(void *vargp){
 }
 
 void *tellerThread2(void *vargp){
-    //sleep(5);
-    //dequeue from array
-    //need while here
-    printf("teller2\n");
     while(1){
         pthread_mutex_lock( &mutex );
         if (bankOpen==1){ //bank open
@@ -139,10 +131,6 @@ void *tellerThread2(void *vargp){
 }
 
 void *tellerThread3(void *vargp){
-    //sleep(5);
-    //dequeue from array
-    //need while here
-    printf("teller3\n");
     while(1){
         pthread_mutex_lock( &mutex );
         if (bankOpen==1){ //bank open
@@ -196,7 +184,6 @@ void *queueThread(void *vargp){
     int i = 0;
     int arrivalTime = 0;
     int transactionTime = 0;
-    printf("queue\n");
     while(1){
         if (bankOpen == 1){                                                                                 // checking hours of operations condition
             pthread_mutex_lock( &mutex );
@@ -217,8 +204,10 @@ void *queueThread(void *vargp){
         else{
             // ARRIVING customer cant be seen because it is past hours - bank is closed
             // Make sure Q->size==0 - customers in queue can still be seen
+            pthread_mutex_lock( &mutex );
             printf("Bank closed\n");
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
+            pthread_mutex_unlock( &mutex );
             break;
         }
     }
