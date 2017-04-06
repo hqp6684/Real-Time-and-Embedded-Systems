@@ -28,6 +28,7 @@ double averageArrival = 0.0;
 int currentCustomerTeller1 = 0;
 int currentCustomerTeller2 = 0;
 int currentCustomerTeller3 = 0;
+int bankOpen = 0;
 Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
 
 
@@ -61,14 +62,14 @@ void *tellerThread1(void *vargp){
     //sleep(5);
     //dequeue from array
     //need while here
-    while (Q->size==0){
+    while (Q->size == 0){
         //If the queue is empty wait
     }
     currentCustomerTeller1 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller1));
     printf("From teller1 \n");
-    teller1Customers+=1;
+    teller1Customers += 1;
     return NULL;
 }
 
@@ -76,14 +77,14 @@ void *tellerThread2(void *vargp){
     //sleep(7);
     //dequeue from array
     //need while here
-    while (Q->size==0){
+    while (Q->size == 0){
         //If the queue is empty wait
     }
     currentCustomerTeller2 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller2));
     printf("From teller2 \n");
-    teller2Customers+=1;
+    teller2Customers += 1;
     return NULL;
 }
 
@@ -91,14 +92,14 @@ void *tellerThread3(void *vargp){
     //sleep(1);
     //dequeue from array
     //need while here
-    while (Q->size==0){
+    while (Q->size == 0){
         //If the queue is empty wait
     }
     currentCustomerTeller3 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller3));
     printf("From teller3 \n");
-    teller3Customers+=1;
+    teller3Customers += 1;
     return NULL;
 }
 
@@ -114,32 +115,14 @@ double arrayAverage(int *myArray, int length) {
    return average;
 }
 
-int main(void) {
-    int i=0;
-    int arrivalTime=0;
-    int transactionTime=0;
 
-    // Thread Ids
-    pthread_t tid1;
-    pthread_t tid2;
-    pthread_t tid3;
-
-    // Creating threads
-    pthread_create(&tid1, NULL, tellerThread1, NULL);
-    pthread_create(&tid2, NULL, tellerThread2, NULL);
-    pthread_create(&tid3, NULL, tellerThread3, NULL);
-
-    // Joining to Pool 
-    pthread_join(tid1, NULL);
-    pthread_join(tid2, NULL);
-    pthread_join(tid3, NULL);
-
+void *queueThread(void *vargp){
     while(1){
         arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                         // generate random arrival time of customer
-        if ((arrivalTime + currentTime) >= openingTime) && ((arrivalTime + currentTime) <= closingTime){    // pseudo code for checking hours of operations condition
+        if (bankOpen == 1){                                                                                 // checking hours of operations condition
             arrivalTimeArray[i] = arrivalTime;                                                              // append the arrival time to the array because it is valid in within hours of operation
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
-            msSleep(convertToSimulationTime((arrivalTimeArray[i])));                                         // dont append to queue until after sleep
+            msSleep(convertToSimulationTime((arrivalTimeArray[i])));                                        // dont append to queue until after sleep
             transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
             Enqueue(Q,transactionTime);
             i++; //# OF CUSTOMER TOTAL
@@ -150,15 +133,45 @@ int main(void) {
             }    
         }
         else{
-            // Customer cant be seen because it is past hours - bank is closed
-            // Make sure Q->size==0
+            // ARRIVING ustomer cant be seen because it is past hours - bank is closed
+            // Make sure Q->size==0 - customers in queue can still be seen
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
             arrivalArrayLength = sizeof(arrivalTimeArray)/sizeof(arrivalTimeArray[0]);
             averageArrival = arrayAverage(arrivalTimeArray, arrivalArrayLength);
             break;
         }
     }
+    return NULL;
+}
 
+
+int main(void) {
+    int i = 0;
+    int arrivalTime = 0;
+    int transactionTime = 0;
+
+    bankOpen = 1; // Bank is now Open
+    
+    // Thread Ids
+    pthread_t tid0;
+    pthread_t tid1;
+    pthread_t tid2;
+    pthread_t tid3;
+
+    // Creating threads
+    pthread_create(&tid0, NULL, queueThread, NULL);
+    pthread_create(&tid1, NULL, tellerThread1, NULL);
+    pthread_create(&tid2, NULL, tellerThread2, NULL);
+    pthread_create(&tid3, NULL, tellerThread3, NULL);
+
+    // Joining to Pool 
+    pthread_join(tid0, NULL);
+    pthread_join(tid1, NULL);
+    pthread_join(tid2, NULL);
+    pthread_join(tid3, NULL);
+
+    sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
+    bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
     report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
 }
