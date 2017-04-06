@@ -66,6 +66,9 @@ void *tellerThread1(void *vargp){
         //bank is closed or there is no line
     }
     while (bankOpen || Q->size){
+        while(!(Q->size)){
+            //bank open but queue empty
+        }
         currentCustomerTeller1 = front(Q);
         printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
         Dequeue(Q); //make sure this is dequeuing proper customer
@@ -85,6 +88,9 @@ void *tellerThread2(void *vargp){
         //bank is closed or there is no line
     }
     while (bankOpen || Q->size){
+        while(!(Q->size)){
+            //bank open but queue empty
+        }
         currentCustomerTeller2 = front(Q);
         printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
         Dequeue(Q); //make sure this is dequeuing proper customer
@@ -104,6 +110,9 @@ void *tellerThread3(void *vargp){
         //bank is closed or there is no line
     }
     while (bankOpen || Q->size){
+        while(!(Q->size)){
+            //bank open but queue empty
+        }
         currentCustomerTeller3 = front(Q);
         printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
         Dequeue(Q); //make sure this is dequeuing proper customer
