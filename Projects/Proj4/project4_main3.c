@@ -243,15 +243,20 @@ int main(void) {
     pthread_create(&tid3, NULL, tellerThread3, NULL);
 
     // Joining to Pool
-    pthread_join(tid0, NULL);
+   /* pthread_join(tid0, NULL);
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
     pthread_join(tid3, NULL);
-
+    */
     //sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
     printf("Bank is now closed!\n");
+    printf("People in queue still: %d\n",Q->size);
+    printf("Total customers served: %d\n", totalCustomers);
+    printf("Teller1 served: %d\n", teller1Customers);
+    printf("Teller2 served: %d\n", teller2Customers);
+    printf("Teller3 served: %d\n", teller3Customers);
 
     //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
