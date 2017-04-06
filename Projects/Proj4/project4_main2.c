@@ -67,7 +67,7 @@ void *tellerThread1(void *vargp){
     }
     while (bankOpen || Q->size){
         currentCustomerTeller1 = front(Q);
-        printf("Teller1 is taking a customer (%d)...\n",currentCustomerTeller1);
+        printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
         Dequeue(Q); //make sure this is dequeuing proper customer
         msSleep(convertToSimulationTime(currentCustomerTeller1));
         printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
@@ -86,7 +86,7 @@ void *tellerThread2(void *vargp){
     }
     while (bankOpen || Q->size){
         currentCustomerTeller2 = front(Q);
-        printf("Teller2 is taking a customer (%d)...\n",currentCustomerTeller2);
+        printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
         Dequeue(Q); //make sure this is dequeuing proper customer
         msSleep(convertToSimulationTime(currentCustomerTeller2));
         printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
@@ -105,7 +105,7 @@ void *tellerThread3(void *vargp){
     }
     while (bankOpen || Q->size){
         currentCustomerTeller3 = front(Q);
-        printf("Teller3 is taking a customer (%d)...\n",currentCustomerTeller3);
+        printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
         Dequeue(Q); //make sure this is dequeuing proper customer
         msSleep(convertToSimulationTime(currentCustomerTeller3));
         printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
