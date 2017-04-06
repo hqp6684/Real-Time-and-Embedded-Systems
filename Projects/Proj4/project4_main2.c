@@ -65,10 +65,11 @@ void *tellerThread1(void *vargp){
     while (Q->size == 0){
         //If the queue is empty wait
     }
+    printf("Teller1 is taking a customer...\n");
     currentCustomerTeller1 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller1));
-    printf("From teller1 \n");
+    printf("Teller1 is done with their customer!\n");
     teller1Customers += 1;
     return NULL;
 }
@@ -80,10 +81,11 @@ void *tellerThread2(void *vargp){
     while (Q->size == 0){
         //If the queue is empty wait
     }
+    printf("Teller2 is taking a customer...\n");
     currentCustomerTeller2 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller2));
-    printf("From teller2 \n");
+    printf("Teller2 is done with their customer!\n");
     teller2Customers += 1;
     return NULL;
 }
@@ -95,10 +97,11 @@ void *tellerThread3(void *vargp){
     while (Q->size == 0){
         //If the queue is empty wait
     }
+    printf("Teller3 is taking a customer...\n");
     currentCustomerTeller3 = front(Q);
     Dequeue(Q);
     msSleep(convertToSimulationTime(currentCustomerTeller3));
-    printf("From teller3 \n");
+    printf("Teller3 is done with their customer!\n");
     teller3Customers += 1;
     return NULL;
 }
@@ -151,7 +154,8 @@ int main(void) {
     int transactionTime = 0;
 
     bankOpen = 1; // Bank is now Open
-    
+    printf("Bank is now open!\n");
+
     // Thread Ids
     pthread_t tid0;
     pthread_t tid1;
@@ -173,6 +177,8 @@ int main(void) {
     //sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
     msSleep(convertToSimulationTime(SECONDS_OPEN));
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
+    printf("Bank is now closed!\n");
+
     report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
 }
