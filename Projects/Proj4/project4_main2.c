@@ -62,15 +62,17 @@ void *tellerThread1(void *vargp){
     //dequeue from array
     //need while here
     printf("teller1\n");
-    while (Q->size == 0){
-        //If the queue is empty wait
+    while (!bankOpen || !(Q->size)){
+        //bank is closed or there is no line
     }
-    printf("Teller1 is taking a customer...\n");
-    currentCustomerTeller1 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller1));
-    printf("Teller1 is done with their customer!\n");
-    teller1Customers += 1;
+    while (bankOpen || Q->size){
+        currentCustomerTeller1 = front(Q);
+        printf("Teller1 is taking a customer (%d)...\n",currentCustomerTeller1);
+        Dequeue(Q); //make sure this is dequeuing proper customer
+        msSleep(convertToSimulationTime(currentCustomerTeller1));
+        printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
+        teller1Customers += 1;
+    }
     return NULL;
 }
 
@@ -79,15 +81,17 @@ void *tellerThread2(void *vargp){
     //dequeue from array
     //need while here
     printf("teller2\n");
-    while (Q->size == 0){
-        //If the queue is empty wait
+    while (!bankOpen || !(Q->size)){
+        //bank is closed or there is no line
     }
-    printf("Teller2 is taking a customer...\n");
-    currentCustomerTeller2 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller2));
-    printf("Teller2 is done with their customer!\n");
-    teller2Customers += 1;
+    while (bankOpen || Q->size){
+        currentCustomerTeller2 = front(Q);
+        printf("Teller2 is taking a customer (%d)...\n",currentCustomerTeller2);
+        Dequeue(Q); //make sure this is dequeuing proper customer
+        msSleep(convertToSimulationTime(currentCustomerTeller2));
+        printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
+        teller2Customers += 1;
+    }
     return NULL;
 }
 
@@ -96,15 +100,17 @@ void *tellerThread3(void *vargp){
     //dequeue from array
     //need while here
     printf("teller3\n");
-    while (Q->size == 0){
-        //If the queue is empty wait
+    while (!bankOpen || !(Q->size)){
+        //bank is closed or there is no line
     }
-    printf("Teller3 is taking a customer...\n");
-    currentCustomerTeller3 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller3));
-    printf("Teller3 is done with their customer!\n");
-    teller3Customers += 1;
+    while (bankOpen || Q->size){
+        currentCustomerTeller3 = front(Q);
+        printf("Teller3 is taking a customer (%d)...\n",currentCustomerTeller3);
+        Dequeue(Q); //make sure this is dequeuing proper customer
+        msSleep(convertToSimulationTime(currentCustomerTeller3));
+        printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
+        teller3Customers += 1;
+    }
     return NULL;
 }
 
@@ -134,6 +140,7 @@ void *queueThread(void *vargp){
             msSleep(convertToSimulationTime((arrivalTimeArray[i])));                                        // dont append to queue until after sleep
             transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
             Enqueue(Q,transactionTime);
+            printf("Size of line: %d\n",Q->size);
             i++; //# OF CUSTOMER TOTAL
             //queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
             queueDepth = Q->size;
@@ -144,6 +151,7 @@ void *queueThread(void *vargp){
         else{
             // ARRIVING ustomer cant be seen because it is past hours - bank is closed
             // Make sure Q->size==0 - customers in queue can still be seen
+            printf("Bank closed\n");
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
             arrivalArrayLength = sizeof(arrivalTimeArray)/sizeof(arrivalTimeArray[0]);
             averageArrival = arrayAverage(arrivalTimeArray, arrivalArrayLength);
@@ -184,4 +192,3 @@ int main(void) {
     //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
     return EXIT_SUCCESS;
 }
-
