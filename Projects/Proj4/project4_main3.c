@@ -15,7 +15,7 @@
 #define SECONDS_OPEN (25200)                                // 7 hours (9am to 4pm)
 #define MAX_AMOUNT_OF_CUSTOMERS (SECONDS_OPEN/MIN_ARRIVAL)  // (25200/60) = 420 customers - this assumes that customers come every 60 seconds which is the quickest arrival time for consecutive customers
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock;
 int totalCustomers = 0;
 int queueDepth = 0;
 int maxDepth = 0;
@@ -57,9 +57,9 @@ int getRandomWithRange(int lower, int upper){
 
 // Pulled from my example of sleep prints see 'thread_dummy.c'
 // In each thread make sure to handle initial condition - while queue is empty do nothing
-void *tellerThread1(void *vargp){
+void* tellerThread1(void *vargp){
     while(1){
-        pthread_mutex_lock( &mutex );
+        pthread_mutex_lock( &lock );
         if (bankOpen==1){ //bank open
             if (Q->size){ //there are customers
                 currentCustomerTeller1 = front(Q);
@@ -68,11 +68,11 @@ void *tellerThread1(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
                 teller1Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{
                 //bank is open but there is no one in line!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
         }
         else{ //bank closed
@@ -83,10 +83,10 @@ void *tellerThread1(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
                 teller1Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{ //bank closed and no customers!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
                 break;
             }
         }
@@ -94,9 +94,9 @@ void *tellerThread1(void *vargp){
     return NULL;
 }
 
-void *tellerThread2(void *vargp){
+void* tellerThread2(void *vargp){
     while(1){
-        pthread_mutex_lock( &mutex );
+        pthread_mutex_lock( &lock );
         if (bankOpen==1){ //bank open
             if (Q->size){ //there are customers
                 currentCustomerTeller2 = front(Q);
@@ -105,11 +105,11 @@ void *tellerThread2(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
                 teller2Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{
                 //bank is open but there is no one in line!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
         }
         else{ //bank closed
@@ -120,10 +120,10 @@ void *tellerThread2(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
                 teller2Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{ //bank closed and no customers!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
                 break;
             }
         }
@@ -131,9 +131,9 @@ void *tellerThread2(void *vargp){
     return NULL;
 }
 
-void *tellerThread3(void *vargp){
+void* tellerThread3(void *vargp){
     while(1){
-        pthread_mutex_lock( &mutex );
+        pthread_mutex_lock( &lock );
         if (bankOpen==1){ //bank open
             if (Q->size){ //there are customers
                 currentCustomerTeller3 = front(Q);
@@ -142,11 +142,11 @@ void *tellerThread3(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
                 teller3Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{
                 //bank is open but there is no one in line!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
         }
         else{ //bank closed
@@ -157,10 +157,10 @@ void *tellerThread3(void *vargp){
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
                 teller3Customers += 1;
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
             }
             else{ //bank closed and no customers!
-                pthread_mutex_unlock( &mutex );
+                pthread_mutex_unlock( &lock );
                 break;
             }
         }
@@ -181,13 +181,13 @@ double arrayAverage(int *myArray, int length) {
 }
 
 
-void *queueThread(void *vargp){
+void* queueThread(void *vargp){
     int i = 0;
     int arrivalTime = 0;
     int transactionTime = 0;
     while(1){
+		pthread_mutex_lock( &lock );
         if (bankOpen == 1){                                                                                 // checking hours of operations condition
-            pthread_mutex_lock( &mutex );
             arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                     // generate random arrival time of customer
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
             msSleep(convertToSimulationTime(arrivalTime));                                        // dont append to queue until after sleep
@@ -200,15 +200,14 @@ void *queueThread(void *vargp){
             if (queueDepth > maxDepth){
                 maxDepth = queueDepth;
             }
-            pthread_mutex_unlock( &mutex );
+            pthread_mutex_unlock( &lock );
         }
         else{
             // ARRIVING customer cant be seen because it is past hours - bank is closed
             // Make sure Q->size==0 - customers in queue can still be seen
-            pthread_mutex_lock( &mutex );
             printf("Bank closed\n");
             totalCustomers = teller1Customers + teller2Customers + teller3Customers;
-            pthread_mutex_unlock( &mutex );
+            pthread_mutex_unlock( &lock );
             break;
         }
     }
@@ -223,6 +222,10 @@ int main(void) {
     pthread_t tid1;
     pthread_t tid2;
     pthread_t tid3;
+	if (pthread_mutex_init(&lock, NULL) != 0){
+        printf("Mutex init failed\n");
+        return 1;
+    }
 
     printf("Bank is now open!\n");
     bankOpen = 1; // Bank is now Open
@@ -232,7 +235,10 @@ int main(void) {
     pthread_create(&tid2, NULL, tellerThread2, NULL);
     pthread_create(&tid3, NULL, tellerThread3, NULL);
     pthread_create(&tid0, NULL, queueThread, NULL);
-
+    pthread_join(tid1, NULL);
+    pthread_join(tid2, NULL);
+    pthread_join(tid3, NULL);
+	pthread_join(tid0, NULL);
 
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
@@ -244,5 +250,6 @@ int main(void) {
     printf("Teller3 served: %d\n", teller3Customers);
 
     //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
+	pthread_mutex_destroy(&lock);
     return EXIT_SUCCESS;
 }
