@@ -44,9 +44,9 @@ void msSleep(int milliseconds){
 /* Unused function as of now - used to convert the randomly generated time to a
 value that can be used with our system's scaling. (60seconds => 100ms)*/
 int convertToSimulationTime(int seconds){
-    int convertedTimeInMS = 0;
-    convertedTimeInMS = ((seconds)/600)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
-    return convertedTimeInMS;
+    double convertedTimeInMS = 0;
+    convertedTimeInMS = ((seconds)/600.0)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
+    return (int)convertedTimeInMS;
 }
 
 /* This generates a random number within range of the passed parameters inclusively, while overall
@@ -216,7 +216,8 @@ void *queueThread(void *vargp){
 }
 
 int main(void) {
-    Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
+    srand(time(NULL)); //seed the randomizer with epoch
+    Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS); //create queue instance w/ capacity for maximum queue possible
     // Thread Ids
     pthread_t tid0;
     pthread_t tid1;
@@ -227,18 +228,12 @@ int main(void) {
     bankOpen = 1; // Bank is now Open
 
     // Creating threads
-    pthread_create(&tid0, NULL, queueThread, NULL);
     pthread_create(&tid1, NULL, tellerThread1, NULL);
     pthread_create(&tid2, NULL, tellerThread2, NULL);
     pthread_create(&tid3, NULL, tellerThread3, NULL);
+    pthread_create(&tid0, NULL, queueThread, NULL);
 
-    // Joining to Pool
-   /* pthread_join(tid0, NULL);
-    pthread_join(tid1, NULL);
-    pthread_join(tid2, NULL);
-    pthread_join(tid3, NULL);
-    */
-    //sleep((SECONDS_OPEN/600)); // (25200/600) = 42 seconds
+
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
     printf("Bank is now closed!\n");
