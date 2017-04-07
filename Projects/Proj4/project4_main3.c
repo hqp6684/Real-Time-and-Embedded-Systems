@@ -235,10 +235,12 @@ int main(void) {
     pthread_create(&tid2, NULL, tellerThread2, NULL);
     pthread_create(&tid3, NULL, tellerThread3, NULL);
     pthread_create(&tid0, NULL, queueThread, NULL);
-    pthread_join(tid1, NULL);
-    pthread_join(tid2, NULL);
-    pthread_join(tid3, NULL);
-    pthread_join(tid0, NULL);
+    
+    //Causes sequence threading
+    //pthread_join(tid1, NULL);
+    //pthread_join(tid2, NULL);
+    //pthread_join(tid3, NULL);
+    //pthread_join(tid0, NULL);
 
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
