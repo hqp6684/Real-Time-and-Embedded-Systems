@@ -186,7 +186,7 @@ void* queueThread(void *vargp){
     int arrivalTime = 0;
     int transactionTime = 0;
     while(1){
-		pthread_mutex_lock( &lock );
+        pthread_mutex_lock( &lock );
         if (bankOpen == 1){                                                                                 // checking hours of operations condition
             arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                     // generate random arrival time of customer
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
@@ -222,7 +222,7 @@ int main(void) {
     pthread_t tid1;
     pthread_t tid2;
     pthread_t tid3;
-	if (pthread_mutex_init(&lock, NULL) != 0){
+    if (pthread_mutex_init(&lock, NULL) != 0){
         printf("Mutex init failed\n");
         return 1;
     }
@@ -238,7 +238,7 @@ int main(void) {
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
     pthread_join(tid3, NULL);
-	pthread_join(tid0, NULL);
+    pthread_join(tid0, NULL);
 
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
@@ -250,6 +250,6 @@ int main(void) {
     printf("Teller3 served: %d\n", teller3Customers);
 
     //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
-	pthread_mutex_destroy(&lock);
+    pthread_mutex_destroy(&lock);
     return EXIT_SUCCESS;
 }
