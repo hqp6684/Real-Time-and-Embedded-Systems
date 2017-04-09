@@ -248,6 +248,7 @@ void* queueThread(void *vargp){
 }
 
 int main(void) {
+    int printFlag = 0;
     srand(time(NULL));                          //seed the randomizer with epoch
     Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);   //create queue instance w/ capacity for maximum queue possible
 
@@ -282,7 +283,7 @@ int main(void) {
     printf("Teller3 served: %d for a total of: %d\n", teller3Customers,totalTeller3WorkTime);*/
     totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
     totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
-    printf("1.) Total number of customers serviced: %d\n", totalCustomers);
+    printf("1.) Total number of customers serviced: %d customers\n", totalCustomers);
     
     //printf("2.) Average time customer spends waiting in queue: %f\n",...);
     printf("3.) Average time customer spends with teller: %f seconds\n",(float)(totalTellerWorkTime/totalCustomers));
@@ -293,16 +294,18 @@ int main(void) {
     /*printf("Max transaction time for teller1: %d\n",teller1MaxTransaction);
     printf("Max transaction time for teller2: %d\n",teller2MaxTransaction);
     printf("Max transaction time for teller3: %d\n",teller3MaxTransaction);*/
-    if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction){//tellers could have same max but dont care - just the value
-            printf("7.) Maximum transaction time for the tellers: %d\n",teller1MaxTransaction);
+    if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction && printFlag==0){//tellers could have same max but dont care - just the value
+        printFlag = 1;
+        printf("7.) Maximum transaction time for the tellers: %d\n",teller1MaxTransaction);
     }
-    if (teller2MaxTransaction>=teller1MaxTransaction && teller2MaxTransaction>=teller3MaxTransaction){
-            printf("7.) Maximum transaction time for the tellers: %d\n",teller2MaxTransaction);
+    if (teller2MaxTransaction>=teller1MaxTransaction && teller2MaxTransaction>=teller3MaxTransaction && printFlag==0){
+        printFlag = 1;
+        printf("7.) Maximum transaction time for the tellers: %d\n",teller2MaxTransaction);
     }
-    if (teller3MaxTransaction>=teller1MaxTransaction && teller3MaxTransaction>=teller2MaxTransaction){
-            printf("7.) Maximum transaction time for the tellers: %d\n",teller3MaxTransaction);
+    if (teller3MaxTransaction>=teller1MaxTransaction && teller3MaxTransaction>=teller2MaxTransaction && printFlag==0){
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller3MaxTransaction);
     }
-    printf("8.) Maximum depth of customer queue: %d\n\n",maxDepth);
+    printf("8.) Maximum depth of customer queue: %d customers\n\n",maxDepth);
     pthread_mutex_destroy(&lock);
     return EXIT_SUCCESS;
 }
