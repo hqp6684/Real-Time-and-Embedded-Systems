@@ -14,6 +14,7 @@
 #define MAX_TRANSACTION (480)                               // 8 minutes
 #define SECONDS_OPEN (25200)                                // 7 hours (9am to 4pm)
 #define MAX_AMOUNT_OF_CUSTOMERS (SECONDS_OPEN/MIN_ARRIVAL)  // (25200/60) = 420 customers - this assumes that customers come every 60 seconds which is the quickest arrival time for consecutive customers
+#define BILLION 1000000000L
 
 pthread_mutex_t lock;
 int totalCustomers = 0;
@@ -36,6 +37,17 @@ int teller1MaxTransaction = 0;
 int teller2MaxTransaction = 0;
 int teller3MaxTransaction = 0;
 
+double customersWaitForTeller = 0.0;
+struct timespec startCustomer, stopCustomer;
+
+double teller1Wait;
+struct timespec teller1WaitStart, teller1WaitEnd;
+
+double teller2Wait = 0.0;
+struct timespec teller2WaitStart, teller2WaitEnd;
+
+double teller3Wait = 0.0;
+struct timespec teller3WaitStart, teller3WaitEnd;
 
 int bankOpen = 0;
 Queue *Q;
@@ -58,6 +70,13 @@ int convertToSimulationTime(int seconds){
     return (int)convertedTimeInMS;
 }
 
+
+double metricConvertSimulationTime(double seconds){
+    double convertedTimeInMS = 0;
+    convertedTimeInMS = ((seconds)/600.0)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
+    return convertedTimeInMS;
+}
+
 /* This generates a random number within range of the passed parameters inclusively, while overall
 producing a uniform distribution of generated values. */
 int getRandomWithRange(int lower, int upper){
@@ -70,10 +89,22 @@ void* tellerThread1(void *vargp){
             pthread_mutex_lock( &lock );
             if (Q->size){//there are customers
                 currentCustomerTeller1 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
                 pthread_mutex_unlock( &lock );
+                
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller1WaitEnd);
+                if (teller1WaitEnd.tv_sec + teller1WaitEnd.tv_nsec > teller1WaitStart.tv_sec + teller1WaitStart.tv_nsec && teller1Customers > 0){
+                    teller1Wait+=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
+                
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller1WaitStart);
+                system(0);
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
                 if (currentCustomerTeller1 > teller1MaxTransaction){
                     teller1MaxTransaction = currentCustomerTeller1;
@@ -89,10 +120,22 @@ void* tellerThread1(void *vargp){
             pthread_mutex_lock( &lock );
             if (Q->size){ //but there are customers!
                 currentCustomerTeller1 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
                 pthread_mutex_unlock( &lock );
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller1WaitEnd);
+                if (teller1WaitEnd.tv_sec + teller1WaitEnd.tv_nsec > teller1WaitStart.tv_sec + teller1WaitStart.tv_nsec && teller1Customers > 0){
+                    teller1Wait+=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller1WaitStart);
+                system(0);
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
                 if (currentCustomerTeller1 > teller1MaxTransaction){
                     teller1MaxTransaction = currentCustomerTeller1;
@@ -115,10 +158,22 @@ void* tellerThread2(void *vargp){
             pthread_mutex_lock( &lock );
             if (Q->size){ //there are customers
                 currentCustomerTeller2 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
                 pthread_mutex_unlock( &lock );
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller2WaitEnd);
+                if (teller2WaitEnd.tv_sec+teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec+teller2WaitStart.tv_nsec && teller2Customers > 0){
+                    teller2Wait+=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller2WaitStart);
+                system(0);
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
                 if (currentCustomerTeller2 > teller2MaxTransaction){
                     teller2MaxTransaction = currentCustomerTeller2;
@@ -134,10 +189,22 @@ void* tellerThread2(void *vargp){
             pthread_mutex_lock( &lock );
             if (Q->size){ //but there are customers!
                 currentCustomerTeller2 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
                 pthread_mutex_unlock( &lock );
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller2WaitEnd);
+                if (teller2WaitEnd.tv_sec+teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec+teller2WaitStart.tv_nsec && teller2Customers > 0){
+                    teller2Wait+=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller2WaitStart);
+                system(0);
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
                 if (currentCustomerTeller2 > teller2MaxTransaction){
                     teller2MaxTransaction = currentCustomerTeller2;
@@ -159,11 +226,23 @@ void* tellerThread3(void *vargp){
         if (bankOpen==1){ //bank open
             pthread_mutex_lock( &lock );
             if (Q->size){ //there are customers
-                pthread_mutex_unlock( &lock );
                 currentCustomerTeller3 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
+                pthread_mutex_unlock( &lock );
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller3WaitEnd);
+                if (teller3WaitEnd.tv_sec+teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec+teller3WaitStart.tv_nsec && teller3Customers > 0){
+                    teller3Wait+=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller3WaitStart);
+                system(0);
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
                 if (currentCustomerTeller3 > teller3MaxTransaction){
                     teller3MaxTransaction = currentCustomerTeller3;
@@ -179,10 +258,22 @@ void* tellerThread3(void *vargp){
             pthread_mutex_lock( &lock );
             if (Q->size){ //but there are customers!
                 currentCustomerTeller3 = front(Q);
+                clock_gettime( CLOCK_REALTIME, &stopCustomer);
+                customersWaitForTeller+=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
                 pthread_mutex_unlock( &lock );
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &teller3WaitEnd);
+                if (teller3WaitEnd.tv_sec+teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec+teller3WaitStart.tv_nsec && teller3Customers > 0){
+                    teller3Wait+=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &teller3WaitStart);
+                system(0);
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
                 if (currentCustomerTeller3 > teller3MaxTransaction){
                     teller3MaxTransaction = currentCustomerTeller3;
@@ -224,6 +315,8 @@ void* queueThread(void *vargp){
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
             msSleep(convertToSimulationTime(arrivalTime));                                                  // dont append to queue until after sleep
             Enqueue(Q,transactionTime);
+            clock_gettime( CLOCK_REALTIME, &startCustomer);
+            system(0);
             printf("Size of line: %d\n",Q->size);
             printf("Customer Added to Queue: %d\n\n",rear(Q));
             i++; //# OF CUSTOMER TOTAL
@@ -273,20 +366,23 @@ int main(void) {
     totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
     totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
     printf("1.) Total number of customers serviced: %d customers\n", totalCustomers);
-    
-    //printf("2.) Average time customer spends waiting in queue: %f\n",...);
-    printf("3.) Average time customer spends with teller: %f seconds\n",(float)(totalTellerWorkTime/totalCustomers));
+    printf("2.) Average time customer spends in queue: %f seconds\n",metricConvertSimulationTime(customersWaitForTeller));
+    printf("3.) Average time customer spends with teller: %d seconds\n",(totalTellerWorkTime/totalCustomers));
+    printf("Teller 1 waits for customers: %lf\n", teller1Wait);
+    printf("Teller 2 waits for customers: %lf\n", teller2Wait);
+    printf("Teller 3 waits for customers: %lf\n", teller3Wait);
+
     //printf("4.) Average time teller waits for customer: %f\n",...);
     //printf("5.) Maximum wait time for customer in queue: %d\n",...);
     //printf("6.) Maximum wait time for tellers waiting for customers: %d\n", ...);
 
     if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction && printFlag==0){//tellers could have same max but dont care - just the value
         printFlag = 1;
-        printf("7.) Maximum transaction time for the tellers: %d\n",teller1MaxTransaction);
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller1MaxTransaction);
     }
     if (teller2MaxTransaction>=teller1MaxTransaction && teller2MaxTransaction>=teller3MaxTransaction && printFlag==0){
         printFlag = 1;
-        printf("7.) Maximum transaction time for the tellers: %d\n",teller2MaxTransaction);
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller2MaxTransaction);
     }
     if (teller3MaxTransaction>=teller1MaxTransaction && teller3MaxTransaction>=teller2MaxTransaction && printFlag==0){
         printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller3MaxTransaction);
