@@ -80,7 +80,6 @@ void* tellerThread1(void *vargp){
                 }
                 totalTeller1WorkTime+=currentCustomerTeller1;
                 teller1Customers += 1;
-                //pthread_mutex_unlock( &lock );
             }
             else{//bank is open but there is no one in line!
                 pthread_mutex_unlock( &lock );
@@ -92,7 +91,6 @@ void* tellerThread1(void *vargp){
                 currentCustomerTeller1 = front(Q);
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                //pthread_mutex_unlock( &lock );
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
@@ -119,7 +117,6 @@ void* tellerThread2(void *vargp){
                 currentCustomerTeller2 = front(Q);
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                //pthread_mutex_unlock( &lock );
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
@@ -139,7 +136,6 @@ void* tellerThread2(void *vargp){
                 currentCustomerTeller2 = front(Q);
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                //pthread_mutex_unlock( &lock );
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
@@ -166,7 +162,6 @@ void* tellerThread3(void *vargp){
                 pthread_mutex_unlock( &lock );
                 currentCustomerTeller3 = front(Q);
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                //pthread_mutex_unlock( &lock );
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
@@ -186,7 +181,6 @@ void* tellerThread3(void *vargp){
                 currentCustomerTeller3 = front(Q);
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                //pthread_mutex_unlock( &lock );
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
@@ -226,7 +220,6 @@ void* queueThread(void *vargp){
     int transactionTime = 0;
     while(1){
         if (bankOpen == 1){                                                                                 // checking hours of operations condition
-            //pthread_mutex_lock( &lock );
             arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                     // generate random arrival time of customer
             transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
             msSleep(convertToSimulationTime(arrivalTime));                                                  // dont append to queue until after sleep
@@ -238,7 +231,6 @@ void* queueThread(void *vargp){
             if (queueDepth > maxDepth){
                 maxDepth = queueDepth;
             }
-            //pthread_mutex_unlock( &lock );
         }
         else{ //Arriving customer cant be seen because it is after hours
             break;
@@ -278,9 +270,6 @@ int main(void) {
     printf("People in queue still: %d\n",Q->size);
     printf("Bank is now closed!\n\n");
 
-    /*printf("Teller1 served: %d for a total of: %d\n", teller1Customers,totalTeller1WorkTime);
-    printf("Teller2 served: %d for a total of: %d\n", teller2Customers,totalTeller2WorkTime);
-    printf("Teller3 served: %d for a total of: %d\n", teller3Customers,totalTeller3WorkTime);*/
     totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
     totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
     printf("1.) Total number of customers serviced: %d customers\n", totalCustomers);
@@ -291,9 +280,6 @@ int main(void) {
     //printf("5.) Maximum wait time for customer in queue: %d\n",...);
     //printf("6.) Maximum wait time for tellers waiting for customers: %d\n", ...);
 
-    /*printf("Max transaction time for teller1: %d\n",teller1MaxTransaction);
-    printf("Max transaction time for teller2: %d\n",teller2MaxTransaction);
-    printf("Max transaction time for teller3: %d\n",teller3MaxTransaction);*/
     if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction && printFlag==0){//tellers could have same max but dont care - just the value
         printFlag = 1;
         printf("7.) Maximum transaction time for the tellers: %d\n",teller1MaxTransaction);
