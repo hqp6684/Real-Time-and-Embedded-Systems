@@ -49,6 +49,11 @@ struct timespec teller2WaitStart, teller2WaitEnd;
 double teller3Wait = 0.0;
 struct timespec teller3WaitStart, teller3WaitEnd;
 
+double maxCustomerWait;
+double maxWaitTeller1;
+double maxWaitTeller2;
+double maxWaitTeller3;
+
 int bankOpen = 0;
 Queue *Q;
 
