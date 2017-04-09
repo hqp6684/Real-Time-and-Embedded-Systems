@@ -318,7 +318,7 @@ void* queueThread(void *vargp){
             clock_gettime( CLOCK_REALTIME, &startCustomer);
             system(0);
             printf("Size of line: %d\n",Q->size);
-            printf("Customer Added to Queue: %d\n\n",rear(Q));
+            printf("Customer Added to Queue!\n\n");
             i++; //# OF CUSTOMER TOTAL
             queueDepth = Q->size;
             if (queueDepth > maxDepth){
@@ -366,13 +366,9 @@ int main(void) {
     totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
     totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
     printf("1.) Total number of customers serviced: %d customers\n", totalCustomers);
-    printf("2.) Average time customer spends in queue: %f seconds\n",metricConvertSimulationTime(customersWaitForTeller));
+    printf("2.) Average time customer spends in queue: %f seconds\n",metricConvertSimulationTime(customersWaitForTeller)); //needs to be checked
     printf("3.) Average time customer spends with teller: %d seconds\n",(totalTellerWorkTime/totalCustomers));
-    printf("Teller 1 waits for customers: %lf\n", teller1Wait);
-    printf("Teller 2 waits for customers: %lf\n", teller2Wait);
-    printf("Teller 3 waits for customers: %lf\n", teller3Wait);
-
-    //printf("4.) Average time teller waits for customer: %f\n",...);
+    printf("4.) Average time teller waits for customer: %lf seconds\n",metricConvertSimulationTime(teller1Wait+teller2Wait+teller3Wait));
     //printf("5.) Maximum wait time for customer in queue: %d\n",...);
     //printf("6.) Maximum wait time for tellers waiting for customers: %d\n", ...);
 

@@ -25,7 +25,7 @@ void Dequeue(Queue *Q){
 	/* If Queue size is zero then it is empty. So we cannot pop */
 	pthread_mutex_lock( &lock );
 	if(Q->size==0){
-		printf("Queue is Empty\n");
+		//printf("Queue is Empty\n");
 		return;
 	}
 	/* Removing an element is equivalent to incrementing index of front by one */
@@ -43,7 +43,7 @@ void Dequeue(Queue *Q){
 
 int rear(Queue *Q){
 	if(Q->size==0){
-		printf("Queue is Empty\n");
+		//printf("Queue is Empty\n");
 		//exit(0);
 	}
 	/* Return the element which is at the rear*/
@@ -54,7 +54,7 @@ int rear(Queue *Q){
 
 int front(Queue *Q){
 	if(Q->size==0){
-		printf("Queue is Empty\n");
+		//printf("Queue is Empty\n");
 		//exit(0);
 	}
 	/* Return the element which is at the front*/
@@ -66,7 +66,7 @@ void Enqueue(Queue *Q,int element){
 	pthread_mutex_lock( &lock );
 	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
 	if(Q->size == Q->capacity){
-		printf("Queue is Full\n");
+		//printf("Queue is Full\n");
 	}
 	else{
 		Q->size++;
