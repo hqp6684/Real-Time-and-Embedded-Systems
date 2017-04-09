@@ -28,6 +28,15 @@ double averageArrival = 0.0;
 int currentCustomerTeller1 = 0;
 int currentCustomerTeller2 = 0;
 int currentCustomerTeller3 = 0;
+int totalTeller1WorkTime = 0;
+int totalTeller2WorkTime = 0;
+int totalTeller3WorkTime = 0;
+int totalTellerWorkTime = 0;
+int teller1MaxTransaction = 0;
+int teller2MaxTransaction = 0;
+int teller3MaxTransaction = 0;
+
+
 int bankOpen = 0;
 Queue *Q;
 
@@ -63,9 +72,13 @@ void* tellerThread1(void *vargp){
                 currentCustomerTeller1 = front(Q);
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
-                msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
+                msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
+                if (currentCustomerTeller1 > teller1MaxTransaction){
+                    teller1MaxTransaction = currentCustomerTeller1;
+                }
+                totalTeller1WorkTime+=currentCustomerTeller1;
                 teller1Customers += 1;
                 //pthread_mutex_unlock( &lock );
             }
@@ -83,6 +96,10 @@ void* tellerThread1(void *vargp){
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
                 msSleep(convertToSimulationTime(currentCustomerTeller1));
                 printf("Teller1 is done with their customer (%d)...\n",currentCustomerTeller1);
+                if (currentCustomerTeller1 > teller1MaxTransaction){
+                    teller1MaxTransaction = currentCustomerTeller1;
+                }
+                totalTeller1WorkTime+=currentCustomerTeller1;
                 teller1Customers += 1;
             }
             else{ //bank closed and no customers!
@@ -106,6 +123,10 @@ void* tellerThread2(void *vargp){
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
+                if (currentCustomerTeller2 > teller2MaxTransaction){
+                    teller2MaxTransaction = currentCustomerTeller2;
+                }
+                totalTeller2WorkTime+=currentCustomerTeller2;
                 teller2Customers += 1;
             }
             else{//bank is open but there is no one in line!
@@ -122,6 +143,10 @@ void* tellerThread2(void *vargp){
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
                 msSleep(convertToSimulationTime(currentCustomerTeller2));
                 printf("Teller2 is done with their customer (%d)...\n",currentCustomerTeller2);
+                if (currentCustomerTeller2 > teller2MaxTransaction){
+                    teller2MaxTransaction = currentCustomerTeller2;
+                }
+                totalTeller2WorkTime+=currentCustomerTeller2;
                 teller2Customers += 1;
             }
             else{ //bank closed and no customers!
@@ -145,6 +170,10 @@ void* tellerThread3(void *vargp){
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
+                if (currentCustomerTeller3 > teller3MaxTransaction){
+                    teller3MaxTransaction = currentCustomerTeller3;
+                }
+                totalTeller3WorkTime+=currentCustomerTeller3;
                 teller3Customers += 1;
             }
             else{//bank is open but there is no one in line!
@@ -161,6 +190,10 @@ void* tellerThread3(void *vargp){
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
                 msSleep(convertToSimulationTime(currentCustomerTeller3));
                 printf("Teller3 is done with their customer (%d)...\n",currentCustomerTeller3);
+                if (currentCustomerTeller3 > teller3MaxTransaction){
+                    teller3MaxTransaction = currentCustomerTeller3;
+                }
+                totalTeller3WorkTime+=currentCustomerTeller3;
                 teller3Customers += 1;
             }
             else{ //bank closed and no customers!
@@ -240,15 +273,36 @@ int main(void) {
 
     sleep(42);
     bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
-    printf("Bank is now closed!\n\n");
+    
     printf("People in queue still: %d\n",Q->size);
-    printf("Teller1 served: %d\n", teller1Customers);
-    printf("Teller2 served: %d\n", teller2Customers);
-    printf("Teller3 served: %d\n", teller3Customers);
-    printf("Total customers served: %d\n", (teller1Customers+teller2Customers+teller3Customers));
-    printf("Max depth: %d\n",maxDepth);
-    printf("\n");
-    //report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
+    printf("Bank is now closed!\n\n");
+
+    /*printf("Teller1 served: %d for a total of: %d\n", teller1Customers,totalTeller1WorkTime);
+    printf("Teller2 served: %d for a total of: %d\n", teller2Customers,totalTeller2WorkTime);
+    printf("Teller3 served: %d for a total of: %d\n", teller3Customers,totalTeller3WorkTime);*/
+    totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
+    totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
+    printf("1.) Total number of customers serviced: %d\n", totalCustomers);
+    
+    //printf("2.) Average time customer spends waiting in queue: %f\n",...);
+    printf("3.) Average time customer spends with teller: %f seconds\n",(float)(totalTellerWorkTime/totalCustomers));
+    //printf("4.) Average time teller waits for customer: %f\n",...);
+    //printf("5.) Maximum wait time for customer in queue: %d\n",...);
+    //printf("6.) Maximum wait time for tellers waiting for customers: %d\n", ...);
+
+    /*printf("Max transaction time for teller1: %d\n",teller1MaxTransaction);
+    printf("Max transaction time for teller2: %d\n",teller2MaxTransaction);
+    printf("Max transaction time for teller3: %d\n",teller3MaxTransaction);*/
+    if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction){//tellers could have same max but dont care - just the value
+            printf("7.) Maximum transaction time for the tellers: %d\n",teller1MaxTransaction);
+    }
+    if (teller2MaxTransaction>=teller1MaxTransaction && teller2MaxTransaction>=teller3MaxTransaction){
+            printf("7.) Maximum transaction time for the tellers: %d\n",teller2MaxTransaction);
+    }
+    if (teller3MaxTransaction>=teller1MaxTransaction && teller3MaxTransaction>=teller2MaxTransaction){
+            printf("7.) Maximum transaction time for the tellers: %d\n",teller3MaxTransaction);
+    }
+    printf("8.) Maximum depth of customer queue: %d\n\n",maxDepth);
     pthread_mutex_destroy(&lock);
     return EXIT_SUCCESS;
 }
