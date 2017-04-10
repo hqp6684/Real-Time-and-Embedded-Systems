@@ -456,7 +456,6 @@ int main(void) {
     }
     printFlag=0;
 
-    printf("%f\n%f\n%f\n",maxWaitTeller1,maxWaitTeller2,maxWaitTeller3);
     maxWaitTeller1=msRealToSim(maxWaitTeller1*1000);
     maxWaitTeller2=msRealToSim(maxWaitTeller2*1000);
     maxWaitTeller3=msRealToSim(maxWaitTeller3*1000);
