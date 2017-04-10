@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <time.h>
 #include "queue.h"
@@ -13,25 +14,58 @@
 #define MAX_TRANSACTION (480)                               // 8 minutes
 #define SECONDS_OPEN (25200)                                // 7 hours (9am to 4pm)
 #define MAX_AMOUNT_OF_CUSTOMERS (SECONDS_OPEN/MIN_ARRIVAL)  // (25200/60) = 420 customers - this assumes that customers come every 60 seconds which is the quickest arrival time for consecutive customers
+#define BILLION (1000000000L)
 
-int arrivalTimeArray[];
-int transactionQueueArray[];
-int totalCustomers = 0;
-int queueDepth = 0;
-int maxDepth = 0;
-int teller1Customers = 0;
-int teller2Customers = 0;
-int teller3Customers = 0;
-int arrivalArrayLength = 0;
-double averageTransaction = 0.0;
-double averageArrival = 0.0;
-int currentCustomerTeller1 = 0;
-int currentCustomerTeller2 = 0;
-int currentCustomerTeller3 = 0;
-Queue *Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);
+pthread_mutex_t lock;
+int total_customers = 0;
+int current_queue_depth = 0;
+int max_queue_depth = 0;
+int customers_served_by_teller1 = 0;
+int customers_served_by_teller2 = 0;
+int customers_served_by_teller3 = 0;
+int current_teller1_customer = 0;
+int current_teller2_customer = 0;
+int current_teller3_customer = 0;
+int time_teller1_worked = 0;
+int time_teller2_worked = 0;
+int time_teller3_worked = 0;
+int tellers_total_work_time = 0;
+int teller1_longest_transaction = 0;
+int teller2_longest_transaction = 0;
+int teller3_longest_transaction = 0;
 
+double time_customers_wait_for_teller1 = 0.0;
+double time_customers_wait_for_teller2 = 0.0;
+double time_customers_wait_for_teller3 = 0.0;
+struct timespec epoch_customer_starts_waiting_in_queue, epoch_customer_leaves_queue_to_teller;
 
-/* This will sleep for a parameter of milliseconds. Parameter should have 
+double teller1Wait; //time_waited_by_teller1_for_customer
+struct timespec epoch_teller1_starts_to_wait_for_customer, epoch_teller1_receives_customer;
+
+double teller2Wait = 0.0;
+struct timespec epoch_teller2_starts_to_wait_for_customer, epoch_teller2_receives_customer;
+
+double teller3Wait = 0.0;
+struct timespec epoch_teller3_starts_to_wait_for_customer, epoch_teller3_receives_customer;
+
+double current_teller1_customer_wait_time;
+double max_time_waited_by_teller1_customer = 0.0;
+double current_teller2_customer_wait_time;
+double max_time_waited_by_teller2_customer = 0.0;
+double current_teller3_customer_wait_time;
+double max_time_waited_by_teller3_customer = 0.0;
+
+double time_teller1_waited_for_customer;
+double max_time_waited_by_teller1_for_customer = 0.0;
+double time_teller2_waited_for_customer;
+double max_time_waited_by_teller2_for_customer = 0.0;
+double time_teller3_waited_for_customer;
+double max_time_waited_by_teller3_for_customer = 0.0;
+
+int bankOpen = 0;
+Queue *Q;
+
+/* This will sleep for a parameter of milliseconds. Parameter should have
 math to convert from world time to system perceived time. (100ms = 60seconds) */
 void msSleep(int milliseconds){
     int ms = milliseconds; // length of time to sleep, in miliseconds
@@ -39,158 +73,415 @@ void msSleep(int milliseconds){
     req.tv_sec = 0;
     req.tv_nsec = ms * 1000000L;
     nanosleep(&req, (struct timespec *)NULL);
-} 
-
-/* Unused function as of now - used to convert the randomly generated time to a 
-value that can be used with our system's scaling. (60seconds => 100ms)*/
-int convertToSimulationTime(int seconds){
-    int convertedTimeInMS = 0;
-    convertedTimeInMS = ((seconds)/600)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
-    return convertedTimeInMS;
 }
 
-/* This generates a random number within range of the passed parameters inclusively, while overall 
+/* Unused function as of now - used to convert the randomly generated time to a
+value that can be used with our system's scaling. (60seconds => 100ms)*/
+int convertToSimulationTime(int seconds){
+    double converted_time_in_ms = 0;
+    converted_time_in_ms = ((seconds)/600.0)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
+    return (int)converted_time_in_ms;
+}
+
+/* This generates a random number within range of the passed parameters inclusively, while overall
 producing a uniform distribution of generated values. */
 int getRandomWithRange(int lower, int upper){
     return lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
-} 
+}
 
-// Pulled from my example of sleep prints see 'thread_dummy.c'
-// In each thread make sure to handle initial condition - while queue is empty do nothing
-void *tellerThread1(void *vargp){
-    //sleep(5);
-    //dequeue from array
-    //need while here
-    while (Q->size==0){
-        //If the queue is empty wait
+double msRealToSim(double ms){
+    return (ms/100.0)*60.0;
+}
+
+void* tellerThread1(void *vargp){
+    while(1){
+        if (bankOpen==1){//bank open
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){//there are customers
+                current_teller1_customer = front(Q);
+
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller1 > 0){
+                    current_teller1_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller1+=current_teller1_customer_wait_time;
+                }
+
+                if (current_teller1_customer_wait_time>max_time_waited_by_teller1_customer){
+                    max_time_waited_by_teller1_customer=current_teller1_customer_wait_time;
+                }
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller1_receives_customer);
+                if (epoch_teller1_receives_customer.tv_sec + epoch_teller1_receives_customer.tv_nsec > epoch_teller1_starts_to_wait_for_customer.tv_sec + epoch_teller1_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller1 > 0){
+                    time_teller1_waited_for_customer=(( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller1Wait+=time_teller1_waited_for_customer;
+                }
+                if (time_teller1_waited_for_customer>max_time_waited_by_teller1_for_customer){
+                    max_time_waited_by_teller1_for_customer=time_teller1_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller1 is taking a customer        (%d)...\n",current_teller1_customer);
+                msSleep(convertToSimulationTime(current_teller1_customer));
+                
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller1_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller1 is done with their customer (%d)...\n",current_teller1_customer);
+                if (current_teller1_customer > teller1_longest_transaction){
+                    teller1_longest_transaction = current_teller1_customer;
+                }
+                time_teller1_worked+=current_teller1_customer;
+                customers_served_by_teller1 += 1;
+            }
+            else{//bank is open but there is no one in line!
+                pthread_mutex_unlock( &lock );
+            }
+        }
+        else{ //bank closed
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){ //but there are customers!
+                current_teller1_customer = front(Q);
+                
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller1 > 0){
+                    current_teller1_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller1+=current_teller1_customer_wait_time;
+                }
+
+                if (current_teller1_customer_wait_time>max_time_waited_by_teller1_customer){
+                    max_time_waited_by_teller1_customer=current_teller1_customer_wait_time;
+                }
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller1_receives_customer);
+                if (epoch_teller1_receives_customer.tv_sec + epoch_teller1_receives_customer.tv_nsec > epoch_teller1_starts_to_wait_for_customer.tv_sec + epoch_teller1_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller1 > 0){
+                    time_teller1_waited_for_customer=(( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller1Wait+=time_teller1_waited_for_customer;
+                }
+                if (time_teller1_waited_for_customer>max_time_waited_by_teller1_for_customer){
+                    max_time_waited_by_teller1_for_customer=time_teller1_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller1 is taking a customer        (%d)...\n",current_teller1_customer);
+                msSleep(convertToSimulationTime(current_teller1_customer));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller1_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller1 is done with their customer (%d)...\n",current_teller1_customer);
+                if (current_teller1_customer > teller1_longest_transaction){
+                    teller1_longest_transaction = current_teller1_customer;
+                }
+                time_teller1_worked+=current_teller1_customer;
+                customers_served_by_teller1 += 1;
+            }
+            else{ //bank closed and no customers!
+                pthread_mutex_unlock( &lock );
+                break;
+            }
+        }
     }
-    currentCustomerTeller1 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller1));
-    printf("From teller1 \n");
-    teller1Customers+=1;
     return NULL;
 }
 
-void *tellerThread2(void *vargp){
-    //sleep(7);
-    //dequeue from array
-    //need while here
-    while (Q->size==0){
-        //If the queue is empty wait
+void* tellerThread2(void *vargp){
+    while(1){
+        if (bankOpen==1){ //bank open
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){ //there are customers
+                current_teller2_customer = front(Q);
+                
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller2 > 0){
+                    current_teller2_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller2+=current_teller2_customer_wait_time;
+                }
+
+                if (current_teller2_customer_wait_time>max_time_waited_by_teller2_customer){
+                    max_time_waited_by_teller2_customer=current_teller2_customer_wait_time;
+                }
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller2_receives_customer);
+                if (epoch_teller2_receives_customer.tv_sec + epoch_teller2_receives_customer.tv_nsec > epoch_teller2_starts_to_wait_for_customer.tv_sec + epoch_teller2_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller2 > 0){
+                    time_teller2_waited_for_customer=(( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller2Wait+=time_teller2_waited_for_customer;
+                }
+                if (time_teller2_waited_for_customer>max_time_waited_by_teller2_for_customer){
+                    max_time_waited_by_teller2_for_customer=time_teller2_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller2 is taking a customer        (%d)...\n",current_teller2_customer);
+                msSleep(convertToSimulationTime(current_teller2_customer));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller2_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller2 is done with their customer (%d)...\n",current_teller2_customer);
+                if (current_teller2_customer > teller2_longest_transaction){
+                    teller2_longest_transaction = current_teller2_customer;
+                }
+                time_teller2_worked+=current_teller2_customer;
+                customers_served_by_teller2 += 1;
+            }
+            else{//bank is open but there is no one in line!
+                pthread_mutex_unlock( &lock );
+            }
+        }
+        else{ //bank closed
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){ //but there are customers!
+                current_teller2_customer = front(Q);
+                
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller2 > 0){
+                    current_teller2_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller2+=current_teller2_customer_wait_time;
+                }
+
+                if (current_teller2_customer_wait_time>max_time_waited_by_teller2_customer){
+                    max_time_waited_by_teller2_customer=current_teller2_customer_wait_time;
+                }
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller2_receives_customer);
+                if (epoch_teller2_receives_customer.tv_sec + epoch_teller2_receives_customer.tv_nsec > epoch_teller2_starts_to_wait_for_customer.tv_sec + epoch_teller2_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller2 > 0){
+                    time_teller2_waited_for_customer=(( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller2Wait+=time_teller2_waited_for_customer;
+                }
+                if (time_teller2_waited_for_customer>max_time_waited_by_teller2_for_customer){
+                    max_time_waited_by_teller2_for_customer=time_teller2_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller2 is taking a customer        (%d)...\n",current_teller2_customer);
+                msSleep(convertToSimulationTime(current_teller2_customer));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller2_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller2 is done with their customer (%d)...\n",current_teller2_customer);
+                if (current_teller2_customer > teller2_longest_transaction){
+                    teller2_longest_transaction = current_teller2_customer;
+                }
+                time_teller2_worked+=current_teller2_customer;
+                customers_served_by_teller2 += 1;
+            }
+            else{ //bank closed and no customers!
+                pthread_mutex_unlock( &lock );
+                break;
+            }
+        }
     }
-    currentCustomerTeller2 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller2));
-    printf("From teller2 \n");
-    teller2Customers+=1;
     return NULL;
 }
 
-void *tellerThread3(void *vargp){
-    //sleep(1);
-    //dequeue from array
-    //need while here
-    while (Q->size==0){
-        //If the queue is empty wait
+void* tellerThread3(void *vargp){
+    while(1){
+        if (bankOpen==1){ //bank open
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){ //there are customers
+                current_teller3_customer = front(Q);
+                
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller3 > 0){
+                    current_teller3_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller3+=current_teller3_customer_wait_time;
+                }
+
+                if (current_teller3_customer_wait_time>max_time_waited_by_teller3_customer){
+                    max_time_waited_by_teller3_customer=current_teller3_customer_wait_time;
+                }
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller3_receives_customer);
+                if (epoch_teller3_receives_customer.tv_sec + epoch_teller3_receives_customer.tv_nsec > epoch_teller3_starts_to_wait_for_customer.tv_sec + epoch_teller3_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller3 > 0){
+                    time_teller3_waited_for_customer=(( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller3Wait+=time_teller3_waited_for_customer;
+                }
+                if (time_teller3_waited_for_customer>max_time_waited_by_teller3_for_customer){
+                    max_time_waited_by_teller3_for_customer=time_teller3_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller3 is taking a customer        (%d)...\n",current_teller3_customer);
+                msSleep(convertToSimulationTime(current_teller3_customer));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller3_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller3 is done with their customer (%d)...\n",current_teller3_customer);
+                if (current_teller3_customer > teller3_longest_transaction){
+                    teller3_longest_transaction = current_teller3_customer;
+                }
+                time_teller3_worked+=current_teller3_customer;
+                customers_served_by_teller3 += 1;
+            }
+            else{//bank is open but there is no one in line!
+                pthread_mutex_unlock( &lock );
+            }
+        }
+        else{ //bank closed
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
+            pthread_mutex_lock( &lock );
+            if (Q->size){ //but there are customers!
+                current_teller3_customer = front(Q);
+                
+                if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller3 > 0){
+                    current_teller3_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller3+=current_teller3_customer_wait_time;
+                }
+
+                if (current_teller3_customer_wait_time>max_time_waited_by_teller3_customer){
+                    max_time_waited_by_teller3_customer=current_teller3_customer_wait_time;
+                }
+
+                //END OF WAITING FOR CUSTOMER
+                clock_gettime( CLOCK_REALTIME, &epoch_teller3_receives_customer);
+                if (epoch_teller3_receives_customer.tv_sec + epoch_teller3_receives_customer.tv_nsec > epoch_teller3_starts_to_wait_for_customer.tv_sec + epoch_teller3_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller3 > 0){
+                    time_teller3_waited_for_customer=(( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    teller3Wait+=time_teller3_waited_for_customer;
+                }
+                if (time_teller3_waited_for_customer>max_time_waited_by_teller3_for_customer){
+                    max_time_waited_by_teller3_for_customer=time_teller3_waited_for_customer;
+                }
+                pthread_mutex_unlock( &lock );
+                Dequeue(Q); //make sure this is dequeuing proper customer
+                printf("Teller3 is taking a customer        (%d)...\n",current_teller3_customer);
+                msSleep(convertToSimulationTime(current_teller3_customer));
+
+                //STARTING TO WAIT FOR NEXT CUSTOMER HERE
+                clock_gettime( CLOCK_REALTIME, &epoch_teller3_starts_to_wait_for_customer);
+                system(0);
+                printf("Teller3 is done with their customer (%d)...\n",current_teller3_customer);
+                if (current_teller3_customer > teller3_longest_transaction){
+                    teller3_longest_transaction = current_teller3_customer;
+                }
+                time_teller3_worked+=current_teller3_customer;
+                customers_served_by_teller3 += 1;
+            }
+            else{ //bank closed and no customers!
+                pthread_mutex_unlock( &lock );
+                break;
+            }
+        }
     }
-    currentCustomerTeller3 = front(Q);
-    Dequeue(Q);
-    msSleep(convertToSimulationTime(currentCustomerTeller3));
-    printf("From teller3 \n");
-    teller3Customers+=1;
     return NULL;
 }
 
-/* This function takes in an int array and calculates the average of all elements. */
-double arrayAverage(int *myArray, int length) {
-   int i;
-   int sum = 0;
-   double average = 0.0;
-   for (i = 0; i < length; i++) {
-      sum = (sum + myArray[i]);
-   }
-   average = (double)sum / length;
-   return average;
+/* Thread for handling enqueuing and arrival of customers. Generates two random numbers arrival and transaction time.
+nanosleeps for the arrival time generated and then enqueues the trnasaction time. Each element in queue is a number 
+represeting that specific customer's tranasaction time.*/
+void* queueThread(void *vargp){
+    int i = 0;
+    int arrivalTime = 0;
+    int transactionTime = 0;
+    while(1){
+        if (bankOpen == 1){                                                                                 // checking hours of operations condition
+            arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                     // generate random arrival time of customer
+            transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
+            msSleep(convertToSimulationTime(arrivalTime));                                                  // dont append to queue until after sleep
+            Enqueue(Q,transactionTime);
+            clock_gettime( CLOCK_REALTIME, &epoch_customer_starts_waiting_in_queue);
+            system(0);
+            printf("Size of line: %d\n",Q->size);
+            printf("Customer Added to Queue!\n\n");
+            i++; //# OF CUSTOMER TOTAL
+            current_queue_depth = Q->size;
+            if (current_queue_depth > max_queue_depth){
+                max_queue_depth = current_queue_depth;
+            }
+        }
+        else{ //Arriving customer cant be seen because it is after hours
+            break;
+        }
+    }
+    return NULL;
 }
 
 int main(void) {
-    int i=0;
-    int arrivalTime=0;
-    int transactionTime=0;
+    int printFlag = 0;
+    srand(time(NULL));                          //seed the randomizer with epoch
+    Q = createQueue(MAX_AMOUNT_OF_CUSTOMERS);   //create queue instance w/ capacity for maximum queue possible
 
     // Thread Ids
+    pthread_t tid0;
     pthread_t tid1;
     pthread_t tid2;
     pthread_t tid3;
+
+    if (pthread_mutex_init(&lock, NULL) != 0){
+        printf("Mutex init failed\n");
+        return 1;
+    }
+
+    printf("\nBank is now open!\n\n");
+    bankOpen = 1; // Bank is now Open
 
     // Creating threads
     pthread_create(&tid1, NULL, tellerThread1, NULL);
     pthread_create(&tid2, NULL, tellerThread2, NULL);
     pthread_create(&tid3, NULL, tellerThread3, NULL);
+    pthread_create(&tid0, NULL, queueThread, NULL);
 
-    // Joining to Pool 
-    pthread_join(tid1, NULL);
-    pthread_join(tid2, NULL);
-    pthread_join(tid3, NULL);
+    sleep(42);
+    bankOpen = 0; // Bank is now Closed - still need to wait for queue to be empty
+    
+    printf("People in queue still: %d\n",Q->size);
+    printf("Bank is now closed!\n\n");
 
-    while(1){
-        arrivalTime = getRandomWithRange(MIN_ARRIVAL, MAX_ARRIVAL);                                         // generate random arrival time of customer
-        if ((arrivalTime + currentTime) >= openingTime) && ((arrivalTime + currentTime) <= closingTime){    // pseudo code for checking hours of operations condition
-            arrivalTimeArray[i] = arrivalTime;                                                              // append the arrival time to the array because it is valid in within hours of operation
-            transactionTime = getRandomWithRange(MIN_TRANSACTION, MAX_TRANSACTION);                         // generate random transaction time of customer
-            sleep(arrivalTimeArray[i]);                                                                     // dont append to queue until after sleep
-            transactionQueueArray[i] = transactionTime;                                                     // queue will be array of customer transaction times
-            Enqueue(Q,transactionTime);
-            i++; //# OF CUSTOMER TOTAL
-            //queueDepth = sizeof(transactionQueueArray)/sizeof(transactionQueueArray[0]);
-            queueDepth = Q->size;
-            if (queueDepth > maxDepth){
-                maxDepth = queueDepth;
-            }    
-        }
-        else{
-            // Customer cant be seen because it is past hours - bank is closed
-            // Maks sure Q->size==0
-            totalCustomers = teller1Customers + teller2Customers + teller3Customers;
-            arrivalArrayLength = sizeof(arrivalTimeArray)/sizeof(arrivalTimeArray[0]);
-            averageArrival = arrayAverage(arrivalTimeArray, arrivalArrayLength);
-            break;
-        }
+    total_customers = (customers_served_by_teller1 + customers_served_by_teller2 + customers_served_by_teller3);
+    tellers_total_work_time = (time_teller1_worked + time_teller2_worked + time_teller3_worked);
+    printf("1.) Total number of customers serviced: %d customers\n", total_customers);
+    printf("2.) Average time customer spends in queue: %lf seconds\n",msRealToSim((time_customers_wait_for_teller1+time_customers_wait_for_teller2+time_customers_wait_for_teller3)*1000)/total_customers); //needs to be checked
+    printf("3.) Average time customer spends with teller: %d seconds\n",(tellers_total_work_time/total_customers));
+    printf("4.) Average time teller waits for customer: %lf seconds\n",msRealToSim((teller1Wait+teller2Wait+teller3Wait)*1000)/total_customers);//needs checking
+    max_time_waited_by_teller1_customer=msRealToSim(max_time_waited_by_teller1_customer*1000);
+    max_time_waited_by_teller2_customer=msRealToSim(max_time_waited_by_teller2_customer*1000);
+    max_time_waited_by_teller3_customer=msRealToSim(max_time_waited_by_teller3_customer*1000);
+    if (max_time_waited_by_teller1_customer>=max_time_waited_by_teller2_customer && max_time_waited_by_teller1_customer>=max_time_waited_by_teller3_customer && printFlag==0){//tellers could have same max but dont care - just the value
+        printFlag = 1;
+        printf("5.) Maximum customer wait time in queue: %f seconds\n",max_time_waited_by_teller1_customer);
     }
+    if (max_time_waited_by_teller2_customer>=max_time_waited_by_teller1_customer && max_time_waited_by_teller2_customer>=max_time_waited_by_teller3_customer && printFlag==0){
+        printFlag = 1;
+        printf("5.) Maximum customer wait time in queue: %f seconds\n",max_time_waited_by_teller2_customer);
+    }
+    if (max_time_waited_by_teller3_customer>=max_time_waited_by_teller1_customer && max_time_waited_by_teller3_customer>=max_time_waited_by_teller2_customer && printFlag==0){
+        printf("5.) Maximum customer wait time in queue: %f seconds\n",max_time_waited_by_teller3_customer);
+    }
+    printFlag=0;
 
-    report(averageArrival, arrivalTimeArray, transactionQueueArray, maxDepth, totalCustomers); // parameterized report function here to display metrics
+    max_time_waited_by_teller1_for_customer=msRealToSim(max_time_waited_by_teller1_for_customer*1000);
+    max_time_waited_by_teller2_for_customer=msRealToSim(max_time_waited_by_teller2_for_customer*1000);
+    max_time_waited_by_teller3_for_customer=msRealToSim(max_time_waited_by_teller3_for_customer*1000);
+    if (max_time_waited_by_teller1_for_customer>=max_time_waited_by_teller2_for_customer && max_time_waited_by_teller1_for_customer>=max_time_waited_by_teller3_for_customer && printFlag==0){//tellers could have same max but dont care - just the value
+        printFlag = 1;
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",max_time_waited_by_teller1_for_customer);
+    }
+    if (max_time_waited_by_teller2_for_customer>=max_time_waited_by_teller1_for_customer && max_time_waited_by_teller2_for_customer>=max_time_waited_by_teller3_for_customer && printFlag==0){
+        printFlag = 1;
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",max_time_waited_by_teller2_for_customer);
+    }
+    if (max_time_waited_by_teller3_for_customer>=max_time_waited_by_teller1_for_customer && max_time_waited_by_teller3_for_customer>=max_time_waited_by_teller2_for_customer && printFlag==0){
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",max_time_waited_by_teller3_for_customer);
+    }
+    printFlag=0;
+
+    if (teller1_longest_transaction>=teller2_longest_transaction && teller1_longest_transaction>=teller3_longest_transaction && printFlag==0){//tellers could have same max but dont care - just the value
+        printFlag = 1;
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller1_longest_transaction);
+    }
+    if (teller2_longest_transaction>=teller1_longest_transaction && teller2_longest_transaction>=teller3_longest_transaction && printFlag==0){
+        printFlag = 1;
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller2_longest_transaction);
+    }
+    if (teller3_longest_transaction>=teller1_longest_transaction && teller3_longest_transaction>=teller2_longest_transaction && printFlag==0){
+        printf("7.) Maximum transaction time for the tellers: %d seconds\n",teller3_longest_transaction);
+    }
+    printf("8.) Maximum depth of customer queue: %d customers\n\n",max_queue_depth);
+    pthread_mutex_destroy(&lock);
     return EXIT_SUCCESS;
 }
-
-
-/******EXAMPLE OF QUEUE INTEGRATION
-int main(){
-    int i=0;
-    Queue *Q = createQueue(50);
-    Enqueue(Q,1);
-    Enqueue(Q,2);
-    Enqueue(Q,3);
-    Enqueue(Q,4); //[1,2,3,4]
-    printf("Front element is %d\n",front(Q)); //1
-    Enqueue(Q,5); //[1,2,3,4,5]
-    Dequeue(Q);   //[2,3,4,5]
-    Enqueue(Q,6); //[2,3,4,5,6]
-    printf("Front element is %d\n",front(Q)); //2
-
-    printf("Capacity: %d\n",Q->capacity);
-
-    printf("Size: %d\n",Q->size);
-    printf("rear: %d\n",rear(Q));  //6
-
-    for (i = 0; i < Q->size; i++ ) {
-      printf( "item at position %d is %d\n", i, (Q->elements[Q->elements[i]]));
-    }
-    printf("\n");
-    Dequeue(Q);   //[3,4,5,6]
-    Dequeue(Q);   //[4,5,6]
-    for (i = 0; i < Q->size; i++ ) {
-          printf( "item at position %d is %d\n", i, (Q->elements[Q->elements[Q->elements[Q->elements[i]]]]));
-    }
-}
-*****/
