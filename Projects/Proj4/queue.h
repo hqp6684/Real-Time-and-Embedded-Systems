@@ -16,11 +16,11 @@
  index of first element (the index at which we remove the element) and rear is the index of last element
  (the index at which we insert the element) */
 typedef struct Queue{
-	int capacity;
-	int size;
-	int front;
-	int rear;
-	int *elements;
+    int capacity;
+    int size;
+    int front;
+    int rear;
+    int *elements;
 }Queue;
 Queue * createQueue(int maxElements);
 void Dequeue(Queue *Q);
