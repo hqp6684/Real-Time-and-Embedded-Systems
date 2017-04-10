@@ -98,28 +98,28 @@ double msRealToSim(double ms){
 
 void* tellerThread1(void *vargp){
     while(1){
-        if (bankOpen==1){//bank open
+        if (bankOpen == 1){//bank open
             clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
             pthread_mutex_lock( &lock );
             if (Q->size){//there are customers
                 current_teller1_customer = front(Q);
 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller1 > 0){
-                    current_teller1_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller1+=current_teller1_customer_wait_time;
+                    current_teller1_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller1 += current_teller1_customer_wait_time;
                 }
 
-                if (current_teller1_customer_wait_time>max_time_waited_by_teller1_customer){
-                    max_time_waited_by_teller1_customer=current_teller1_customer_wait_time;
+                if (current_teller1_customer_wait_time > max_time_waited_by_teller1_customer){
+                    max_time_waited_by_teller1_customer = current_teller1_customer_wait_time;
                 }
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &epoch_teller1_receives_customer);
                 if (epoch_teller1_receives_customer.tv_sec + epoch_teller1_receives_customer.tv_nsec > epoch_teller1_starts_to_wait_for_customer.tv_sec + epoch_teller1_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller1 > 0){
-                    time_teller1_waited_for_customer=(( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller1_for_customer+=time_teller1_waited_for_customer;
+                    time_teller1_waited_for_customer = (( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller1_for_customer += time_teller1_waited_for_customer;
                 }
-                if (time_teller1_waited_for_customer>max_time_waited_by_teller1_for_customer){
-                    max_time_waited_by_teller1_for_customer=time_teller1_waited_for_customer;
+                if (time_teller1_waited_for_customer > max_time_waited_by_teller1_for_customer){
+                    max_time_waited_by_teller1_for_customer = time_teller1_waited_for_customer;
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
@@ -133,7 +133,7 @@ void* tellerThread1(void *vargp){
                 if (current_teller1_customer > teller1_longest_transaction){
                     teller1_longest_transaction = current_teller1_customer;
                 }
-                time_teller1_worked+=current_teller1_customer;
+                time_teller1_worked += current_teller1_customer;
                 customers_served_by_teller1 += 1;
             }
             else{//bank is open but there is no one in line!
@@ -147,22 +147,22 @@ void* tellerThread1(void *vargp){
                 current_teller1_customer = front(Q);
                 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller1 > 0){
-                    current_teller1_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller1+=current_teller1_customer_wait_time;
+                    current_teller1_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller1 += current_teller1_customer_wait_time;
                 }
 
-                if (current_teller1_customer_wait_time>max_time_waited_by_teller1_customer){
-                    max_time_waited_by_teller1_customer=current_teller1_customer_wait_time;
+                if (current_teller1_customer_wait_time > max_time_waited_by_teller1_customer){
+                    max_time_waited_by_teller1_customer = current_teller1_customer_wait_time;
                 }
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &epoch_teller1_receives_customer);
                 if (epoch_teller1_receives_customer.tv_sec + epoch_teller1_receives_customer.tv_nsec > epoch_teller1_starts_to_wait_for_customer.tv_sec + epoch_teller1_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller1 > 0){
-                    time_teller1_waited_for_customer=(( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller1_for_customer+=time_teller1_waited_for_customer;
+                    time_teller1_waited_for_customer = (( epoch_teller1_receives_customer.tv_sec - epoch_teller1_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller1_receives_customer.tv_nsec - epoch_teller1_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller1_for_customer += time_teller1_waited_for_customer;
                 }
-                if (time_teller1_waited_for_customer>max_time_waited_by_teller1_for_customer){
-                    max_time_waited_by_teller1_for_customer=time_teller1_waited_for_customer;
+                if (time_teller1_waited_for_customer > max_time_waited_by_teller1_for_customer){
+                    max_time_waited_by_teller1_for_customer = time_teller1_waited_for_customer;
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
@@ -176,7 +176,7 @@ void* tellerThread1(void *vargp){
                 if (current_teller1_customer > teller1_longest_transaction){
                     teller1_longest_transaction = current_teller1_customer;
                 }
-                time_teller1_worked+=current_teller1_customer;
+                time_teller1_worked += current_teller1_customer;
                 customers_served_by_teller1 += 1;
             }
             else{ //bank closed and no customers!
@@ -190,29 +190,29 @@ void* tellerThread1(void *vargp){
 
 void* tellerThread2(void *vargp){
     while(1){
-        if (bankOpen==1){ //bank open
+        if (bankOpen == 1){ //bank open
             clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
             pthread_mutex_lock( &lock );
             if (Q->size){ //there are customers
                 current_teller2_customer = front(Q);
                 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller2 > 0){
-                    current_teller2_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller2+=current_teller2_customer_wait_time;
+                    current_teller2_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller2 += current_teller2_customer_wait_time;
                 }
 
-                if (current_teller2_customer_wait_time>max_time_waited_by_teller2_customer){
-                    max_time_waited_by_teller2_customer=current_teller2_customer_wait_time;
+                if (current_teller2_customer_wait_time > max_time_waited_by_teller2_customer){
+                    max_time_waited_by_teller2_customer = current_teller2_customer_wait_time;
                 }
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &epoch_teller2_receives_customer);
                 if (epoch_teller2_receives_customer.tv_sec + epoch_teller2_receives_customer.tv_nsec > epoch_teller2_starts_to_wait_for_customer.tv_sec + epoch_teller2_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller2 > 0){
-                    time_teller2_waited_for_customer=(( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller2_for_customer+=time_teller2_waited_for_customer;
+                    time_teller2_waited_for_customer = (( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller2_for_customer += time_teller2_waited_for_customer;
                 }
-                if (time_teller2_waited_for_customer>max_time_waited_by_teller2_for_customer){
-                    max_time_waited_by_teller2_for_customer=time_teller2_waited_for_customer;
+                if (time_teller2_waited_for_customer > max_time_waited_by_teller2_for_customer){
+                    max_time_waited_by_teller2_for_customer = time_teller2_waited_for_customer;
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
@@ -226,7 +226,7 @@ void* tellerThread2(void *vargp){
                 if (current_teller2_customer > teller2_longest_transaction){
                     teller2_longest_transaction = current_teller2_customer;
                 }
-                time_teller2_worked+=current_teller2_customer;
+                time_teller2_worked += current_teller2_customer;
                 customers_served_by_teller2 += 1;
             }
             else{//bank is open but there is no one in line!
@@ -240,22 +240,22 @@ void* tellerThread2(void *vargp){
                 current_teller2_customer = front(Q);
                 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller2 > 0){
-                    current_teller2_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller2+=current_teller2_customer_wait_time;
+                    current_teller2_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller2 += current_teller2_customer_wait_time;
                 }
 
-                if (current_teller2_customer_wait_time>max_time_waited_by_teller2_customer){
-                    max_time_waited_by_teller2_customer=current_teller2_customer_wait_time;
+                if (current_teller2_customer_wait_time > max_time_waited_by_teller2_customer){
+                    max_time_waited_by_teller2_customer = current_teller2_customer_wait_time;
                 }
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &epoch_teller2_receives_customer);
                 if (epoch_teller2_receives_customer.tv_sec + epoch_teller2_receives_customer.tv_nsec > epoch_teller2_starts_to_wait_for_customer.tv_sec + epoch_teller2_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller2 > 0){
-                    time_teller2_waited_for_customer=(( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller2_for_customer+=time_teller2_waited_for_customer;
+                    time_teller2_waited_for_customer = (( epoch_teller2_receives_customer.tv_sec - epoch_teller2_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller2_receives_customer.tv_nsec - epoch_teller2_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller2_for_customer += time_teller2_waited_for_customer;
                 }
-                if (time_teller2_waited_for_customer>max_time_waited_by_teller2_for_customer){
-                    max_time_waited_by_teller2_for_customer=time_teller2_waited_for_customer;
+                if (time_teller2_waited_for_customer > max_time_waited_by_teller2_for_customer){
+                    max_time_waited_by_teller2_for_customer = time_teller2_waited_for_customer;
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
@@ -269,7 +269,7 @@ void* tellerThread2(void *vargp){
                 if (current_teller2_customer > teller2_longest_transaction){
                     teller2_longest_transaction = current_teller2_customer;
                 }
-                time_teller2_worked+=current_teller2_customer;
+                time_teller2_worked += current_teller2_customer;
                 customers_served_by_teller2 += 1;
             }
             else{ //bank closed and no customers!
@@ -283,29 +283,29 @@ void* tellerThread2(void *vargp){
 
 void* tellerThread3(void *vargp){
     while(1){
-        if (bankOpen==1){ //bank open
+        if (bankOpen == 1){ //bank open
             clock_gettime( CLOCK_REALTIME, &epoch_customer_leaves_queue_to_teller);
             pthread_mutex_lock( &lock );
             if (Q->size){ //there are customers
                 current_teller3_customer = front(Q);
                 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller3 > 0){
-                    current_teller3_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller3+=current_teller3_customer_wait_time;
+                    current_teller3_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller3 += current_teller3_customer_wait_time;
                 }
 
-                if (current_teller3_customer_wait_time>max_time_waited_by_teller3_customer){
-                    max_time_waited_by_teller3_customer=current_teller3_customer_wait_time;
+                if (current_teller3_customer_wait_time > max_time_waited_by_teller3_customer){
+                    max_time_waited_by_teller3_customer = current_teller3_customer_wait_time;
                 }
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &epoch_teller3_receives_customer);
                 if (epoch_teller3_receives_customer.tv_sec + epoch_teller3_receives_customer.tv_nsec > epoch_teller3_starts_to_wait_for_customer.tv_sec + epoch_teller3_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller3 > 0){
-                    time_teller3_waited_for_customer=(( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller3_for_customer+=time_teller3_waited_for_customer;
+                    time_teller3_waited_for_customer = (( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller3_for_customer += time_teller3_waited_for_customer;
                 }
-                if (time_teller3_waited_for_customer>max_time_waited_by_teller3_for_customer){
-                    max_time_waited_by_teller3_for_customer=time_teller3_waited_for_customer;
+                if (time_teller3_waited_for_customer > max_time_waited_by_teller3_for_customer){
+                    max_time_waited_by_teller3_for_customer = time_teller3_waited_for_customer;
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q); //make sure this is dequeuing proper customer
@@ -319,7 +319,7 @@ void* tellerThread3(void *vargp){
                 if (current_teller3_customer > teller3_longest_transaction){
                     teller3_longest_transaction = current_teller3_customer;
                 }
-                time_teller3_worked+=current_teller3_customer;
+                time_teller3_worked += current_teller3_customer;
                 customers_served_by_teller3 += 1;
             }
             else{                                                                                       // Bank is open but no customers!
@@ -333,21 +333,21 @@ void* tellerThread3(void *vargp){
                 current_teller3_customer = front(Q);                                                    // Current customer for teller3 is the next one in the queue
                 
                 if (epoch_customer_leaves_queue_to_teller.tv_sec + epoch_customer_leaves_queue_to_teller.tv_nsec > epoch_customer_starts_waiting_in_queue.tv_sec + epoch_customer_starts_waiting_in_queue.tv_nsec && customers_served_by_teller3 > 0){
-                    current_teller3_customer_wait_time=(( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec )+ (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
-                    time_customers_wait_for_teller3+=current_teller3_customer_wait_time;                // Update time waited by customers to be seen by teller3
+                    current_teller3_customer_wait_time = (( epoch_customer_leaves_queue_to_teller.tv_sec - epoch_customer_starts_waiting_in_queue.tv_sec ) + (double)( epoch_customer_leaves_queue_to_teller.tv_nsec - epoch_customer_starts_waiting_in_queue.tv_nsec ) / (double)BILLION);
+                    time_customers_wait_for_teller3 += current_teller3_customer_wait_time;              // Update time waited by customers to be seen by teller3
                 }
 
-                if (current_teller3_customer_wait_time>max_time_waited_by_teller3_customer){
-                    max_time_waited_by_teller3_customer=current_teller3_customer_wait_time;             // Update max time waited by customer to be seen by teller3 if needed
+                if (current_teller3_customer_wait_time > max_time_waited_by_teller3_customer){
+                    max_time_waited_by_teller3_customer = current_teller3_customer_wait_time;           // Update max time waited by customer to be seen by teller3 if needed
                 }
 
                 clock_gettime( CLOCK_REALTIME, &epoch_teller3_receives_customer);                       // End wait for customer - take from queue
                 if (epoch_teller3_receives_customer.tv_sec + epoch_teller3_receives_customer.tv_nsec > epoch_teller3_starts_to_wait_for_customer.tv_sec + epoch_teller3_starts_to_wait_for_customer.tv_nsec && customers_served_by_teller3 > 0){
-                    time_teller3_waited_for_customer=(( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec )+ (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
-                    time_waited_by_teller3_for_customer+=time_teller3_waited_for_customer;              // Update time waited by teller3 for customer
+                    time_teller3_waited_for_customer = (( epoch_teller3_receives_customer.tv_sec - epoch_teller3_starts_to_wait_for_customer.tv_sec ) + (double)( epoch_teller3_receives_customer.tv_nsec - epoch_teller3_starts_to_wait_for_customer.tv_nsec ) / (double)BILLION);
+                    time_waited_by_teller3_for_customer += time_teller3_waited_for_customer;            // Update time waited by teller3 for customer
                 }
-                if (time_teller3_waited_for_customer>max_time_waited_by_teller3_for_customer){
-                    max_time_waited_by_teller3_for_customer=time_teller3_waited_for_customer;           // Update max time of teller3 waiting for customer if needed
+                if (time_teller3_waited_for_customer > max_time_waited_by_teller3_for_customer){
+                    max_time_waited_by_teller3_for_customer = time_teller3_waited_for_customer;         // Update max time of teller3 waiting for customer if needed
                 }
                 pthread_mutex_unlock( &lock );
                 Dequeue(Q);                                                                             // Next customer in queue taken to conduct business
@@ -359,7 +359,7 @@ void* tellerThread3(void *vargp){
                 if (current_teller3_customer > teller3_longest_transaction){
                     teller3_longest_transaction = current_teller3_customer;                             // Update the max transaction time completed by teller3 if needed
                 }
-                time_teller3_worked+=current_teller3_customer;                                          // Increment the time worked by teller3
+                time_teller3_worked += current_teller3_customer;                                        // Increment the time worked by teller3
                 customers_served_by_teller3 += 1;                                                       // Increment the number of customers teller3 has processed
             }
             else{                                                                                       // Bank closed and no customers!
@@ -433,14 +433,14 @@ int main(void) {
 
     total_customers = (customers_served_by_teller1 + customers_served_by_teller2 + customers_served_by_teller3);
     tellers_total_work_time = (time_teller1_worked + time_teller2_worked + time_teller3_worked);
-    max_time_waited_by_teller1_customer=msRealToSim(max_time_waited_by_teller1_customer*1000);
-    max_time_waited_by_teller2_customer=msRealToSim(max_time_waited_by_teller2_customer*1000);
-    max_time_waited_by_teller3_customer=msRealToSim(max_time_waited_by_teller3_customer*1000);
-    max_time_waited_by_teller1_for_customer=msRealToSim(max_time_waited_by_teller1_for_customer*1000);
-    max_time_waited_by_teller2_for_customer=msRealToSim(max_time_waited_by_teller2_for_customer*1000);
-    max_time_waited_by_teller3_for_customer=msRealToSim(max_time_waited_by_teller3_for_customer*1000);
-    total_time_customers_waited_for_all_tellers=msRealToSim((time_customers_wait_for_teller1+time_customers_wait_for_teller2+time_customers_wait_for_teller3)*1000);
-    total_time_waited_by_all_tellers_for_customer=msRealToSim((time_waited_by_teller1_for_customer+time_waited_by_teller2_for_customer+time_waited_by_teller3_for_customer)*1000);
+    max_time_waited_by_teller1_customer = msRealToSim(max_time_waited_by_teller1_customer*1000);
+    max_time_waited_by_teller2_customer = msRealToSim(max_time_waited_by_teller2_customer*1000);
+    max_time_waited_by_teller3_customer = msRealToSim(max_time_waited_by_teller3_customer*1000);
+    max_time_waited_by_teller1_for_customer = msRealToSim(max_time_waited_by_teller1_for_customer*1000);
+    max_time_waited_by_teller2_for_customer = msRealToSim(max_time_waited_by_teller2_for_customer*1000);
+    max_time_waited_by_teller3_for_customer = msRealToSim(max_time_waited_by_teller3_for_customer*1000);
+    total_time_customers_waited_for_all_tellers = msRealToSim((time_customers_wait_for_teller1 + time_customers_wait_for_teller2 + time_customers_wait_for_teller3)*1000);
+    total_time_waited_by_all_tellers_for_customer = msRealToSim((time_waited_by_teller1_for_customer + time_waited_by_teller2_for_customer + time_waited_by_teller3_for_customer)*1000);
     
     report_metrics(total_customers, total_time_customers_waited_for_all_tellers, tellers_total_work_time, total_time_waited_by_all_tellers_for_customer, max_time_waited_by_teller1_customer, 
         max_time_waited_by_teller2_customer, max_time_waited_by_teller3_customer, max_time_waited_by_teller1_for_customer, max_time_waited_by_teller2_for_customer, max_time_waited_by_teller3_for_customer, 
