@@ -50,16 +50,20 @@ struct timespec teller2WaitStart, teller2WaitEnd;
 
 double teller3Wait = 0.0;
 struct timespec teller3WaitStart, teller3WaitEnd;
-double customer1WaitTime;
-double maxCustomer1Wait=0.0;
-double customer2WaitTime;
-double maxCustomer2Wait=0.0;
-double customer3WaitTime;
-double maxCustomer3Wait=0.0;
 
-double maxWaitTeller1;
-double maxWaitTeller2;
-double maxWaitTeller3;
+double customer1WaitTime;
+double maxCustomer1Wait = 0.0;
+double customer2WaitTime;
+double maxCustomer2Wait = 0.0;
+double customer3WaitTime;
+double maxCustomer3Wait = 0.0;
+
+double teller1WaitTime;
+double maxWaitTeller1 = 0.0;
+double teller2WaitTime;
+double maxWaitTeller2 = 0.0;
+double teller3WaitTime;
+double maxWaitTeller3 = 0.0;
 
 int bankOpen = 0;
 Queue *Q;
@@ -111,7 +115,11 @@ void* tellerThread1(void *vargp){
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller1WaitEnd);
                 if (teller1WaitEnd.tv_sec + teller1WaitEnd.tv_nsec > teller1WaitStart.tv_sec + teller1WaitStart.tv_nsec && teller1Customers > 0){
-                    teller1Wait+=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                    teller1WaitTime=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                    teller1Wait+=teller1WaitTime;
+                }
+                if (teller1WaitTime>maxWaitTeller1){
+                    maxWaitTeller1=teller1WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
@@ -150,7 +158,11 @@ void* tellerThread1(void *vargp){
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller1WaitEnd);
                 if (teller1WaitEnd.tv_sec + teller1WaitEnd.tv_nsec > teller1WaitStart.tv_sec + teller1WaitStart.tv_nsec && teller1Customers > 0){
-                    teller1Wait+=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                    teller1WaitTime=(( teller1WaitEnd.tv_sec - teller1WaitStart.tv_sec )+ (double)( teller1WaitEnd.tv_nsec - teller1WaitStart.tv_nsec ) / (double)BILLION);
+                    teller1Wait+=teller1WaitTime;
+                }
+                if (teller1WaitTime>maxWaitTeller1){
+                    maxWaitTeller1=teller1WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller1 is taking a customer        (%d)...\n",currentCustomerTeller1);
@@ -195,8 +207,12 @@ void* tellerThread2(void *vargp){
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller2WaitEnd);
-                if (teller2WaitEnd.tv_sec+teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec+teller2WaitStart.tv_nsec && teller2Customers > 0){
-                    teller2Wait+=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                if (teller2WaitEnd.tv_sec + teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec + teller2WaitStart.tv_nsec && teller2Customers > 0){
+                    teller2WaitTime=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                    teller2Wait+=teller2WaitTime;
+                }
+                if (teller2WaitTime>maxWaitTeller2){
+                    maxWaitTeller2=teller2WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
@@ -234,8 +250,12 @@ void* tellerThread2(void *vargp){
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller2WaitEnd);
-                if (teller2WaitEnd.tv_sec+teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec+teller2WaitStart.tv_nsec && teller2Customers > 0){
-                    teller2Wait+=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                if (teller2WaitEnd.tv_sec + teller2WaitEnd.tv_nsec > teller2WaitStart.tv_sec + teller2WaitStart.tv_nsec && teller2Customers > 0){
+                    teller2WaitTime=(( teller2WaitEnd.tv_sec - teller2WaitStart.tv_sec )+ (double)( teller2WaitEnd.tv_nsec - teller2WaitStart.tv_nsec ) / (double)BILLION);
+                    teller2Wait+=teller2WaitTime;
+                }
+                if (teller2WaitTime>maxWaitTeller2){
+                    maxWaitTeller2=teller2WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller2 is taking a customer        (%d)...\n",currentCustomerTeller2);
@@ -280,8 +300,12 @@ void* tellerThread3(void *vargp){
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller3WaitEnd);
-                if (teller3WaitEnd.tv_sec+teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec+teller3WaitStart.tv_nsec && teller3Customers > 0){
-                    teller3Wait+=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                if (teller3WaitEnd.tv_sec + teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec + teller3WaitStart.tv_nsec && teller3Customers > 0){
+                    teller3WaitTime=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                    teller3Wait+=teller3WaitTime;
+                }
+                if (teller3WaitTime>maxWaitTeller3){
+                    maxWaitTeller3=teller3WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
@@ -319,8 +343,12 @@ void* tellerThread3(void *vargp){
 
                 //END OF WAITING FOR CUSTOMER
                 clock_gettime( CLOCK_REALTIME, &teller3WaitEnd);
-                if (teller3WaitEnd.tv_sec+teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec+teller3WaitStart.tv_nsec && teller3Customers > 0){
-                    teller3Wait+=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                if (teller3WaitEnd.tv_sec + teller3WaitEnd.tv_nsec > teller3WaitStart.tv_sec + teller3WaitStart.tv_nsec && teller3Customers > 0){
+                    teller3WaitTime=(( teller3WaitEnd.tv_sec - teller3WaitStart.tv_sec )+ (double)( teller3WaitEnd.tv_nsec - teller3WaitStart.tv_nsec ) / (double)BILLION);
+                    teller3Wait+=teller3WaitTime;
+                }
+                if (teller3WaitTime>maxWaitTeller3){
+                    maxWaitTeller3=teller3WaitTime;
                 }
                 Dequeue(Q); //make sure this is dequeuing proper customer
                 printf("Teller3 is taking a customer        (%d)...\n",currentCustomerTeller3);
@@ -428,7 +456,22 @@ int main(void) {
     }
     printFlag=0;
 
-    //printf("6.) Maximum wait time for tellers waiting for customers: %d\n", ...);
+    printf("%f\n%f\n%f\n",maxWaitTeller1,maxWaitTeller2,maxWaitTeller3);
+    maxWaitTeller1=msRealToSim(maxWaitTeller1*1000);
+    maxWaitTeller2=msRealToSim(maxWaitTeller2*1000);
+    maxWaitTeller3=msRealToSim(maxWaitTeller3*1000);
+    if (maxWaitTeller1>=maxWaitTeller2 && maxWaitTeller1>=maxWaitTeller3 && printFlag==0){//tellers could have same max but dont care - just the value
+        printFlag = 1;
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",maxWaitTeller1);
+    }
+    if (maxWaitTeller2>=maxWaitTeller1 && maxWaitTeller2>=maxWaitTeller3 && printFlag==0){
+        printFlag = 1;
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",maxWaitTeller2);
+    }
+    if (maxWaitTeller3>=maxWaitTeller1 && maxWaitTeller3>=maxWaitTeller2 && printFlag==0){
+        printf("6.) Maximum wait time for tellers waiting for customers: %f seconds\n",maxWaitTeller3);
+    }
+    printFlag=0;
 
     if (teller1MaxTransaction>=teller2MaxTransaction && teller1MaxTransaction>=teller3MaxTransaction && printFlag==0){//tellers could have same max but dont care - just the value
         printFlag = 1;
