@@ -37,7 +37,9 @@ int teller1MaxTransaction = 0;
 int teller2MaxTransaction = 0;
 int teller3MaxTransaction = 0;
 
-double customersWaitForTeller = 0.0;
+double customersWaitForTeller1 = 0.0;
+double customersWaitForTeller2 = 0.0;
+double customersWaitForTeller3 = 0.0;
 struct timespec startCustomer, stopCustomer;
 
 double teller1Wait;
@@ -96,8 +98,12 @@ void* tellerThread1(void *vargp){
             if (Q->size){//there are customers
                 currentCustomerTeller1 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer1WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer1WaitTime;
+
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller1Customers > 0){
+                    customer1WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller1+=customer1WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer1WaitTime>maxCustomer1Wait){
                     maxCustomer1Wait=customer1WaitTime;
@@ -130,8 +136,12 @@ void* tellerThread1(void *vargp){
             if (Q->size){ //but there are customers!
                 currentCustomerTeller1 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer1WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer1WaitTime;
+                
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller1Customers > 0){
+                    customer1WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller1+=customer1WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer1WaitTime>maxCustomer1Wait){
                     maxCustomer1Wait=customer1WaitTime;
@@ -172,8 +182,12 @@ void* tellerThread2(void *vargp){
             if (Q->size){ //there are customers
                 currentCustomerTeller2 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer2WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer2WaitTime;
+                
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller2Customers > 0){
+                    customer2WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller2+=customer2WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer2WaitTime>maxCustomer2Wait){
                     maxCustomer2Wait=customer2WaitTime;
@@ -207,8 +221,12 @@ void* tellerThread2(void *vargp){
             if (Q->size){ //but there are customers!
                 currentCustomerTeller2 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer2WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer2WaitTime;
+                
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller2Customers > 0){
+                    customer2WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller2+=customer2WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer2WaitTime>maxCustomer2Wait){
                     maxCustomer2Wait=customer2WaitTime;
@@ -249,8 +267,12 @@ void* tellerThread3(void *vargp){
             if (Q->size){ //there are customers
                 currentCustomerTeller3 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer3WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer3WaitTime;
+                
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller3Customers > 0){
+                    customer3WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller3+=customer3WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer3WaitTime>maxCustomer3Wait){
                     maxCustomer3Wait=customer3WaitTime;
@@ -284,8 +306,12 @@ void* tellerThread3(void *vargp){
             if (Q->size){ //but there are customers!
                 currentCustomerTeller3 = front(Q);
                 clock_gettime( CLOCK_REALTIME, &stopCustomer);
-                customer3WaitTime=( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION;
-                customersWaitForTeller+=customer3WaitTime;
+                
+                if (stopCustomer.tv_sec + stopCustomer.tv_nsec > startCustomer.tv_sec + startCustomer.tv_nsec && teller3Customers > 0){
+                    customer3WaitTime=(( stopCustomer.tv_sec - startCustomer.tv_sec )+ (double)( stopCustomer.tv_nsec - startCustomer.tv_nsec ) / (double)BILLION);
+                    customersWaitForTeller3+=customer3WaitTime;
+                }
+
                 pthread_mutex_unlock( &lock );
                 if (customer3WaitTime>maxCustomer3Wait){
                     maxCustomer3Wait=customer3WaitTime;
@@ -317,18 +343,6 @@ void* tellerThread3(void *vargp){
         }
     }
     return NULL;
-}
-
-/* This function takes in an int array and calculates the average of all elements. */
-double arrayAverage(int *myArray, int length) {
-   int i;
-   int sum = 0;
-   double average = 0.0;
-   for (i = 0; i < length; i++) {
-      sum = (sum + myArray[i]);
-   }
-   average = (double)sum / length;
-   return average;
 }
 
 /* Thread for handling enqueuing and arrival of customers. Generates two random numbers arrival and transaction time.
@@ -395,7 +409,7 @@ int main(void) {
     totalCustomers = (teller1Customers + teller2Customers + teller3Customers);
     totalTellerWorkTime = (totalTeller1WorkTime + totalTeller2WorkTime + totalTeller3WorkTime);
     printf("1.) Total number of customers serviced: %d customers\n", totalCustomers);
-    printf("2.) Average time customer spends in queue: %f seconds\n",msRealToSim(customersWaitForTeller*1000)/totalCustomers); //needs to be checked
+    printf("2.) Average time customer spends in queue: %lf seconds\n",msRealToSim((customersWaitForTeller1+customersWaitForTeller2+customersWaitForTeller3)*1000)/totalCustomers); //needs to be checked
     printf("3.) Average time customer spends with teller: %d seconds\n",(totalTellerWorkTime/totalCustomers));
     printf("4.) Average time teller waits for customer: %lf seconds\n",msRealToSim((teller1Wait+teller2Wait+teller3Wait)*1000)/totalCustomers);//needs checking
     maxCustomer1Wait=msRealToSim(maxCustomer1Wait*1000);
