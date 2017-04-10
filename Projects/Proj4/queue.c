@@ -1,3 +1,5 @@
+// Z. Weeden Mar. 29, 2017
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
@@ -11,7 +13,7 @@ Queue * createQueue(int maxElements){
 	/* Create a Queue */
 	Queue *Q;
 	Q = (Queue *)malloc(sizeof(Queue));
-	/* Initialise its properties */
+	/* Initialize its properties */
 	Q->elements = (int *)malloc(sizeof(int)*maxElements);
 	Q->size = 0;
 	Q->capacity = maxElements;
@@ -21,11 +23,12 @@ Queue * createQueue(int maxElements){
 	return Q;
 }
 
+/* Moves the head of the passed queue to the next element. This simulates the dequeue of 
+   the first element.*/
 void Dequeue(Queue *Q){
 	/* If Queue size is zero then it is empty. So we cannot pop */
 	pthread_mutex_lock( &lock );
-	if(Q->size==0){
-		//printf("Queue is Empty\n");
+	if(Q->size==0){ //Queue is Empty
 		return;
 	}
 	/* Removing an element is equivalent to incrementing index of front by one */
@@ -41,10 +44,10 @@ void Dequeue(Queue *Q){
 	return;
 }
 
+/* Returns the last element of the passed queue. */
 int rear(Queue *Q){
-	if(Q->size==0){
-		//printf("Queue is Empty\n");
-		//exit(0);
+	if(Q->size==0){ 
+		//Queue is Empty
 	}
 	/* Return the element which is at the rear*/
 	else{
@@ -52,21 +55,24 @@ int rear(Queue *Q){
 	}
 }
 
+/* Returns the front of the passed queue. */
 int front(Queue *Q){
 	if(Q->size==0){
-		//printf("Queue is Empty\n");
-		//exit(0);
+		//Queue is Empty
 	}
 	/* Return the element which is at the front*/
 	else{
 		return Q->elements[Q->front];
 	}
 }
+
+/* Takes a passed queue and element and appends the element to the end of that particular 
+   queue instance. */
 void Enqueue(Queue *Q,int element){
 	pthread_mutex_lock( &lock );
 	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
 	if(Q->size == Q->capacity){
-		//printf("Queue is Full\n");
+		//Queue is Full
 	}
 	else{
 		Q->size++;
