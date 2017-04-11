@@ -88,7 +88,7 @@ int convertToSimulationTime(int seconds){
 
 /* This generates a random number within range of the passed parameters inclusively, while overall
    producing a uniform distribution of generated values. QNX doesn't like the variable declaration so
-   I added a condition that restricts the bounds as defined in the specifications.*/
+   I added a condition that ensure restriction of the bounds as defined in the specifications.*/
 int getRandomWithRange(int lower, int upper){
     int randVal=0;
     randVal=lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
