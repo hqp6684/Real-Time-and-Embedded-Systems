@@ -94,6 +94,7 @@ int getRandomWithRange(int lower, int upper){
     if (randVal>MAX_TRANSACTION){
     	randVal=MAX_TRANSACTION;
     }
+    return randVal;
 }
 
 double msRealToSim(double ms){
