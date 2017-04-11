@@ -69,7 +69,7 @@ int bankOpen = 0;
 Queue *Q;
 
 /* This will sleep for a parameter of milliseconds. Parameter should have
-math to convert from world time to system perceived time. (100ms = 60seconds) */
+   math to convert from world time to system perceived time. (100ms = 60seconds) */
 void msSleep(int milliseconds){
     int ms = milliseconds; // length of time to sleep, in miliseconds
     struct timespec req = {0};
@@ -79,7 +79,7 @@ void msSleep(int milliseconds){
 }
 
 /* Unused function as of now - used to convert the randomly generated time to a
-value that can be used with our system's scaling. (60seconds => 100ms)*/
+   value that can be used with our system's scaling. (60seconds => 100ms)*/
 int convertToSimulationTime(int seconds){
     double converted_time_in_ms = 0;
     converted_time_in_ms = ((seconds)/600.0)*1000; // milliseconds expressed as whole number eg. (60/600)*1000 = 100
@@ -87,7 +87,8 @@ int convertToSimulationTime(int seconds){
 }
 
 /* This generates a random number within range of the passed parameters inclusively, while overall
-producing a uniform distribution of generated values. */
+   producing a uniform distribution of generated values. QNX doesn't like the variable declaration so
+   I added a condition that restricts the bounds as defined in the specifications.*/
 int getRandomWithRange(int lower, int upper){
     int randVal=0;
     randVal=lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
@@ -97,10 +98,20 @@ int getRandomWithRange(int lower, int upper){
     return randVal;
 }
 
+/* This converts a millisecond input (real world time) to simultated time.
+   Input eg. 100. This 100ms is converted to (60) seconds of simulated time.*/
 double msRealToSim(double ms){
     return (ms/100.0)*60.0;
 }
 
+/* This is the thread representing teller1. It is indefintely checking to see if the bank is operating.
+   Many individual customer metrics are calulated as well as tallying of running sums for overal metrics
+   at program completion. Generally speaking this thread dequeues the next customer from the queue and 
+   services them for their generated transaction time. During this time the thread sleeps to simulate business.
+   Metrics such as the length of the wait for customer, length of transactions, customers serviced by this particular
+   teller as well as the maxmum for said data is all done here as well. A mutex is used to unlock/lock variables
+   so that shared resources/variables are not altered by any other thread/function that may make use of said 
+   shared resources/variables. */
 void* tellerThread1(void *vargp){
     while(1){
         if (bankOpen == 1){                                                                             // Bank is open
@@ -188,6 +199,14 @@ void* tellerThread1(void *vargp){
     return NULL;
 }
 
+/* This is the thread representing teller2. It is indefintely checking to see if the bank is operating.
+   Many individual customer metrics are calulated as well as tallying of running sums for overal metrics
+   at program completion. Generally speaking this thread dequeues the next customer from the queue and 
+   services them for their generated transaction time. During this time the thread sleeps to simulate business.
+   Metrics such as the length of the wait for customer, length of transactions, customers serviced by this particular
+   teller as well as the maxmum for said data is all done here as well. A mutex is used to unlock/lock variables
+   so that shared resources/variables are not altered by any other thread/function that may make use of said 
+   shared resources/variables. */
 void* tellerThread2(void *vargp){
     while(1){
         if (bankOpen == 1){                                                                             // Bank is open
@@ -275,6 +294,14 @@ void* tellerThread2(void *vargp){
     return NULL;
 }
 
+/* This is the thread representing teller3. It is indefintely checking to see if the bank is operating.
+   Many individual customer metrics are calulated as well as tallying of running sums for overal metrics
+   at program completion. Generally speaking this thread dequeues the next customer from the queue and 
+   services them for their generated transaction time. During this time the thread sleeps to simulate business.
+   Metrics such as the length of the wait for customer, length of transactions, customers serviced by this particular
+   teller as well as the maxmum for said data is all done here as well. A mutex is used to unlock/lock variables
+   so that shared resources/variables are not altered by any other thread/function that may make use of said 
+   shared resources/variables. */
 void* tellerThread3(void *vargp){
     while(1){
         if (bankOpen == 1){                                                                             // Bank is open
