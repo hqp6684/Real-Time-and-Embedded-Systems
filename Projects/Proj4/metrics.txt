@@ -1,0 +1,120 @@
+1.) Total number of customers serviced: 157 customers
+2.) Average time customer spends in queue: 2.965151 seconds
+3.) Average time customer spends with teller: 261 seconds
+4.) Average time teller waits for customer: 105.973592 seconds
+5.) Maximum customer wait time in queue: 98.384945 seconds
+6.) Maximum wait time for tellers waiting for customers: 911.860464 seconds
+7.) Maximum transaction time for the tellers: 484 seconds
+8.) Maximum depth of customer queue: 1 customers
+
+1.) Total number of customers serviced: 153 customers
+2.) Average time customer spends in queue: 2.074192 seconds
+3.) Average time customer spends with teller: 271 seconds
+4.) Average time teller waits for customer: 108.018765 seconds
+5.) Maximum customer wait time in queue: 71.389076 seconds
+6.) Maximum wait time for tellers waiting for customers: 814.075427 seconds
+7.) Maximum transaction time for the tellers: 480 seconds
+8.) Maximum depth of customer queue: 1 customers
+
+
+1.) Total number of customers serviced: 146 customers
+2.) Average time customer spends in queue: 1.750417 seconds
+3.) Average time customer spends with teller: 255 seconds
+4.) Average time teller waits for customer: 159.826228 seconds
+5.) Maximum customer wait time in queue: 68.389535 seconds
+6.) Maximum wait time for tellers waiting for customers: 1350.393358 seconds
+7.) Maximum transaction time for the tellers: 484 seconds
+8.) Maximum depth of customer queue: 1 customers
+
+1.) Total number of customers serviced: 154 customers
+2.) Average time customer spends in queue: 3.548808 seconds
+3.) Average time customer spends with teller: 262 seconds
+4.) Average time teller waits for customer: 115.766701 seconds
+5.) Maximum customer wait time in queue: 130.779988 seconds
+6.) Maximum wait time for tellers waiting for customers: 1501.570225 seconds
+7.) Maximum transaction time for the tellers: 483 seconds
+8.) Maximum depth of customer queue: 1 customers
+
+1.) Total number of customers serviced: 154 customers
+2.) Average time customer spends in queue: 16733638818.844961 seconds
+3.) Average time customer spends with teller: 262 seconds
+4.) Average time teller waits for customer: 134.430078 seconds
+5.) Maximum customer wait time in queue: 2576980377599.399902 seconds
+6.) Maximum wait time for tellers waiting for customers: 1026.442930 seconds
+7.) Maximum transaction time for the tellers: 482 seconds
+8.) Maximum depth of customer queue: 2 customers
+
+
+
+DEBUG SESSION
+1.) Total number of customers serviced: 152 customers
+2.) Average time customer spends in queue: 7.088993 seconds
+3.) Average time customer spends with teller: 248 seconds
+4.) Average time teller waits for customer: 120.526293 seconds
+Size of line: 1
+5.) Maximum customer wait time in queue: 597.000459 seconds
+Customer Added to Queue!
+
+6.) Maximum wait time for tellers waiting for customers: 1096.632190 seconds
+7.) Maximum transaction time for the tellers: 480 seconds
+8.) Maximum depth of customer queue: 2 customers
+++++++++++++++++++++++++++++
+
+
+1.) Total number of customers serviced: 157 customers
+2.) Average time customer spends in queue: 2.460770 seconds
+3.) Average time customer spends with teller: 261 seconds
+4.) Average time teller waits for customer: 117.941188 seconds
+5.) Maximum customer wait time in queue: 77.988066 seconds
+6.) Maximum wait time for tellers waiting for customers: 755.884332 seconds
+7.) Maximum transaction time for the tellers: 484 seconds
+8.) Maximum depth of customer queue: 1 customers
+
+
+
+1.) Total number of customers serviced: 148 customers
+2.) Average time customer spends in queue: 6.242908 seconds
+3.) Average time customer spends with teller: 248 seconds
+4.) Average time teller waits for customer: 111.477536 seconds
+5.) Maximum customer wait time in queue: 594.600826 seconds
+6.) Maximum wait time for tellers waiting for customers: 922.058903 seconds
+7.) Maximum transaction time for the tellers: 480 seconds
+8.) Maximum depth of customer queue: 2 customers
+
+
+
+Bank is now open!
+
+Bank is now closed!
+
+People in queue still: 0
+1.) Total number of customers serviced: 167 customers
+2.) Average time customer spends in queue: 3.775470 seconds
+3.) Average time customer spends with teller: 264 seconds
+4.) Average time teller waits for customer: 101.406039 seconds
+5.) Maximum customer wait time in queue: 91.785955 seconds
+6.) Maximum wait time for tellers waiting for customers: 809.876070 seconds
+7.) Maximum transaction time for the tellers: 480 seconds
+8.) Maximum depth of customer queue: 2 customers
+
+173
+
+4 20
+3 27
+1 35
+8 12
+8
+1
+
+
+
+
+
+1.) Total number of customers serviced: 154 customers
+2.) Average time customer spends in queue: 3.019019 seconds
+3.) Average time customer spends with teller: 265 seconds
+4.) Average time teller waits for customer: 95.743791 seconds
+5.) Maximum customer wait time in queue: 82.787332 seconds
+6.) Maximum wait time for tellers waiting for customers: 932.257343 seconds
+7.) Maximum transaction time for the tellers: 480 seconds
+8.) Maximum depth of customer queue: 1 customers

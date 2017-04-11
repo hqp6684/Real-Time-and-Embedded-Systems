@@ -89,7 +89,11 @@ int convertToSimulationTime(int seconds){
 /* This generates a random number within range of the passed parameters inclusively, while overall
 producing a uniform distribution of generated values. */
 int getRandomWithRange(int lower, int upper){
-    return lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
+    int randVal=0;
+    randVal=lower + (rand() / (RAND_MAX / (upper + 1 - lower))) ;
+    if (randVal>MAX_TRANSACTION){
+    	randVal=MAX_TRANSACTION;
+    }
 }
 
 double msRealToSim(double ms){
@@ -372,7 +376,7 @@ void* queueThread(void *vargp){
             clock_gettime( CLOCK_REALTIME, &epoch_customer_starts_waiting_in_queue);    // Fetch current time - used to calculate when the customer was enqueue and how long they'll wait to be seen
             system(0);
             printf("Size of line: %d\n",Q->size);
-            printf("Customer Added to Queue!\n\n");
+            //printf("Customer Added to Queue!\n\n");
             current_queue_depth = Q->size;                                              // Check size of queue
             if (current_queue_depth > max_queue_depth){                                 // Update max queue size with current if needed
                 max_queue_depth = current_queue_depth;
@@ -414,8 +418,8 @@ int main(void) {
     sleep(42);                                  // Simulate 9AM-4PM (7 hours) business day. (7 hours*60 minutes) = 420 minutes*.1 second = 42
     bankOpen = 0;                               // Bank is now Closed
     
-    printf("People in queue still: %d\n",Q->size);
     printf("Bank is now closed!\n\n");
+    printf("People in queue still: %d\n",Q->size);
 
     total_customers = (customers_served_by_teller1 + customers_served_by_teller2 + customers_served_by_teller3);
     tellers_total_work_time = (time_teller1_worked + time_teller2_worked + time_teller3_worked);
