@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QdeProjectsBuildInfo>
-<qdeBuildInfo IMemento.internal.id="Z:/QNX-workspace/HelloPurplebox" buildConfig="_x86_g" projectName="HelloPurplebox">
-<srcDirs>
-<element>Z:/QNX-workspace/HelloPurplebox/x86/o</element>
-<element>Z:/QNX-workspace/HelloPurplebox/x86/o-g</element>
-<element>Z:/QNX-workspace/HelloPurplebox/x86</element>
-<element>Z:/QNX-workspace/HelloPurplebox</element>
-</srcDirs>
-<libDirs>
-<element>Z:/QNX-workspace/HelloPurplebox/x86/o-g</element>
-<element>C:/QNX650/target/qnx6/x86/lib</element>
-<element>C:/QNX650/target/qnx6/x86/usr/lib</element>
-</libDirs>
+<qdeBuildInfo IMemento.internal.id="//mightor/home/fall2011/zdw7287/Documents/Real-Time-and-Embedded-Systems/QNX-workspace/HelloPurplebox" buildConfig="_x86_g" projectName="HelloPurplebox">
+<srcDirs/>
+<libDirs/>
 <incDirs>
 <element>C:/QNX650/target/qnx6/usr/include</element>
-<element>Z:/QNX-workspace/HelloPurplebox/x86/o-g</element>
-<element>Z:/QNX-workspace/HelloPurplebox/x86/o</element>
-<element>Z:/QNX-workspace/HelloPurplebox/x86</element>
-<element>Z:/QNX-workspace/HelloPurplebox</element>
 </incDirs>
 <libs/>
-<SRCS>
-<element>Z:/QNX-workspace/HelloPurplebox/HelloPurplebox.c</element>
-</SRCS>
+<SRCS/>
 </qdeBuildInfo>
 </QdeProjectsBuildInfo>

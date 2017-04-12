@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="18" version="2.0">
+<workbench progressCount="20" version="2.0">
 <workbenchAdvisor/>
-<window height="768" maximized="true" width="1024" x="1407" y="506">
+<window height="768" maximized="true" width="1024" x="224" y="-8">
 <fastViewData fastViewLocation="1024"/>
+<intro standby="false"/>
 <perspectiveBar>
 <itemSize x="365"/>
 </perspectiveBar>
 <coolbarLayout locked="0">
 <coolItem id="group.file" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="130" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="140" y="22"/>
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="com.qnx.tools.ide.phab.ui.PhabActionSet" itemType="typeToolBarContribution" x="38" y="22"/>
 <coolItem id="org.eclipse.cdt.ui.CElementCreationActionSet" itemType="typeToolBarContribution" x="167" y="22"/>
 <coolItem id="org.eclipse.cdt.ui.buildConfigActionSet" itemType="typeToolBarContribution" x="89" y="22"/>
 <coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="167" y="22"/>
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="76" y="22"/>
-<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="84" y="22"/>
+<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="61" y="22"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="190" y="22"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.cdt.ui.editor.CEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
-<page aggregateWorkingSetId="Aggregate for window 1492035303315" focus="true" label="Workspace - C/C++">
+<page focus="true" label="Workspace - C/C++">
 <editors>
 <editorArea activeWorkbook="DefaultEditorWorkbook">
 <info part="DefaultEditorWorkbook">
@@ -34,8 +35,8 @@
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="HelloPurplebox.c" partName="HelloPurplebox.c" path="//mightor/home/fall2011/zdw7287/Documents/Real-Time-and-Embedded-Systems/QNX-workspace/HelloPurplebox/HelloPurplebox.c" title="HelloPurplebox.c" tooltip="HelloPurplebox/HelloPurplebox.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/HelloPurplebox/HelloPurplebox.c"/>
+<editor activePart="true" focus="true" id="org.eclipse.ui.DefaultTextEditor" name=".cproject" partName=".cproject" title=".cproject" tooltip="\\mightor\home\fall2011\zdw7287\Documents\Real-Time-and-Embedded-Systems\Projects\Proj4\.cproject" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:////mightor/home/fall2011/zdw7287/Documents/Real-Time-and-Embedded-Systems/Projects/Proj4/.cproject"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
 </editor>
 </editors>
@@ -43,19 +44,23 @@
 <view id="org.eclipse.ui.views.TaskList" partName="Tasks"/>
 <view id="com.qnx.tools.ide.SystemProfiler.ui.views.filters" partName="Filters"/>
 <view id="org.eclipse.debug.ui.DebugView" partName="Debug"/>
-<view id="com.qnx.tools.ide.sysinfo.internal.ui.mallocview" partName="Malloc Information"/>
-<view id="org.eclipse.ui.console.ConsoleView" partName="Console">
-<viewState/>
+<view id="org.eclipse.ui.internal.introview" partName="Welcome">
+<viewState>
+<presentation currentPage="root" restore="true"/>
+<standbyPart/>
+</viewState>
 </view>
+<view id="com.qnx.tools.ide.sysinfo.internal.ui.mallocview" partName="Malloc Information"/>
+<view id="org.eclipse.ui.console.ConsoleView" partName="Console"/>
 <view id="QNXSystemBuilderBinaryInspector" partName="QNX Binary Inspector"/>
 <view id="com.qnx.tools.ide.sysinfo.internal.ui.memview" partName="Memory Information"/>
 <view id="com.qnx.tools.ide.sysinfo.internal.ui.systemview" partName="System Summary"/>
 <view id="org.eclipse.ui.navigator.ProjectExplorer" partName="Project Explorer">
-<viewState CommonNavigator.LINKING_ENABLED="0" CommonNavigator.LINKING_ENABLED.delayed="0" currentWorkingSetName="Aggregate for window 1492035303315" org.eclipse.cdt.ui.cview.groupincludes="false" org.eclipse.cdt.ui.editor.CUChildren="true" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
+<viewState CommonNavigator.LINKING_ENABLED="0" CommonNavigator.LINKING_ENABLED.delayed="0" org.eclipse.cdt.ui.cview.groupincludes="false" org.eclipse.cdt.ui.editor.CUChildren="true" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
 </view>
 <view id="org.eclipse.debug.ui.BreakpointView" partName="Breakpoints"/>
-<view id="org.eclipse.ui.views.BookmarkView" partName="Bookmarks"/>
 <view id="org.eclipse.cdt.debug.ui.executablesView" partName="Executables"/>
+<view id="org.eclipse.ui.views.BookmarkView" partName="Bookmarks"/>
 <view id="com.qnx.tools.ide.target.fsys" partName="Target File System Navigator"/>
 <view id="org.eclipse.debug.ui.VariableView" partName="Variables"/>
 <view id="com.qnx.tools.ide.sysinfo.internal.ui.processview" partName="Process Information"/>
@@ -85,7 +90,7 @@
 </viewState>
 </view>
 </views>
-<perspectives activePart="org.eclipse.ui.navigator.ProjectExplorer" activePerspective="org.eclipse.cdt.ui.CPerspective">
+<perspectives activePart="org.eclipse.ui.internal.introview" activePerspective="org.eclipse.cdt.ui.CPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="com.qnx.tools.ide.SystemProfiler.ui.SystemProfilerPerspective" id="com.qnx.tools.ide.SystemProfiler.ui.perspective.traceperspective" label="QNX System Profiler"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -120,16 +125,24 @@
 <view id="com.qnx.tools.ide.SystemProfiler.views.ConditionStatsView"/>
 <view id="com.qnx.tools.ide.SystemProfiler.views.ClientServer"/>
 <fastViewBars/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="Left">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
+<layout>
+<mainWindow>
+<info folder="true" part="Left">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="Left">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="Left">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.2" ratioLeft="200" ratioRight="800" relationship="2" relative="Left"/>
-<info folder="true" part="Bottom" ratio="0.69860893" ratioLeft="452" ratioRight="195" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="com.qnx.tools.ide.SystemProfiler.ui.views.logview" label="Trace Event Log"/>
+<info folder="true" part="Bottom" ratio="0.69860893" ratioLeft="452" ratioRight="195" relationship="4" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="com.qnx.tools.ide.SystemProfiler.ui.views.logview" label="Trace Event Log"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="Bookmarks"/>
 <page content="com.qnx.tools.ide.SystemProfiler.views.GeneralStatsView" label="General Statistics"/>
 <page content="com.qnx.tools.ide.SystemProfiler.views.ElementStatsView" label="Event Owner Statistics"/>
@@ -137,7 +150,9 @@
 <page content="com.qnx.tools.ide.SystemProfiler.views.ClientServer" label="Client/Server CPU Statistics"/>
 </folder>
 </info>
-<info folder="true" part="LeftBottom" ratio="0.4992272" ratioLeft="323" ratioRight="324" relationship="4" relative="Left">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="com.qnx.tools.ide.SystemProfiler.ui.views.filters" label="Filters"/>
+<info folder="true" part="LeftBottom" ratio="0.4992272" ratioLeft="323" ratioRight="324" relationship="4" relative="Left">
+<folder appearance="2" expanded="2">
+<page content="com.qnx.tools.ide.SystemProfiler.ui.views.filters" label="Filters"/>
 <page content="com.qnx.tools.ide.target.internal.ui.targetview" label="Target Navigator"/>
 </folder>
 </info>
@@ -182,26 +197,38 @@
 <view id="org.eclipse.tm.terminal.view.TerminalView"/>
 <view id="org.eclipse.ui.views.PropertySheet"/>
 <fastViewBars/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="leftFolder">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="QNXSystemBuilderProjectView" label="System Builder Projects"/>
+<layout>
+<mainWindow>
+<info folder="true" part="leftFolder">
+<folder appearance="2" expanded="2">
+<page content="QNXSystemBuilderProjectView" label="System Builder Projects"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="leftFolder">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="leftFolder">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="250" ratioRight="750" relationship="2" relative="leftFolder"/>
-<info folder="true" part="bottomFolder" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
+<info folder="true" part="bottomFolder" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="QNXSystemBuilderBinaryInspector" label="QNX Binary Inspector"/>
 <page content="org.eclipse.tm.terminal.view.TerminalView" label="Terminal"/>
 </folder>
 </info>
-<info folder="true" part="rightFolder" ratio="0.7493333" ratioLeft="562" ratioRight="188" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
+<info folder="true" part="rightFolder" ratio="0.7493333" ratioLeft="562" ratioRight="188" relationship="2" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@4854f6" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="leftFolder">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="qnxTftpView" label="TFTP Server"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@d8a923" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="leftFolder">
+<folder appearance="2" expanded="2">
+<page content="qnxTftpView" label="TFTP Server"/>
 </folder>
 </info>
 </mainWindow>
@@ -242,16 +269,24 @@
 <view id="com.qnx.tools.ide.sysinfo.internal.ui.mallocview"/>
 <view id="com.qnx.tools.ide.target.fsys"/>
 <fastViewBars/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="navArea">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="com.qnx.tools.ide.target.internal.ui.targetview" label="Target Navigator"/>
+<layout>
+<mainWindow>
+<info folder="true" part="navArea">
+<folder appearance="2" expanded="2">
+<page content="com.qnx.tools.ide.target.internal.ui.targetview" label="Target Navigator"/>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="navArea">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="navArea">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="250" ratioRight="750" relationship="2" relative="navArea"/>
-<info folder="true" part="belowEditor" ratio="0.24884081" ratioLeft="161" ratioRight="486" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="com.qnx.tools.ide.sysinfo.internal.ui.systemview" label="System Summary"/>
+<info folder="true" part="belowEditor" ratio="0.24884081" ratioLeft="161" ratioRight="486" relationship="4" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="com.qnx.tools.ide.sysinfo.internal.ui.systemview" label="System Summary"/>
 <page content="com.qnx.tools.ide.sysinfo.internal.ui.processview" label="Process Information"/>
 <page content="com.qnx.tools.ide.sysinfo.internal.ui.memview" label="Memory Information"/>
 <page content="com.qnx.tools.ide.sysinfo.internal.ui.mallocview" label="Malloc Information"/>
@@ -262,7 +297,9 @@
 <page content="com.qnx.tools.ide.sysinfo.internal.ui.usageview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="belowSysViews" ratio="0.74897116" ratioLeft="364" ratioRight="122" relationship="4" relative="belowEditor">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
+<info folder="true" part="belowSysViews" ratio="0.74897116" ratioLeft="364" ratioRight="122" relationship="4" relative="belowEditor">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
 </folder>
 </info>
 <info part="com.qnx.tools.ide.sysinfo.log.ui.historyView" ratio="0.4992272" ratioLeft="323" ratioRight="324" relationship="4" relative="navArea"/>
@@ -317,16 +354,24 @@
 <view id="org.eclipse.debug.ui.BreakpointView"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViewBars/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
+<layout>
+<mainWindow>
+<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="LabelNotFound"/>
@@ -336,11 +381,15 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.44948453" ratioLeft="218" ratioRight="267" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView"/>
-<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.cdt.debug.ui.DisassemblyView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.5" ratioLeft="500" ratioRight="500" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.5" ratioLeft="500" ratioRight="500" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="Breakpoints"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
@@ -413,6 +462,7 @@
 <view id="org.eclipse.ui.views.PropertySheet"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <view id="org.eclipse.cdt.make.ui.views.MakeView"/>
+<view id="org.eclipse.ui.internal.introview"/>
 <fastViewBars/>
 <layout>
 <mainWindow>
@@ -427,17 +477,19 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@12fb063" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="topLeft">
-<folder appearance="2" expanded="2">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1826ac5" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="topLeft">
+<folder activePageID="org.eclipse.ui.internal.introview" appearance="2" expanded="1">
+<page content="org.eclipse.ui.internal.introview" label="Welcome"/>
 <page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="250" ratioRight="750" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottom" ratio="0.50429183" ratioLeft="470" ratioRight="462" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<info folder="true" part="bottom" ratio="0.7496136" ratioLeft="485" ratioRight="162" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.views.ProblemView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
@@ -467,22 +519,9 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/HelloPurplebox/HelloPurplebox.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj4/proj4.c"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" uri="file:////mightor/home/fall2011/zdw7287/Documents/Real-Time-and-Embedded-Systems/Projects/Proj4/.cproject"/>
 </editors>
-<item historyLabel="HelloPurplebox.c" index="0">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="proj4.c" index="1">
-<position/>
-</item>
-<item historyLabel="HelloPurplebox.c" index="0">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="proj4.c" index="1">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item active="true" historyLabel="HelloPurplebox.c" index="0">
+<item active="true" historyLabel=".cproject" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
@@ -491,9 +530,6 @@
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
-<trimArea IMemento.internal.id="128">
-<trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
-</trimArea>
 <trimArea IMemento.internal.id="1024">
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
@@ -502,11 +538,8 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="proj4.c" tooltip="proj4/proj4.c">
-<persistable path="/proj4/proj4.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="HelloPurplebox.c" tooltip="HelloPurplebox/HelloPurplebox.c">
-<persistable path="/HelloPurplebox/HelloPurplebox.c"/>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name=".cproject" tooltip="\\mightor\home\fall2011\zdw7287\Documents\Real-Time-and-Embedded-Systems\Projects\Proj4\.cproject">
+<persistable uri="file:////mightor/home/fall2011/zdw7287/Documents/Real-Time-and-Embedded-Systems/Projects/Proj4/.cproject"/>
 </file>
 </mruList>
 </workbench>
