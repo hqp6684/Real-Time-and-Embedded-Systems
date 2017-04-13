@@ -10,7 +10,8 @@
 #include <pthread.h>
 #include <sys/netmgr.h>
 #include <sys/neutrino.h>
-
+int position=0;
+int period=0;
 #define MY_PULSE_CODE   _PULSE_CODE_MINAVAIL
 
 typedef union {
@@ -19,6 +20,18 @@ typedef union {
            here too */
 } my_message_t;
 
+void* UI(void *vargp){
+	//Fetch user input to determine - recipe/pulse
+	while (position==0){
+		period=388000;//nano - .388ms for 0 degree
+	}
+	while (position==1){
+		period=1264000;//nano - 1.264ms for 90 degree
+	}
+	while (position==2){
+		period=2140000;//nano - 2.14ms for 180 degree
+	}
+}
 
 
 int main(void){
@@ -28,6 +41,9 @@ int main(void){
 	timer_t                 timer_id;
 	int                     chid, rcvid;
 	my_message_t            msg;
+	pthread_t tid0;
+
+	pthread_create(&tid0, NULL, UI, NULL);
 
 	chid = ChannelCreate(0);
 
@@ -37,31 +53,26 @@ int main(void){
 	event.sigev_code = MY_PULSE_CODE;
 	timer_create(CLOCK_REALTIME, &event, &timer_id);
 
-	itime.it_value.tv_sec = 1;
-	/* 500 million nsecs = .5 secs */
-	itime.it_value.tv_nsec = 500000000;
-	itime.it_interval.tv_sec = 1;
-	/* 500 million nsecs = .5 secs */
-	itime.it_interval.tv_nsec = 500000000;
-	timer_settime(timer_id, 0, &itime, NULL);
-
 	/*
 	 * As of the timer_settime(), we will receive our pulse
 	 * in 1.5 seconds (the itime.it_value) and every 1.5
 	 * seconds thereafter (the itime.it_interval)
 	 */
 	for (;;) {
-		itime.it_value.tv_sec = i; //increments the time +1 second on each pass for pulse
-		/* 500 million nsecs = .5 secs */
-		itime.it_value.tv_nsec = 500000000;
-		itime.it_interval.tv_sec = i; //increments the time +1 second on each pass for pulse
-		/* 500 million nsecs = .5 secs */
-		itime.it_interval.tv_nsec = 500000000;
+		if (i==50){
+			position=1; //change period after 50 pulses at .388ms
+		}
+		itime.it_value.tv_sec = 0;
+		itime.it_value.tv_nsec = period;
+		itime.it_interval.tv_sec = 0;
+		itime.it_interval.tv_nsec = period;
+
 		timer_settime(timer_id, 0, &itime, NULL);
+
 		rcvid = MsgReceive(chid, &msg, sizeof(msg), NULL);
 		if (rcvid == 0) { /* we got a pulse */
         	if (msg.pulse.code == MY_PULSE_CODE) {
-            	printf("we got a pulse from our timer\n");
+            	printf("we got a pulse from our timer - %d\n",period);
             } /* else other pulses ... */
 		} /* else other messages ... */
 		i+=1;
