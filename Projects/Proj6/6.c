@@ -59,6 +59,7 @@ void monitorADCVoltagePinUpdateCCR(void){
 	//joystickButton = register?;
 	while (1){
 		if (joystickButton == 1){
+			joystickButton = 1; //acts as init - doesnt need to be held high
 			voltage = fetchVOLTAGEFromPIN(); //continually update
 			if (voltage < 0 && voltage > -5){  //negative voltage leftmost position
 				RED_LED_OFF(); //valid voltage
