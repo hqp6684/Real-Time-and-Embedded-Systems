@@ -53,28 +53,60 @@ while 1:
 
 
 
-
+//function to be ran on STM
 void monitorADCVoltagePinUpdateCCR(void){
+	static int joystickButton = 0; //monitor josytick press
+	//joystickButton = register?;
 	while (1){
-		voltage = fetchVOLTAGEFromPIN(); //continually update
-		if (voltage < 0 && voltage > -5){  //negative voltage leftmost position
-			RED_LED_OFF(); //valid voltage
-			CCRx = 21 //position5;
+		if (joystickButton == 1){
+			voltage = fetchVOLTAGEFromPIN(); //continually update
+			if (voltage < 0 && voltage > -5){  //negative voltage leftmost position
+				RED_LED_OFF(); //valid voltage
+				CCRx = 21 //position5;
+			}
+			else if (voltage == 0){ 
+				RED_LED_OFF(); //valid voltage
+				CCRx = 13 //position3;
+			}
+			else if (voltage > 0 && voltage < 5){ //positive voltage rightmost position
+				RED_LED_OFF(); //valid voltage
+				CCRx = 4 //position0;
+			}
+			else if (voltage > 5){ //voltage has gone over accepted value
+				RED_LED_ON(); //indicate failure on STM/servo
+				//printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
+			}
+			else if (voltage < -5){ //voltage has gone lower accepted value
+				RED_LED_ON(); //indicate failure on STM/servo
+				//printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
+			}
+			else{
+				;
+			}
 		}
-		else if (voltage == 0){ 
-			RED_LED_OFF(); //valid voltage
-			CCRx = 13 //position3;
+	}
+}
+
+//function to be run on QNX
+void convertToDigitalAndOutput(void){
+	while (1){
+		voltageIn = fetchVoltageFromGenerator(); //continually update
+		digitalVoltage = convertADC(voltageIn);
+		//route digitalVoltage to pin
+		if (digitalVoltage < 0 && digitalVoltage > -5){  //negative voltage leftmost position
+			printf("Valid negative voltage\n");
 		}
-		else if (voltage > 0 && voltage < 5){ //positive voltage rightmost position
-			RED_LED_OFF(); //valid voltage
-			CCRx = 4 //position0;
+		else if (digitalVoltage == 0){ 
+			printf("Valid neutral voltage\n");
 		}
-		else if (voltage > 5){ //voltage has gone over accepted value
-			RED_LED_ON(); //indicate failure on STM/servo
+		else if (digitalVoltage > 0 && digitalVoltage < 5){ //positive voltage rightmost position
+			printf("Valid positive voltage\n");
+
+		}
+		else if (digitalVoltage > 5){ //voltage has gone over accepted value
 			printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
 		}
-		else if (voltage < -5){ //voltage has gone lower accepted value
-			RED_LED_ON(); //indicate failure on STM/servo
+		else if (digitalVoltage < -5){ //voltage has gone lower accepted value
 			printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
 		}
 		else{
