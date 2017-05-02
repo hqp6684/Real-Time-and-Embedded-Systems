@@ -55,7 +55,7 @@ while 1:
 
 
 while 1:
-	voltage = fetchVOLTAGEFromPIN(); //this stays the same and isnt updated
+	voltage = fetchVOLTAGEFromPIN(); //continually update
 	if (voltage < 0 && voltage > -5){  //negative voltage leftmost position
 		RED_LED_OFF(); //valid voltage
 		CCRx = 21 //position5;
