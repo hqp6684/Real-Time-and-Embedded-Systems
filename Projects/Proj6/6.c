@@ -50,3 +50,32 @@ while 1:
 	prevVoltage = currentVoltage;
 	currentVoltage = fetchVOLTAGEFromPIN();
 
+
+
+
+
+while 1:
+	voltage = fetchVOLTAGEFromPIN(); //this stays the same and isnt updated
+	if (voltage < 0 && voltage > -5){  //negative voltage leftmost position
+		RED_LED_OFF(); //valid voltage
+		CCRx = 21 //position5;
+	}
+	else if (voltage == 0){ 
+		RED_LED_OFF(); //valid voltage
+		CCRx = 13 //position3;
+	}
+	else if (voltage > 0 && voltage < 5){ //positive voltage rightmost position
+		RED_LED_OFF(); //valid voltage
+		CCRx = 4 //position0;
+	}
+	else if (voltage > 5){ //voltage has gone over accepted value
+		RED_LED_ON(); //indicate failure on STM/servo
+		printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
+	}
+	else if (voltage < -5){ //voltage has gone lower accepted value
+		RED_LED_ON(); //indicate failure on STM/servo
+		printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
+	}
+	else{
+		;
+	}
