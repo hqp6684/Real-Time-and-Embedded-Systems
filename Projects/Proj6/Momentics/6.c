@@ -73,6 +73,45 @@ void main(void){
         return 2;
     }
 
+    /* Steps for A/D conversion
+    Select input channel
+    (To set the board to channel 4 only, write 0x44 to Base + 2.)
+    (To set the board to read channels 0 through 15, write 0xF0 to Base + 2. )
+
+    Select input range
+    (For ±5V range (gain of 2), write 0x01 to Base + 3.)
+
+    Wait for analog input circuit to settle
+    ( Monitor the WAIT bit at Base + 3 bit 5.
+    When it is 1 the circuit is actively settling on the input signal. When it is 0 the board is ready to
+    perform A/D conversions.)
+    
+    Initiate A/D conversion
+    (outp(base,0x80);)
+
+    Wait for conversion to finish
+    (
+    int checkstatus() // returns 0 if ok, -1 if error
+    int i;
+    for (i = 0; i < 10000; i++){
+        if !(inp(base+3) & 0x80) then return(0); // conversion completed
+    }
+    return(-1); // conversion didn’t complete)
+    )
+
+    Read data from board
+    (
+    LSB = inp(base);
+    MSB = inp(base+1);
+    Data = MSB * 256 + LSB; // combine the 2 bytes into a 16-bit value
+    )
+
+    Convert numerical data to a meaningful value
+    (Input voltage = A/D value / 32768 * Full-scale input range)
+    
+    */
+
+
 
 
 }
