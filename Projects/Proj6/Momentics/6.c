@@ -4,7 +4,7 @@
 
 #define IO_PORT_SIZE                (1)
 #define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
-#define A_D                         (BASE_ADDRESS+1) //
+#define A_D_MSB                     (BASE_ADDRESS+1) //
 #define A_D_CHANNEL                 (BASE_ADDRESS+2) //
 #define A_D_GAIN_STATUS             (BASE_ADDRESS+3) //
 #define INTRPT_DMA_CONTROL_COUNTER  (BASE_ADDRESS+4)
