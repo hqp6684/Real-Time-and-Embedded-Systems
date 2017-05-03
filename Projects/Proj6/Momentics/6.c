@@ -67,7 +67,7 @@ void main(void){
     }
 
     uintptr_t baseHandle;
-    baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
+    baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(baseHandle == MAP_DEVICE_FAILED){
         perror("Failed to map base addr");
         return 2;
