@@ -61,7 +61,8 @@ void convertToDigitalAndOutput(void){
 }
 
 void main(void){
-    int LSB, MSB, a_d_val = 0;
+    int LSB, MSB = 0; //check these datatypes need proper sizeof()
+    long a_d_val = 0; //
     uintptr_t baseHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
@@ -74,6 +75,7 @@ void main(void){
         perror("Failed to map base addr");
         return 2;
     }
+
 
     //Select input channel
     outp(A_D_CHANNEL,0xF0);                 //1111 0000 Read channels 0 through 15
