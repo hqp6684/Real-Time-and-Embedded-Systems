@@ -61,6 +61,7 @@ void convertToDigitalAndOutput(void){
 }
 
 void main(void){
+    int LSB, MSB, a_d_val = 0;
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
         perror("Failed to get I/O access permission");
         return 1;
@@ -73,45 +74,30 @@ void main(void){
         return 2;
     }
 
-    /* Steps for A/D conversion
-    Select input channel
-    (To set the board to channel 4 only, write 0x44 to Base + 2.)
-    (To set the board to read channels 0 through 15, write 0xF0 to Base + 2. )
-
-    Select input range
-    (For ±5V range (gain of 2), write 0x01 to Base + 3.)
-
-    Wait for analog input circuit to settle
-    ( Monitor the WAIT bit at Base + 3 bit 5.
-    When it is 1 the circuit is actively settling on the input signal. When it is 0 the board is ready to
-    perform A/D conversions.)
+    //Select input channel
+    outp(A_D_CHANNEL,0xF0);                 //1111 0000 Read channels 0 through 15
     
-    Initiate A/D conversion
-    (outp(base,0x80);)
-
-    Wait for conversion to finish
-    (
-    int checkstatus() // returns 0 if ok, -1 if error
-    int i;
-    for (i = 0; i < 10000; i++){
-        if !(inp(base+3) & 0x80) then return(0); // conversion completed
+    //Select input range
+    outp(A_D_GAIN_STATUS, 0x01);            //0000 0001 bipolar +-5V gain of 2
+    
+    //Wait for analog circuit to settle
+    while( (inp(A_D_GAIN_STATUS) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 
+        ;                                   //A/D is setting new value
     }
-    return(-1); // conversion didn’t complete)
-    )
+    //bit 5 went low - ok to start conversion
 
-    Read data from board
-    (
-    LSB = inp(base);
-    MSB = inp(base+1);
-    Data = MSB * 256 + LSB; // combine the 2 bytes into a 16-bit value
-    )
-
-    Convert numerical data to a meaningful value
-    (Input voltage = A/D value / 32768 * Full-scale input range)
+    //Initiate conversion
+    outp(BASE_ADDRESS,0x80);                //1000 0000 STRTAD start A/D
     
-    */
+    //Wait for conversion to finish
+    while( (inp(A_D_GAIN_STATUS) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 
+        ;                                   //converstion still in progress
+    }
+    //bit 7 went low conversion complete
 
-
-
+    //Resolving adc value
+    LSB = inp(BASE_ADDRESS);
+    MSB = inp(A_D_MSB);
+    a_d_val = MSB * 256 + LSB;
 
 }
