@@ -84,7 +84,7 @@ void main(void){
     outp(A_D_GAIN_STATUS, 0x01);            //0000 0001 bipolar +-5V gain of 2
     
     //Wait for analog circuit to settle
-    while( (inp(A_D_GAIN_STATUS) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 
+    while( (inp(A_D_GAIN_STATUS) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
         ;                                   //A/D is setting new value
     }
     //bit 5 went low - ok to start conversion
@@ -93,7 +93,7 @@ void main(void){
     outp(BASE_ADDRESS,0x80);                //1000 0000 STRTAD start A/D
     
     //Wait for conversion to finish
-    while( (inp(A_D_GAIN_STATUS) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 
+    while( (inp(A_D_GAIN_STATUS) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
         ;                                   //converstion still in progress
     }
     //bit 7 went low conversion complete
@@ -101,6 +101,6 @@ void main(void){
     //Resolving adc value
     LSB = inp(BASE_ADDRESS);
     MSB = inp(A_D_MSB);
-    a_d_val = MSB * 256 + LSB;
+    a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
 
 }
