@@ -62,12 +62,13 @@ void convertToDigitalAndOutput(void){
 
 void main(void){
     int LSB, MSB, a_d_val = 0;
+    uintptr_t baseHandle;
+
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
         perror("Failed to get I/O access permission");
         return 1;
     }
 
-    uintptr_t baseHandle;
     baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(baseHandle == MAP_DEVICE_FAILED){
         perror("Failed to map base addr");
