@@ -12,28 +12,28 @@ CCRx       21          16            13       10       7       4
 
 //function to be run on QNX
 void convertToDigitalAndOutput(void){
-	while (1){
-		voltageIn = fetchVoltageFromGenerator(); //continually update
-		digitalVoltage = convertADC(voltageIn);
-		//route digitalVoltage to pin
-		if (digitalVoltage < 0 && digitalVoltage > -5){  //negative voltage leftmost position
-			printf("Valid negative voltage\n");
-		}
-		else if (digitalVoltage == 0){ 
-			printf("Valid neutral voltage\n");
-		}
-		else if (digitalVoltage > 0 && digitalVoltage < 5){ //positive voltage rightmost position
-			printf("Valid positive voltage\n");
+    while (1){
+        voltageIn = fetchVoltageFromGenerator(); //continually update
+        digitalVoltage = convertADC(voltageIn);
+        //route digitalVoltage to pin
+        if (digitalVoltage < 0 && digitalVoltage > -5){  //negative voltage leftmost position
+            printf("Valid negative voltage\n");
+        }
+        else if (digitalVoltage == 0){ 
+            printf("Valid neutral voltage\n");
+        }
+        else if (digitalVoltage > 0 && digitalVoltage < 5){ //positive voltage rightmost position
+            printf("Valid positive voltage\n");
 
-		}
-		else if (digitalVoltage > 5){ //voltage has gone over accepted value
-			printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
-		}
-		else if (digitalVoltage < -5){ //voltage has gone lower accepted value
-			printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
-		}
-		else{
-			;
-		}
-	}
+        }
+        else if (digitalVoltage > 5){ //voltage has gone over accepted value
+            printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
+        }
+        else if (digitalVoltage < -5){ //voltage has gone lower accepted value
+            printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
+        }
+        else{
+            ;
+        }
+    }
 }
