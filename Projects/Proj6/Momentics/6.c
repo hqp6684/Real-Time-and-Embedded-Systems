@@ -60,10 +60,40 @@ void convertToDigitalAndOutput(void){
     }
 }
 
-void main(void){
+double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t adChannelHandle, uintptr_t adGainStatusHandle){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
     long a_d_val = 0; //
     double volts;
+    //Select input channel
+    outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
+    
+    //Select input range
+    outp(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
+    
+    //Wait for analog circuit to settle
+    while( (inp(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
+        ;                                   //A/D is setting new value
+    }
+    //bit 5 went low - ok to start conversion
+
+    //Initiate conversion
+    outp(baseHandle,0x80);                //1000 0000 STRTAD start A/D
+    
+    //Wait for conversion to finish
+    while( (inp(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
+        ;                                   //converstion still in progress
+    }
+    //bit 7 went low conversion complete
+
+    //Resolving adc value
+    LSB = inp(baseHandle);
+    MSB = inp(adMSBHandle);
+    a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
+    volts = (a_d_val/32768.0)*5.0;
+    return volts;
+}
+
+void main(void){
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
@@ -94,31 +124,8 @@ void main(void){
         perror("Failed to map A/D MSB regitser");
         return 2;
     }
-    
-    //Select input channel
-    outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
-    
-    //Select input range
-    outp(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
-    
-    //Wait for analog circuit to settle
-    while( (inp(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
-        ;                                   //A/D is setting new value
+    while(1){
+        analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage
     }
-    //bit 5 went low - ok to start conversion
-
-    //Initiate conversion
-    outp(baseHandle,0x80);                //1000 0000 STRTAD start A/D
     
-    //Wait for conversion to finish
-    while( (inp(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
-        ;                                   //converstion still in progress
-    }
-    //bit 7 went low conversion complete
-
-    //Resolving adc value
-    LSB = inp(baseHandle);
-    MSB = inp(adMSBHandle);
-    a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
-    volts = (a_d_val/32768.0)*5.0;
 }
