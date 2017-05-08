@@ -1,6 +1,11 @@
-#include <sys/neutrino.h>
-#include <stdint.h>
-#include <sys/mman.h>
+#include <stdio.h>
+#include <stdlib.h>       /* for EXIT_* */
+#include <stdint.h>       /* for uintptr_t */
+#include <hw/inout.h>     /* for in*() and out*() functions */
+#include <sys/neutrino.h> /* for ThreadCtl() */
+#include <sys/syspage.h>  /* for for cycles_per_second */
+#include <sys/mman.h>     /* for mmap_device_io() */
+#include <unistd.h>       /* for sleep() */
 
 #define IO_PORT_SIZE                (1)
 #define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
@@ -24,14 +29,15 @@
 
 0 voltage = position 3
 - voltage = positions 4 and 5
-+ voltage = position 0, 1, and 2 
++ voltage = position 0, 1, and 2
 
-VOLTAGE   -5   -4   -3   -2   -1      0    1    2    3    4    5 
+VOLTAGE   -5   -4   -3   -2   -1      0    1    2    3    4    5
 POSITION   5           4              3       2        1       0
-CCRx       21          16            13       10       7       4  
+CCRx       21          16            13       10       7       4
 
 */
 
+/*
 //function to be run on QNX
 void convertToDigitalAndOutput(void){
     while (1){
@@ -41,7 +47,7 @@ void convertToDigitalAndOutput(void){
         if (digitalVoltage < 0 && digitalVoltage > -5){  //negative voltage leftmost position
             printf("Valid negative voltage\n");
         }
-        else if (digitalVoltage == 0){ 
+        else if (digitalVoltage == 0){
             printf("Valid neutral voltage\n");
         }
         else if (digitalVoltage > 0 && digitalVoltage < 5){ //positive voltage rightmost position
@@ -59,6 +65,7 @@ void convertToDigitalAndOutput(void){
         }
     }
 }
+*/
 
 double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t adChannelHandle, uintptr_t adGainStatusHandle){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
@@ -66,10 +73,10 @@ double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t 
     double volts;
     //Select input channel
     outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
-    
+
     //Select input range
     outp(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
-    
+
     //Wait for analog circuit to settle
     while( (inp(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
         ;                                   //A/D is setting new value
@@ -78,7 +85,7 @@ double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t 
 
     //Initiate conversion
     outp(baseHandle,0x80);                //1000 0000 STRTAD start A/D
-    
+
     //Wait for conversion to finish
     while( (inp(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
         ;                                   //converstion still in progress
@@ -93,7 +100,7 @@ double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t 
     return volts;
 }
 
-void main(void){
+int main(void){
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
@@ -118,7 +125,7 @@ void main(void){
         perror("Failed to map A/D channel register");
         return 2;
     }
-    
+
     adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(adMSBHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D MSB regitser");
@@ -127,5 +134,5 @@ void main(void){
     while(1){
         analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage
     }
-    
+    return 0;
 }

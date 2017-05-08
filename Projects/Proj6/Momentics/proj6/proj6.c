@@ -72,29 +72,29 @@ double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t 
     long a_d_val = 0; //
     double volts;
     //Select input channel
-    outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
+    out16(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
 
     //Select input range
-    outp(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
+    out16(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
 
     //Wait for analog circuit to settle
-    while( (inp(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
+    while( (in16(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
         ;                                   //A/D is setting new value
     }
     //bit 5 went low - ok to start conversion
 
     //Initiate conversion
-    outp(baseHandle,0x80);                //1000 0000 STRTAD start A/D
+    out16(baseHandle,0x80);                //1000 0000 STRTAD start A/D
 
     //Wait for conversion to finish
-    while( (inp(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
+    while( (in16(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
         ;                                   //converstion still in progress
     }
     //bit 7 went low conversion complete
 
     //Resolving adc value
-    LSB = inp(baseHandle);
-    MSB = inp(adMSBHandle);
+    LSB = in16(baseHandle);
+    MSB = in16(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
     volts = (a_d_val/32768.0)*5.0;
     return volts;
@@ -128,7 +128,7 @@ int main(void){
 
     adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(adMSBHandle == MAP_DEVICE_FAILED){
-        perror("Failed to map A/D MSB regitser");
+        perror("Failed to map A/D MSB register");
         return 2;
     }
     while(1){
