@@ -24,6 +24,7 @@ CCRx       21          16            13       10       7       4
 
 */
 
+/*
 //function to be ran on STM
 void monitorADCVoltagePinUpdateCCR(void){
     static int joystickButton = 0; //monitor josytick press
@@ -58,7 +59,7 @@ void monitorADCVoltagePinUpdateCCR(void){
         }
     }
 }
-
+*/
 int main(void){
     System_Clock_Init();
     LED_Init();
@@ -72,6 +73,8 @@ int main(void){
     //TIM2->CCR2 = pwm_vars[3]; // other motor example CCR2
 
     while(1){ // Poll indefinitely to read output of purplebox
-        ;
+        if (is_event()){
+					//action seen on pin from purple box
+				}
     }
 }

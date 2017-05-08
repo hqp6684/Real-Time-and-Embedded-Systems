@@ -1,0 +1,10 @@
+--cpu Cortex-M4.fp --branchpatch=sdcomp-29491-629360
+".\objects\led.o"
+".\objects\proj6.o"
+".\objects\sysclock.o"
+".\objects\timer.o"
+".\objects\uart.o"
+".\objects\startup_stm32l476xx.o"
+--ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\proj6.map" -o .\Objects\proj6.axf

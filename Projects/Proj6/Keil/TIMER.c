@@ -33,3 +33,8 @@ void delay(int ms) {
     }
 }
 
+/* This determines if an edge/event has been seen. The return value is the 
+flag of the status registers bit 1. */
+int is_event( void ) {
+    return (TIM2->SR & 0x2);                // return flag indicating capture/compare interrupt flag
+}
