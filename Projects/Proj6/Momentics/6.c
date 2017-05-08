@@ -63,7 +63,7 @@ void convertToDigitalAndOutput(void){
 void main(void){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
     long a_d_val = 0; //
-    uintptr_t baseHandle;
+    uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
         perror("Failed to get I/O access permission");
@@ -76,31 +76,48 @@ void main(void){
         return 2;
     }
 
+	adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    if(adGainStatusHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D gain status register");
+        return 2;
+    }
 
+	adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    if(adChannelHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D channel register");
+        return 2;
+    }
+	
+	adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    if(adMSBHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D MSB regitser");
+        return 2;
+    }
+	
     //Select input channel
-    outp(A_D_CHANNEL,0xF0);                 //1111 0000 Read channels 0 through 15
+    outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
     
     //Select input range
-    outp(A_D_GAIN_STATUS, 0x01);            //0000 0001 bipolar +-5V gain of 2
+    outp(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
     
     //Wait for analog circuit to settle
-    while( (inp(A_D_GAIN_STATUS) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
+    while( (inp(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
         ;                                   //A/D is setting new value
     }
     //bit 5 went low - ok to start conversion
 
     //Initiate conversion
-    outp(BASE_ADDRESS,0x80);                //1000 0000 STRTAD start A/D
+    outp(baseHandle,0x80);                //1000 0000 STRTAD start A/D
     
     //Wait for conversion to finish
-    while( (inp(A_D_GAIN_STATUS) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
+    while( (inp(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
         ;                                   //converstion still in progress
     }
     //bit 7 went low conversion complete
 
     //Resolving adc value
-    LSB = inp(BASE_ADDRESS);
-    MSB = inp(A_D_MSB);
+    LSB = inp(baseHandle);
+    MSB = inp(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
 
 }
