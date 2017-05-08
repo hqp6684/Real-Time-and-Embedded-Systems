@@ -63,6 +63,7 @@ void convertToDigitalAndOutput(void){
 void main(void){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
     long a_d_val = 0; //
+    double volts;
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
@@ -76,24 +77,24 @@ void main(void){
         return 2;
     }
 
-	adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(adGainStatusHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D gain status register");
         return 2;
     }
 
-	adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(adChannelHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D channel register");
         return 2;
     }
-	
-	adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
+    
+    adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB); // Now have a handle to the device register which you can use in a call to any of the in*() or out*() functions that QNX provides.
     if(adMSBHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D MSB regitser");
         return 2;
     }
-	
+    
     //Select input channel
     outp(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
     
@@ -119,5 +120,5 @@ void main(void){
     LSB = inp(baseHandle);
     MSB = inp(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
-
+    volts = (a_d_val/32768.0)*5.0;
 }
