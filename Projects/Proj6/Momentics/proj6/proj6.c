@@ -141,7 +141,7 @@ int abs_voltage(double volts){ //makes it so that 3 pins + 1 polarity pin are ne
 
 
 int main(void){
-    uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
+    uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHandle, portBHandle, dataDirectionHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
         perror("Failed to get I/O access permission");
@@ -171,8 +171,27 @@ int main(void){
         perror("Failed to map A/D MSB register");
         return 2;
     }
+
+    portAHandle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT); //
+    if(portAHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map port a register");
+        return 2;
+    }
+
+    portBHandle = mmap_device_io(IO_PORT_SIZE,PORT_B_OUT); //
+    if(portBHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map port b register");
+        return 2;
+    }
+
+    dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL); //
+    if(dataDirectionHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map data direction register");
+        return 2;
+    }
+
     while(1){
-        analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage
+        analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
     }
     return 0;
 }
