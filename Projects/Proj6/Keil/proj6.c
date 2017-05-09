@@ -74,7 +74,7 @@ int main(void){
 
     while(1){ // Poll indefinitely to read output of purplebox
         if (is_event()){
-					//action seen on pin from purple box
-				}
+            //action seen on pin from purple box
+        }
     }
 }

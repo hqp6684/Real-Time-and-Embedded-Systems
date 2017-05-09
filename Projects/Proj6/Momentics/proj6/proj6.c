@@ -100,6 +100,46 @@ double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t 
     return volts;
 }
 
+int determine_polarity(double volts){
+    int isNegative=0;
+    if ((int)volts > 0x8){ // 1000 - negative number
+        isNegative=1;
+    }
+    if (0x8 > (int)volts){ // less than 1000 - positive number
+        isNegative=0;
+    }
+    return isNegative;
+}
+
+int abs_voltage(double volts){ //makes it so that 3 pins + 1 polarity pin are needed to relay information
+    switch ((int)volts & 0xF){ //bottom nibble
+        case 0xB:
+        case 0x5:
+            return 5;
+            break; //+-5
+        case 0xC:
+        case 0x4:
+            return 4;
+            break; //+-4
+        case 0xD:
+        case 0x3:
+            return 3;
+            break; //+-3
+        case 0xE:
+        case 0x2:
+            return 2;
+            break; //+-2
+        case 0xF:
+        case 0x1:
+            return 1;
+            break; //+-1
+        case 0x0:
+            return 0;
+            break; //0
+    }
+}
+
+
 int main(void){
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle;
 
