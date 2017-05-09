@@ -37,76 +37,56 @@ CCRx       21          16            13       10       7       4
 
 */
 
-/*
-//function to be run on QNX
-void convertToDigitalAndOutput(void){
-    while (1){
-        voltageIn = fetchVoltageFromGenerator(); //continually update
-        digitalVoltage = convertADC(voltageIn);
-        //route digitalVoltage to pin
-        if (digitalVoltage < 0 && digitalVoltage > -5){  //negative voltage leftmost position
-            printf("Valid negative voltage\n");
-        }
-        else if (digitalVoltage == 0){
-            printf("Valid neutral voltage\n");
-        }
-        else if (digitalVoltage > 0 && digitalVoltage < 5){ //positive voltage rightmost position
-            printf("Valid positive voltage\n");
-
-        }
-        else if (digitalVoltage > 5){ //voltage has gone over accepted value
-            printf("Voltage has gone over +5V\n"); //indicate failure in momentics/qnx
-        }
-        else if (digitalVoltage < -5){ //voltage has gone lower accepted value
-            printf("Voltage has gone under -5V\n"); //indicate failure in momentics/qnx
-        }
-        else{
-            ;
-        }
-    }
-}
-*/
-
 double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t adChannelHandle, uintptr_t adGainStatusHandle){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
     long a_d_val = 0; //
+    int i;
     double volts;
-    //Select input channel
-    out16(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
-
-    //Select input range
-    out16(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
 
     //Wait for analog circuit to settle
-    while( (in16(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
+    while( (in8(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
         ;                                   //A/D is setting new value
     }
     //bit 5 went low - ok to start conversion
 
     //Initiate conversion
-    out16(baseHandle,0x80);                //1000 0000 STRTAD start A/D
+    out8(baseHandle,0x80);                //1000 0000 STRTAD start A/D
 
     //Wait for conversion to finish
-    while( (in16(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
+    while( (in8(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
         ;                                   //converstion still in progress
     }
     //bit 7 went low conversion complete
 
     //Resolving adc value
-    LSB = in16(baseHandle);
-    MSB = in16(adMSBHandle);
+    LSB = in8(baseHandle);
+    MSB = in8(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
     volts = (a_d_val/32768.0)*5.0;
+    if (volts > 5.0 || volts < -5.0){
+        ;
+    }
+    else{
+        for (i=0; i<10; i++){
+            if (i-5 > (int)volts){
+                printf(' ');
+            }
+            else{
+                printf('|');
+            }
+        }
+        printf('\n');
+    }
     return volts;
 }
 
 int determine_polarity(double volts){
-    int isNegative=0;
+    int isNegative = 0;
     if ((int)volts > 0x8){ // 1000 - negative number
-        isNegative=1;
+        isNegative = 1;
     }
     if (0x8 > (int)volts){ // less than 1000 - positive number
-        isNegative=0;
+        isNegative = 0;
     }
     return isNegative;
 }
@@ -139,8 +119,10 @@ int abs_voltage(double volts){ //makes it so that 3 pins + 1 polarity pin are ne
     }
 }
 
-
 int main(void){
+    int polarityNeg = 0;
+    int absVoltage = 0;
+    double convertedAD = 0.0;
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHandle, portBHandle, dataDirectionHandle;
 
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){ // request access rights to the hardware I/O for the thread
@@ -190,8 +172,20 @@ int main(void){
         return 2;
     }
 
+    //Select input channel
+    out8(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
+
+    //Select input range
+    out8(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
+
     while(1){
-        analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
+        convertedAD = analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
+        while (convertedAD > 5.0 || convertedAD < -5.0){ //voltage has gone over accepted value
+            printf("Voltage has gone over/under +/-5V\n"); //indicate failure in momentics/qnx
+            convertedAD = analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
+        }
+        //polarityNeg = determine_polarity(convertedAD);
+        //absVoltage = abs_voltage(convertedAD);
     }
     return 0;
 }
