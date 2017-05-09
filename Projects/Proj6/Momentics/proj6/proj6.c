@@ -37,7 +37,7 @@ CCRx       21          16            13       10       7       4
 
 */
 
-double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t adChannelHandle, uintptr_t adGainStatusHandle){
+double analog_to_digital(uintptr_t baseHandle, uintptr_t adMSBHandle, uintptr_t adGainStatusHandle){
     int LSB, MSB = 0; //check these datatypes need proper sizeof()
     long a_d_val = 0; //
     int i;
@@ -179,10 +179,10 @@ int main(void){
     out8(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
 
     while(1){
-        convertedAD = analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
+        convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
         while (convertedAD > 5.0 || convertedAD < -5.0){ //voltage has gone over accepted value
             printf("Voltage has gone over/under +/-5V\n"); //indicate failure in momentics/qnx
-            convertedAD = analog_to_digital(baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
+            convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
         }
         //polarityNeg = determine_polarity(convertedAD);
         //absVoltage = abs_voltage(convertedAD);
