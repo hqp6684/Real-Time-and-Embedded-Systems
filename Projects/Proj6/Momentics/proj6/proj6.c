@@ -120,8 +120,6 @@ int abs_voltage(double volts){ //makes it so that 3 pins + 1 polarity pin are ne
 }
 
 int main(void){
-    int polarityNeg = 0;
-    int absVoltage = 0;
     double convertedAD = 0.0;
     uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHandle, portBHandle, dataDirectionHandle;
 
@@ -185,8 +183,6 @@ int main(void){
             convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
         }
         out8(portAHandle, convertedAD); //output on portA
-        //polarityNeg = determine_polarity(convertedAD);
-        //absVoltage = abs_voltage(convertedAD);
     }
     return 0;
 }
