@@ -184,6 +184,7 @@ int main(void){
             printf("Voltage has gone over/under +/-5V\n"); //indicate failure in momentics/qnx
             convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
         }
+        out8(portAHandle, convertedAD); //output on portA
         //polarityNeg = determine_polarity(convertedAD);
         //absVoltage = abs_voltage(convertedAD);
     }
