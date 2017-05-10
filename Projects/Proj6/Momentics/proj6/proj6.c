@@ -178,9 +178,14 @@ int main(void){
 
     while(1){
         convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
+        /*
         while (convertedAD > 5.0 || convertedAD < -5.0){ //voltage has gone over accepted value
             printf("Voltage has gone over/under +/-5V\n"); //indicate failure in momentics/qnx
             convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?    
+        }
+        */
+        if (convertedAD > 5.0 || convertedAD < -5.0){ //voltage has gone over accepted value
+            printf("Voltage has gone over/under +/-5V\n"); //indicate failure in momentics/qnx
         }
         out8(portAHandle, convertedAD); //output on portA
     }
