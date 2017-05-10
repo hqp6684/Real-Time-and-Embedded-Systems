@@ -171,10 +171,10 @@ int main(void){
     }
 
     //Select input channel
-    out8(adChannelHandle,0xF0);                 //1111 0000 Read channels 0 through 15
+    out8(adChannelHandle,0xF0); //1111 0000 Read channels 0 through 15
 
     //Select input range
-    out8(adGainStatusHandle, 0x01);            //0000 0001 bipolar +-5V gain of 2
+    out8(adGainStatusHandle, 0x01); //0000 0001 bipolar +-5V gain of 2
 
     while(1){
         convertedAD = analog_to_digital(baseHandle, adMSBHandle, adGainStatusHandle); //double digital voltage - should we pass the ports?
