@@ -1,4 +1,5 @@
-// Z. Weeden Feb 27, 2017
+// Z. Weeden 2017
+
 #include "stm32l476xx.h"
 #include "SysClock.h"   // Sysclock
 #include <stdio.h>

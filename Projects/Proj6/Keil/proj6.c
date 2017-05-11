@@ -1,3 +1,5 @@
+// Z. Weeden 2017
+
 #include "stm32l476xx.h"    // Board
 #include "SysClock.h"       // Sysclock
 #include "LED.h"            // LED
@@ -59,6 +61,38 @@ void monitorADCVoltagePinUpdateCCR(void){
         }
     }
 }
+*/
+
+/* pseudo range for resolving ccr
+if (input_voltage >= -5.0 && input_voltage < -3.75){
+    RED_LED_OFF();
+    TIM2->CCR1 = 21;
+}
+else if (input_voltage >= -3.75 && input_voltage < -1.25){
+    RED_LED_OFF();
+    TIM2->CCR1 = 16;
+}
+else if (input_voltage >= -1.25 && input_voltage < .835){
+    RED_LED_OFF();
+    TIM2->CCR1 = 13;
+} 
+else if (input_voltage >= .835 && input_voltage < 2.5){
+    RED_LED_OFF();
+    TIM2->CCR1 = 10;
+}
+else if (input_voltage >= 2.5 && input_voltage < 4.18){
+    RED_LED_OFF();
+    TIM2->CCR1 = 7;
+}
+else if (input_voltage >= 4.18 && input_voltage <= 5.0){
+    RED_LED_OFF();
+    TIM2->CCR1 = 4;
+}
+else{
+    RED_LED_ON();
+    USART_Write(USART2, (uint8_t *)"\r\nVoltage out of range.\r\n", 25);
+}
+
 */
 int main(void){
     System_Clock_Init();
