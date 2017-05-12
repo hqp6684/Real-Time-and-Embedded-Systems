@@ -12,6 +12,8 @@
 #include <math.h>
 
 int main(void){
+    double fine_ccr;
+    int rounded_ccr;
     System_Clock_Init();
     LED_Init();
     UART2_Init();
@@ -27,8 +29,8 @@ int main(void){
             }
             else{
                 RED_LED_OFF();
-                double fine_ccr = (-0.0667*(double)input_voltage)+21.242;
-                int rounded_ccr = round(fine_ccr);
+                fine_ccr = (-0.0667*(double)input_voltage)+21.242;
+                rounded_ccr = round(fine_ccr);
                 TIM2->CCR1 = rounded_ccr;
             }
             */
