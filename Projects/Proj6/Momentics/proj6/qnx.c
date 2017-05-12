@@ -125,7 +125,7 @@ double analog_to_digital(void){
     }
     else{
         for (i=0; i<10; i++){
-            if (i-5 > (int)volts){
+            if (i-5 < (int)volts){
                 printf(' ');
             }
             else{
