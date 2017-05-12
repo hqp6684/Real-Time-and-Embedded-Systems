@@ -27,7 +27,7 @@ int main(void){
             }
             else{
                 RED_LED_OFF();
-                double fine_ccr = (-0.0667*input_voltage)+21.242;
+                double fine_ccr = (-0.0667*(double)input_voltage)+21.242;
                 int rounded_ccr = round(fine_ccr);
                 TIM2->CCR1 = rounded_ccr;
             }
