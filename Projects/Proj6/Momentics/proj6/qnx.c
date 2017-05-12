@@ -8,6 +8,7 @@
 #include <sys/syspage.h>  /* for for cycles_per_second */
 #include <sys/mman.h>     /* for mmap_device_io() */
 #include <unistd.h>       /* for sleep() */
+#include <math.h>
 
 #define IO_PORT_SIZE                (1)
 #define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
@@ -141,7 +142,7 @@ void output_to_stm(double convertedAD){
     out8(portAHandle, convertedAD);
 }
 
-/* This function serves to scale the voltage so that no negative numbers are seen by the STM. Voltage now ranges from 0V to 20V. */
-double scale(double volts){
-    return (volts+5.0)*2.0;
+/* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
+int scale(double volts){
+    return round((volts+5.0)*25.5);
 }

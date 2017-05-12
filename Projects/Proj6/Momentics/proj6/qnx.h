@@ -6,4 +6,4 @@ void map_ports(void);
 void analog_to_digital_setup(void);
 double analog_to_digital(void);
 void output_to_stm(double convertedAD);
-double scale(double volts);
+int scale(double volts);
