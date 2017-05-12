@@ -138,11 +138,11 @@ double analog_to_digital(void){
 }
 
 /* Function to output the parameter value to portA. This parameter is the return value of analog_to_digital(). */
-void output_to_stm(double convertedAD){
-    out8(portAHandle, convertedAD);
+void output_to_stm(int scaled_voltage){
+    out8(portAHandle, scaled_voltage);
 }
 
 /* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
-int scale(double volts){
-    return round((volts+5.0)*25.5);
+int scale(double converted_volts){
+    return round((converted_volts+5.0)*25.5);
 }
