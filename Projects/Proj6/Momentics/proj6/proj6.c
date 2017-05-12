@@ -17,7 +17,7 @@ int main(void){
         if (convertedAD > 5.0 || convertedAD < -5.0){       //voltage has gone over accepted value
             printf("Voltage has gone over/under +/-5V\n");  //indicate failure in momentics/qnx
         }
-        output_to_stm(convertedAD);                         //kick it back to isolated qnx files - output to stm
+        output_to_stm(scale(convertedAD));                   //kick it back to isolated qnx files - output to stm
     }
     return 0;
 }

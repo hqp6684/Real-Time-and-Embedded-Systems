@@ -140,3 +140,8 @@ double analog_to_digital(void){
 void output_to_stm(double convertedAD){
     out8(portAHandle, convertedAD);
 }
+
+/* This function serves to scale the voltage so that no negative numbers are seen by the STM. Voltage now ranges from 0V to 20V. */
+double scale(double volts){
+    return (volts+5.0)*2.0;
+}
