@@ -14,7 +14,7 @@ void init_timer(void){
     RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;   // TIM2 timer clock enable
     
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;    // port b input
-    GPIOB->MODER &= ~GPIO_MODER_MODE2;      // pb2 input
+    GPIOB->MODER &= ~GPIO_MODER_MODER2;      // pb2 input
     GPIOB->PUPDR &= 0;
     GPIOB->PUPDR &= 0x2;                    // pulldown resistor
     
