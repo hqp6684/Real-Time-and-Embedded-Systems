@@ -89,7 +89,7 @@ void analog_to_digital_setup(void){
    bar graph that represents input signal. Returns double type voltage. */
 double analog_to_digital(void){
 	int LSB, MSB = 0;
-	short a_d_val = 0;
+	long a_d_val = 0;
 	double volts;
     //Wait for analog circuit to settle
     while( (in8(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'

@@ -110,7 +110,7 @@ double analog_to_digital(void){
     LSB = in8(baseHandle);
     MSB = in8(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
-    volts = (a_d_val/32768.0)*5.0;
+    volts = (a_d_val/32768.0f * 5);
     printf("%f\n",volts);
     return volts;
 }
