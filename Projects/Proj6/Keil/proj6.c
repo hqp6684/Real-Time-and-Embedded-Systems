@@ -16,7 +16,7 @@
    excel. */
 int main(void){
     int voltage_on_pins;
-		double scaled_back_voltage;
+    double scaled_back_voltage;
     double fine_ccr;
     int rounded_ccr;
     System_Clock_Init();
@@ -30,12 +30,12 @@ int main(void){
             voltage_on_pins = fetch_voltage_port_b();
             if (voltage_on_pins < 0 || voltage_on_pins > 255){ //New scaling from QNX
                 Red_LED_On();
-								scaled_back_voltage = ((double)voltage_on_pins/25.5)-5.0;
+                scaled_back_voltage = ((double)voltage_on_pins/25.5)-5.0; //Changes depends on scaling used in QNX portion
                 USART_Write(USART2, (uint8_t *)"\r\nVoltage out of range.\r\n", 25);
             }
             else{
                 Red_LED_Off();
-                fine_ccr = (-0.0667*(double)voltage_on_pins)+21.242;
+                fine_ccr = (-0.0667*(double)voltage_on_pins)+21.242; //Equation to convert qnx scale to a ccr value - dependent on QNX scale used
                 rounded_ccr = round(fine_ccr);
                 TIM2->CCR1 = rounded_ccr;
             }

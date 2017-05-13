@@ -1,0 +1,130 @@
+// Z. Weeden 2017
+
+#include <stdio.h>
+#include <stdlib.h>       /* for EXIT_* */
+#include <stdint.h>       /* for uintptr_t */
+#include <hw/inout.h>     /* for in*() and out*() functions */
+#include <sys/neutrino.h> /* for ThreadCtl() */
+#include <sys/syspage.h>  /* for for cycles_per_second */
+#include <sys/mman.h>     /* for mmap_device_io() */
+#include <unistd.h>       /* for sleep() */
+#include <math.h>
+
+#define IO_PORT_SIZE                (1)
+#define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
+#define A_D_MSB                     (BASE_ADDRESS+1)
+#define A_D_CHANNEL                 (BASE_ADDRESS+2)
+#define A_D_GAIN_STATUS             (BASE_ADDRESS+3)
+#define INTRPT_DMA_CONTROL_COUNTER  (BASE_ADDRESS+4)
+#define FIFO_THRESHOLD              (BASE_ADDRESS+5)
+#define D_A_LSB                     (BASE_ADDRESS+6)
+#define D_A_MSB                     (BASE_ADDRESS+7)
+#define PORT_A_OUT                  (BASE_ADDRESS+8)
+#define PORT_B_OUT                  (BASE_ADDRESS+9)
+#define PORT_C_OUT                  (BASE_ADDRESS+0xA)
+#define DIRECTION_CONTROL           (BASE_ADDRESS+0xB)
+#define COUNTER_TIMER_B0            (BASE_ADDRESS+0xC)
+#define COUNTER_TIMER_B1            (BASE_ADDRESS+0xD)
+#define COUNTER_TIMER_B2            (BASE_ADDRESS+0xE)
+#define COUNTER_TIMER_CONTROL       (BASE_ADDRESS+0xF)
+
+uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHandle, portBHandle, dataDirectionHandle, pol_handle;
+
+/* Request I/O access permission - needed for accessing registers. */
+void request_access_permission(void){
+    if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){
+        perror("Failed to get I/O access permission");
+    }
+}
+
+/* Map ports into address space so we can observer/write to them using handler pointers. */
+void map_ports(void){
+	pol_handle = mmap_device_io(IO_PORT_SIZE, COUNTER_TIMER_B1);
+	if(pol_handle == MAP_DEVICE_FAILED){
+		perror("Failed to pol addr");
+	}
+
+    baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
+    if(baseHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map base addr");
+    }
+
+    adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS);
+    if(adGainStatusHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D gain status register");
+    }
+
+    adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL);
+    if(adChannelHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D channel register");
+    }
+
+    adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB);
+    if(adMSBHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D MSB register");
+    }
+
+    portAHandle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT);
+    if(portAHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map port a register");
+    }
+
+    portBHandle = mmap_device_io(IO_PORT_SIZE,PORT_B_OUT);
+    if(portBHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map port b register");
+    }
+
+    dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
+    if(dataDirectionHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map data direction register");
+    }
+
+    //Select input channel
+	out8(adChannelHandle,0x44); //0010 0010 channel2
+
+	//Select input range
+	//out8(adGainStatusHandle, 0x01); //0000 0001 bipolar +-5V gain of 2
+	out8(adMSBHandle, 2);
+	out8(pol_handle, 0x00)
+
+}
+
+/* Convert signal from analog to digital by writing proper values to registers. Scales A/D code back to voltage. Prints out
+   bar graph that represents input signal. Returns double type voltage. */
+double analog_to_digital(void){
+	int LSB, MSB = 0;
+	short a_d_val = 0;
+	double volts;
+    //Wait for analog circuit to settle
+    while( (in8(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
+        ;                                   //A/D is setting new value
+    }
+    //bit 5 went low - ok to start conversion
+
+    //Initiate conversion
+    out8(baseHandle,0x80);                //1000 0000 STRTAD start A/D
+
+    //Wait for conversion to finish
+    while( (in8(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
+        ;                                   //converstion still in progress
+    }
+    //bit 7 went low conversion complete
+
+    //Resolving adc value
+    LSB = in8(baseHandle);
+    MSB = in8(adMSBHandle);
+    a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
+    volts = (a_d_val/32768.0)*5.0;
+    printf("%f\n",volts);
+    return volts;
+}
+
+/* Function to output the parameter value to portA. This parameter is the return value of analog_to_digital(). */
+void output_to_stm(int scaled_voltage){
+    out8(portAHandle, scaled_voltage);
+}
+
+/* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
+int scale(double converted_volts){
+    return round((converted_volts+5.0)*25.5);
+}

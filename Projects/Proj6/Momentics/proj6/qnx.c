@@ -12,23 +12,18 @@
 
 #define IO_PORT_SIZE                (1)
 #define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
-#define A_D_MSB                     (BASE_ADDRESS+1)
-#define A_D_CHANNEL                 (BASE_ADDRESS+2)
-#define A_D_GAIN_STATUS             (BASE_ADDRESS+3)
-#define INTRPT_DMA_CONTROL_COUNTER  (BASE_ADDRESS+4)
-#define FIFO_THRESHOLD              (BASE_ADDRESS+5)
-#define D_A_LSB                     (BASE_ADDRESS+6)
-#define D_A_MSB                     (BASE_ADDRESS+7)
-#define PORT_A_OUT                  (BASE_ADDRESS+8)
-#define PORT_B_OUT                  (BASE_ADDRESS+9)
-#define PORT_C_OUT                  (BASE_ADDRESS+0xA)
+#define A_D_MSB                     (BASE_ADDRESS+0x1)
+#define A_D_CHANNEL                 (BASE_ADDRESS+0x2)
+#define A_D_GAIN_STATUS             (BASE_ADDRESS+0x3)
+#define PORT_A_OUT                  (BASE_ADDRESS+0x8)
 #define DIRECTION_CONTROL           (BASE_ADDRESS+0xB)
-#define COUNTER_TIMER_B0            (BASE_ADDRESS+0xC)
-#define COUNTER_TIMER_B1            (BASE_ADDRESS+0xD)
-#define COUNTER_TIMER_B2            (BASE_ADDRESS+0xE)
-#define COUNTER_TIMER_CONTROL       (BASE_ADDRESS+0xF)
 
-uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHandle, portBHandle, dataDirectionHandle;
+uintptr_t baseHandle;
+uintptr_t adMSBHandle;
+uintptr_t adChannelHandle;
+uintptr_t adGainStatusHandle;
+uintptr_t portAHandle;
+uintptr_t dataDirectionHandle;
 
 /* Request I/O access permission - needed for accessing registers. */
 void request_access_permission(void){
@@ -64,58 +59,53 @@ void map_ports(void){
         perror("Failed to map port a register");
     }
 
-    portBHandle = mmap_device_io(IO_PORT_SIZE,PORT_B_OUT);
-    if(portBHandle == MAP_DEVICE_FAILED){
-        perror("Failed to map port b register");
-    }
-
     dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
     if(dataDirectionHandle == MAP_DEVICE_FAILED){
         perror("Failed to map data direction register");
     }
 }
 
-
 /* Preliminary setup for a/d conversion. Set pins to search for signal and choosing input range for bipolar from -5V to 5V */
 void analog_to_digital_setup(void){
-    //Select input channel
-    out8(adChannelHandle,0x22); //0010 0010 channel2
+	//Select input channel
+	out8(adChannelHandle,0x44); //respective channel vin
 
-    //Select input range
-    out8(adGainStatusHandle, 0x01); //0000 0001 bipolar +-5V gain of 2
+	//Select input range
+	out8(adGainStatusHandle, 0x01); //0000 0001 bipolar +-5V gain of 2
+
+	out8(baseHandle,0x10); //Reset fifo
+
+	out8(dataDirectionHandle, 0x00); //Direction dioa and diob output
 }
 
 /* Convert signal from analog to digital by writing proper values to registers. Scales A/D code back to voltage. Prints out
    bar graph that represents input signal. Returns double type voltage. */
 double analog_to_digital(void){
-	int LSB, MSB = 0;
+	int8_t LSB, MSB = 0;
 	short a_d_val = 0;
-	double volts;
-    //Wait for analog circuit to settle
-    while( (in8(adGainStatusHandle) & 0x20) ){ //base+3 bit 5 is not less than 32 0010 0000 - subject to 'hardware fault'
-        ;                                   //A/D is setting new value
+	double volts = 0.0;
+
+    while( (in8(adGainStatusHandle) & 0x20) ){ //Wait for analog circuit to settle
+        ; //A/D is setting new value
     }
-    //bit 5 went low - ok to start conversion
 
     //Initiate conversion
-    out8(baseHandle,0x80);                //1000 0000 STRTAD start A/D
+    out8(baseHandle,0x80); //1000 0000 STRTAD start A/D
 
-    //Wait for conversion to finish
-    while( (in8(adGainStatusHandle) & 0x80) ){ //base+3 bit 7 is not less than 128 1000 0000 - subject to 'hardware fault'
-        ;                                   //converstion still in progress
+    while( (in8(adGainStatusHandle) & 0x80) ){ //wait for conversion to finish
+        ; //conversion still in progress
     }
-    //bit 7 went low conversion complete
 
     //Resolving adc value
     LSB = in8(baseHandle);
     MSB = in8(adMSBHandle);
-    a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
-    volts = (a_d_val/32768.0)*5.0;
+    a_d_val = (MSB * 256) + LSB; //shifts MSB over 8 bits and appends the lsb
+    volts = (a_d_val/32768.0)*5.0; // convert a/d code to usable units
     printf("%f\n",volts);
     return volts;
 }
 
-/* Function to output the parameter value to portA. This parameter is the return value of analog_to_digital(). */
+/* Function to output the parameter value to portA. This parameter is the return scaled value of analog_to_digital(). */
 void output_to_stm(int scaled_voltage){
     out8(portAHandle, scaled_voltage);
 }
