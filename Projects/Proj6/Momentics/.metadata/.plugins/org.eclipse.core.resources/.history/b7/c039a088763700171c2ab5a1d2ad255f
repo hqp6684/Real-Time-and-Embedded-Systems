@@ -34,6 +34,7 @@ uintptr_t baseHandle, adMSBHandle, adChannelHandle, adGainStatusHandle, portAHan
 void request_access_permission(void){
     if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){
         perror("Failed to get I/O access permission");
+        return 1;
     }
 }
 
@@ -42,36 +43,43 @@ void map_ports(void){
     baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
     if(baseHandle == MAP_DEVICE_FAILED){
         perror("Failed to map base addr");
+        return 2;
     }
 
     adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS);
     if(adGainStatusHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D gain status register");
+        return 2;
     }
 
     adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL);
     if(adChannelHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D channel register");
+        return 2;
     }
 
     adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB);
     if(adMSBHandle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D MSB register");
+        return 2;
     }
 
     portAHandle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT);
     if(portAHandle == MAP_DEVICE_FAILED){
         perror("Failed to map port a register");
+        return 2;
     }
 
     portBHandle = mmap_device_io(IO_PORT_SIZE,PORT_B_OUT);
     if(portBHandle == MAP_DEVICE_FAILED){
         perror("Failed to map port b register");
+        return 2;
     }
 
     dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
     if(dataDirectionHandle == MAP_DEVICE_FAILED){
         perror("Failed to map data direction register");
+        return 2;
     }
 }
 
@@ -111,7 +119,6 @@ double analog_to_digital(void){
     MSB = in8(adMSBHandle);
     a_d_val = MSB * 256 + LSB; //essentially shifts MSB over 8bits and appends the lsb
     volts = (a_d_val/32768.0)*5.0;
-    printf("%f\n",volts);
     return volts;
 }
 
