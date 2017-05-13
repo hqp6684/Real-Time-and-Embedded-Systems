@@ -80,6 +80,8 @@ void a_d_init(void){
     //Select the input range
     out8(adGainHandle,0x01) //+-5V bipolar
 
+    out8(baseHandle,0x10); //Reset fifo depth to 0
+
     //DIO direction
     out8(dioDirectionHandle,0x00); //DIRA DIRAB output
 }
