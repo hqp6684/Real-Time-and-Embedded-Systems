@@ -30,21 +30,26 @@ int main(void){
     USART_Write(USART2, (uint8_t *)"\r\nWelcome to Proj6\r\n", 20);
 
     while(1){ // Poll indefinitely to read output of purplebox
-        //if (pe_event()){  //action seen on pin
-        voltage_on_pins = fetch_voltage();
-        n = sprintf((char *)bounds, "[%d] scaled number resolved\r\n\r\n", voltage_on_pins);
-        USART_Write(USART2, bounds, n); 
-        if (voltage_on_pins < 0 || voltage_on_pins > 255){ //New scaling from QNX
-            Red_LED_On();
-            //scaled_back_voltage = ((double)voltage_on_pins/25.5)-5.0; //Changes depends on scaling used in QNX portion
-            USART_Write(USART2, (uint8_t *)"\r\nVoltage out of range.\r\n", 25);
+        if (pe_event()){  //action seen on pin
+          voltage_on_pins = fetch_voltage();
+          //n = sprintf((char *)bounds, "[%d] scaled number resolved\r\n\r\n", voltage_on_pins);
+          //USART_Write(USART2, bounds, n); 
+          if (voltage_on_pins < 0 || voltage_on_pins > 255){ //New scaling from QNX
+              Red_LED_On();
+              //scaled_back_voltage = ((double)voltage_on_pins/25.5)-5.0; //Changes depends on scaling used in QNX portion
+              USART_Write(USART2, (uint8_t *)"\r\nVoltage out of range.\r\n", 25);
+          }
+          else{
+              Red_LED_Off();
+              fine_ccr = (-0.0667*(double)voltage_on_pins)+21.242; //Equation to convert qnx scale to a ccr value - dependent on QNX scale used
+              rounded_ccr = round(fine_ccr);
+              //n = sprintf((char *)bounds, "Rough ccr: [%f]\r\n\r\n", fine_ccr);
+              //USART_Write(USART2, bounds, n);
+              n = sprintf((char *)bounds, "Seen voltage: [%f] || CCR: [%f]\r\n\r\n", ((voltage_on_pins/25.5)-5.0),fine_ccr);
+              USART_Write(USART2, bounds, n);
+              //TIM2->CCR1 = rounded_ccr;
+              TIM2->CCR1 = (int)fine_ccr;
+          }
         }
-        else{
-            Red_LED_Off();
-            fine_ccr = (-0.0667*(double)voltage_on_pins)+21.242; //Equation to convert qnx scale to a ccr value - dependent on QNX scale used
-            rounded_ccr = round(fine_ccr);
-            TIM2->CCR1 = rounded_ccr;
-        }
-        //}
     }
 }
