@@ -101,7 +101,7 @@ double analog_to_digital(void){
     MSB = in8(adMSBHandle);
     a_d_val = (MSB * 256) + LSB; //shifts MSB over 8 bits and appends the lsb
     volts = (a_d_val/32768.0)*5.0; // convert a/d code to usable units
-    printf("%f\n",volts);
+    printf("%f volts\n",volts);
     return volts;
 }
 
@@ -112,5 +112,8 @@ void output_to_stm(int scaled_voltage){
 
 /* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
 int scale(double converted_volts){
-    return round((converted_volts+5.0)*25.5);
+	int scaled_value=0;
+    scaled_value=round((converted_volts+5.0)*25.5);
+    //printf("Scaled value: %d\n",scaled_value); //between 0 and 255
+    return scaled_value;
 }

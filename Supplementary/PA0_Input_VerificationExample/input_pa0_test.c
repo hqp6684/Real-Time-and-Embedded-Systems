@@ -14,6 +14,15 @@ void init_pa0( void )
 	// GPIOA->MODER |= 2 ;									// Enable alternate function mode (binary 10) for PA0
 }
 
+GPIOE->MODER &= ~0xC0000000 ;//E15
+GPIOE->MODER &= ~0x30000000 ;//E14
+GPIOE->MODER &= ~0xC000000 ;//E13
+GPIOE->MODER &= ~0x3000000 ;//E12
+GPIOE->MODER &= ~0xC00000 ;//E11
+GPIOE->MODER &= ~0x300000 ;//E10
+GPIOC->MODER &= ~0xC0000000 ;//C15
+GPIOC->MODER &= ~0x30000000 ;//C14
+
 // Read the state of PA0 (high or low)
 int read_pa0( void )
 {
