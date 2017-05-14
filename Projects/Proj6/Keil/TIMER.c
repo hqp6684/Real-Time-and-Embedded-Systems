@@ -8,7 +8,7 @@
 uint8_t scaleDisplay[50];
 
 /* Timer init and pin config for PWM on PA0 and PA1 */
-void init_timer(void){
+void init_pwm(void){
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;    // clock enable on GPIO
     GPIOA->MODER &= ~(0x3);          // bit mask and clear register 31..0
   
@@ -34,24 +34,24 @@ int pe_event(void){ //lsb most frequently change
     return (GPIOE->IDR & 0x8000);                                              
 }
 
-/* Read voltage */
+/* Read voltage - order of pins right down the row*/
 int fetch_voltage(void){
-    int e15bit, e14bit, e13bit, e12bit, e11bit, e10bit, c15bit, c14bit = 0;
+    int e15bit, e14bit, e13bit, e12bit, e11bit, e10bit, h1bit, h0bit = 0;
     int resolved_voltage = 0;
     int x;
-    x = sprintf((char *)scaleDisplay, "[%d] in GPIOE\r\n\r\n", GPIOE->IDR);
-    USART_Write(USART2, scaleDisplay, x); 
-    x = sprintf((char *)scaleDisplay, "[%d] in GPIOC\r\n\r\n", GPIOC->IDR);
-    USART_Write(USART2, scaleDisplay, x); 
+    //x = sprintf((char *)scaleDisplay, "[%d] in GPIOE\r\n\r\n", GPIOE->IDR);
+    //USART_Write(USART2, scaleDisplay, x); 
+    //x = sprintf((char *)scaleDisplay, "[%d] in GPIOH\r\n\r\n", GPIOH->IDR);
+    //USART_Write(USART2, scaleDisplay, x); 
   
     e15bit=(GPIOE->IDR & 0x8000); //pe15 - dio a0
     e14bit=(GPIOE->IDR & 0x4000); //pe14 - dio a1
     e13bit=(GPIOE->IDR & 0x2000); //pe13 - dio a2
     e12bit=(GPIOE->IDR & 0x1000); //pe12 - dio a3
-    e11bit=(GPIOE->IDR & 0x800); //pe11 - dio a4
-    e10bit=(GPIOE->IDR & 0x400); //pe10 - dio a5
-    c15bit=(GPIOC->IDR & 0x8000); //pc15 - dio a6
-    c14bit=(GPIOC->IDR & 0x4000); //pc14 - dio a7
+    e10bit=(GPIOE->IDR & 0x400);  //pe10 - dio a4 !!Due to pin layout
+    e11bit=(GPIOE->IDR & 0x800);  //pe11 - dio a5 !!Due to pin layout
+    h1bit=(GPIOC->IDR & 0x2); //ph1 - dio a6
+    h0bit=(GPIOC->IDR & 0x1); //ph0 - dio a7
     if (e15bit > 0){//b0
       resolved_voltage+=1;
     }
@@ -64,31 +64,32 @@ int fetch_voltage(void){
     if (e12bit > 0){//b3
       resolved_voltage+=8;
     }
-    if (e11bit > 0){//b4
+    if (e10bit > 0){//b4 !!Pin layout
       resolved_voltage+=16;
     }
-    if (e10bit > 0){//b5
+    if (e11bit > 0){//b5 !!Pin layout
       resolved_voltage+=32;
     }
-    if (c15bit > 0){//b6
+    if (h1bit > 0){//b6
       resolved_voltage+=64;
     }
-    if (c14bit > 0){//b7
+    if (h0bit > 0){//b7
       resolved_voltage+=128;
     }
     return resolved_voltage;
 }
 
 void init_gpio(void){
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN | RCC_AHB2ENR_GPIOEEN;    // clock enable on GPIO
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOHEN;
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOEEN;    // clock enable on GPIO
     
     GPIOE->MODER &= ~(0xFFF00000);//E15,14,13,12,11,10
-    GPIOE->MODER |= 0xAAA00000; //af for e15,14,13,12,11,10
+    //GPIOE->MODER |= 0xAAA00000; //af for e15,14,13,12,11,10
     //GPIOE->PUPDR &= ~(0xFFF00000);//E15,14,13,12,11,10
     //GPIOE->PUPDR |= 0xAAA00000; //E15,14,13,12,11,10 pulldown
   
-    GPIOC->MODER &= ~(0xF0000000);//C15,14
-    GPIOC->MODER |= 0xA0000000; //af for c15,14
-    GPIOC->PUPDR &= ~(0xF0000000);//C15,14
+    GPIOH->MODER &= ~(0x0000000F);//H0,1
+    //GPIOC->MODER |= 0xA0000000; //af for c15,14
+    //GPIOC->PUPDR &= ~(0xF0000000);//C15,14
     //GPIOC->PUPDR |= 0xA0000000; //C15,14 pulldown
 }

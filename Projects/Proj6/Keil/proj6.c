@@ -25,7 +25,7 @@ int main(void){
     System_Clock_Init();
     LED_Init();
     UART2_Init();
-    init_timer();
+    init_pwm();
     init_gpio();
     USART_Write(USART2, (uint8_t *)"\r\nWelcome to Proj6\r\n", 20);
 
@@ -33,7 +33,7 @@ int main(void){
         //if (pe_event()){  //action seen on pin
         voltage_on_pins = fetch_voltage();
         n = sprintf((char *)bounds, "[%d] scaled number resolved\r\n\r\n", voltage_on_pins);
-        //USART_Write(USART2, bounds, n); 
+        USART_Write(USART2, bounds, n); 
         if (voltage_on_pins < 0 || voltage_on_pins > 255){ //New scaling from QNX
             Red_LED_On();
             //scaled_back_voltage = ((double)voltage_on_pins/25.5)-5.0; //Changes depends on scaling used in QNX portion
