@@ -38,12 +38,6 @@ int pe_event(void){ //lsb most frequently change
 int fetch_voltage(void){
     int e15bit, e14bit, e13bit, e12bit, e11bit, e10bit, h1bit, h0bit = 0;
     int resolved_voltage = 0;
-    int x;
-    //x = sprintf((char *)scaleDisplay, "[%d] in GPIOE\r\n\r\n", GPIOE->IDR);
-    //USART_Write(USART2, scaleDisplay, x); 
-    //x = sprintf((char *)scaleDisplay, "[%d] in GPIOH\r\n\r\n", GPIOH->IDR);
-    //USART_Write(USART2, scaleDisplay, x); 
-  
     e15bit=(GPIOE->IDR & 0x8000); //pe15 - dio a0
     e14bit=(GPIOE->IDR & 0x4000); //pe14 - dio a1
     e13bit=(GPIOE->IDR & 0x2000); //pe13 - dio a2
@@ -84,12 +78,5 @@ void init_gpio(void){
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOEEN;    // clock enable on GPIO
     
     GPIOE->MODER &= ~(0xFFF00000);//E15,14,13,12,11,10
-    //GPIOE->MODER |= 0xAAA00000; //af for e15,14,13,12,11,10
-    //GPIOE->PUPDR &= ~(0xFFF00000);//E15,14,13,12,11,10
-    //GPIOE->PUPDR |= 0xAAA00000; //E15,14,13,12,11,10 pulldown
-  
     GPIOH->MODER &= ~(0x0000000F);//H0,1
-    //GPIOC->MODER |= 0xA0000000; //af for c15,14
-    //GPIOC->PUPDR &= ~(0xF0000000);//C15,14
-    //GPIOC->PUPDR |= 0xA0000000; //C15,14 pulldown
 }
