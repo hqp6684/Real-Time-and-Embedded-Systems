@@ -50,8 +50,8 @@ int fetch_voltage(void){
     e12bit=(GPIOE->IDR & 0x1000); //pe12 - dio a3
     e10bit=(GPIOE->IDR & 0x400);  //pe10 - dio a4 !!Due to pin layout
     e11bit=(GPIOE->IDR & 0x800);  //pe11 - dio a5 !!Due to pin layout
-    h1bit=(GPIOC->IDR & 0x2); //ph1 - dio a6
-    h0bit=(GPIOC->IDR & 0x1); //ph0 - dio a7
+    h1bit=(GPIOH->IDR & 0x2); //ph1 - dio a6
+    h0bit=(GPIOH->IDR & 0x1); //ph0 - dio a7
     if (e15bit > 0){//b0
       resolved_voltage+=1;
     }
