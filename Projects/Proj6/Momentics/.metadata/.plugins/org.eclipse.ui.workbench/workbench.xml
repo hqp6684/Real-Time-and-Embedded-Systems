@@ -38,15 +38,15 @@
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="proj6.c" partName="proj6.c" path="Z:/Real-Time-and-Embedded-Systems/Projects/Proj6/Momentics/proj6/proj6.c" title="proj6.c" tooltip="proj6/proj6.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/proj6/proj6.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="892" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="11" selectionOffset="811" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="qnx.h" partName="qnx.h" path="Z:/Real-Time-and-Embedded-Systems/Projects/Proj6/Momentics/proj6/qnx.h" title="qnx.h" tooltip="proj6/qnx.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/proj6/qnx.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="209" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="188" selectionTopPixel="0"/>
 </editor>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="qnx.c" partName="qnx.c" path="Z:/Real-Time-and-Embedded-Systems/Projects/Proj6/Momentics/proj6/qnx.c" title="qnx.c" tooltip="proj6/qnx.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/proj6/qnx.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2641" selectionTopPixel="853"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2375" selectionTopPixel="748"/>
 </editor>
 </editors>
 <views>
@@ -467,7 +467,7 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.14911607" ratioLeft="194" ratioRight="1107" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottom" ratio="0.50214595" ratioLeft="468" ratioRight="464" relationship="4" relative="org.eclipse.ui.editorss">
+<info folder="true" part="bottom" ratio="0.49328858" ratioLeft="441" ratioRight="453" relationship="4" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
@@ -500,25 +500,9 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj6/qnx.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj6/proj6.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj6/qnx.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj6/proj6.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/proj6/qnx.h"/>
 </editors>
-<item historyLabel="qnx.h" index="2">
-<position info="not_deleted" x="209" y="0"/>
-</item>
-<item historyLabel="proj6.c" index="0">
-<position/>
-</item>
-<item historyLabel="qnx.c" index="1">
-<position/>
-</item>
-<item historyLabel="proj6.c" index="0">
-<position/>
-</item>
-<item historyLabel="qnx.h" index="2">
-<position info="not_deleted" x="209" y="0"/>
-</item>
-<item historyLabel="qnx.c" index="1">
-<position info="not_deleted" x="83" y="0"/>
-</item>
 <item historyLabel="qnx.h" index="2">
 <position info="not_deleted" x="0" y="209"/>
 </item>
@@ -648,8 +632,26 @@
 <item historyLabel="proj6.c" index="3">
 <position info="not_deleted" x="892" y="0"/>
 </item>
-<item active="true" historyLabel="qnx.c" index="1">
+<item historyLabel="qnx.c" index="1">
 <position info="not_deleted" x="4216" y="0"/>
+</item>
+<item historyLabel="proj6.c" index="5">
+<position info="not_deleted" x="945" y="0"/>
+</item>
+<item historyLabel="qnx.h" index="6">
+<position info="not_deleted" x="215" y="0"/>
+</item>
+<item historyLabel="qnx.c" index="1">
+<position info="not_deleted" x="996" y="0"/>
+</item>
+<item historyLabel="proj6.c" index="5">
+<position info="not_deleted" x="811" y="11"/>
+</item>
+<item historyLabel="qnx.h" index="6">
+<position info="not_deleted" x="188" y="0"/>
+</item>
+<item active="true" historyLabel="qnx.c" index="1">
+<position info="not_deleted" x="996" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>

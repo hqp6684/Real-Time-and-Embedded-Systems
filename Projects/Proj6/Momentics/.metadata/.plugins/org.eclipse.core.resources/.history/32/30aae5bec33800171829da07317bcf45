@@ -1,0 +1,118 @@
+// Z. Weeden 2017
+
+#include <stdio.h>
+#include <stdlib.h>       /* for EXIT_* */
+#include <stdint.h>       /* for uintptr_t */
+#include <hw/inout.h>     /* for in*() and out*() functions */
+#include <sys/neutrino.h> /* for ThreadCtl() */
+#include <sys/syspage.h>  /* for for cycles_per_second */
+#include <sys/mman.h>     /* for mmap_device_io() */
+#include <unistd.h>       /* for sleep() */
+#include <math.h>
+
+#define IO_PORT_SIZE                (1)
+#define BASE_ADDRESS                (0x280) //QNX base address - a/d lsb
+#define A_D_MSB                     (BASE_ADDRESS+0x1)
+#define A_D_CHANNEL                 (BASE_ADDRESS+0x2)
+#define A_D_GAIN_STATUS             (BASE_ADDRESS+0x3)
+#define PORT_A_OUT                  (BASE_ADDRESS+0x8)
+#define DIRECTION_CONTROL           (BASE_ADDRESS+0xB)
+
+uintptr_t base_handle;
+uintptr_t a_d_msb_handle;
+uintptr_t a_d_channel_handle;
+uintptr_t a_d_gain_status_handle;
+uintptr_t port_a_handle;
+uintptr_t data_Direction_Handle;
+
+/* Request I/O access permission - needed for accessing registers. */
+void request_access_permission(void){
+    if ( ThreadCtl(_NTO_TCTL_IO, NULL) == -1){
+        perror("Failed to get I/O access permission");
+    }
+}
+
+/* Map ports into address space so we can observer/write to them using handler pointers. */
+void map_ports(void){
+	base_handle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
+    if(base_handle == MAP_DEVICE_FAILED){
+        perror("Failed to map base addr");
+    }
+
+    a_d_gain_status_handle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS);
+    if(a_d_gain_status_handle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D gain status register");
+    }
+
+    a_d_channel_handle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL);
+    if(a_d_channel_handle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D channel register");
+    }
+
+    a_d_msb_handle = mmap_device_io(IO_PORT_SIZE, A_D_MSB);
+    if(a_d_msb_handle == MAP_DEVICE_FAILED){
+        perror("Failed to map A/D MSB register");
+    }
+
+    portAHandle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT);
+    if(portAHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map port a register");
+    }
+
+    dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
+    if(dataDirectionHandle == MAP_DEVICE_FAILED){
+        perror("Failed to map data direction register");
+    }
+}
+
+/* Preliminary setup for a/d conversion. Set pins to search for signal and choosing input range for bipolar from -5V to 5V */
+void analog_to_digital_setup(void){
+	//Select input channel
+	out8(a_d_channel_handle,0x44); //respective channel vin4
+
+	//Select input range
+	out8(a_d_gain_status_handle, 0x01); //0000 0001 bipolar +-5V gain of 2
+
+	out8(base_handle,0x10); //Reset fifo
+
+	out8(dataDirectionHandle, 0x00); //Direction dioa and diob output
+}
+
+/* Convert signal from analog to digital by writing proper values to registers. Scales A/D code back to voltage. Prints out
+   bar graph that represents input signal. Returns double type voltage. */
+double analog_to_digital(void){
+	int8_t LSB, MSB = 0;
+	short a_d_val = 0;
+	double volts = 0.0;
+
+    while( (in8(a_d_gain_status_handle) & 0x20) ){ //Wait for analog circuit to settle
+        ; //A/D is setting new value
+    }
+
+    //Initiate conversion
+    out8(base_handle,0x80); //1000 0000 STRTAD start A/D
+
+    while( (in8(a_d_gain_status_handle) & 0x80) ){ //wait for conversion to finish
+        ; //conversion still in progress
+    }
+
+    //Resolving adc value
+    LSB = in8(base_handle);
+    MSB = in8(a_d_msb_handle);
+    a_d_val = (MSB * 256) + LSB; //shifts MSB over 8 bits and appends the lsb
+    volts = (a_d_val/32768.0)*5.0; // convert a/d code to usable units
+    printf("%f volts\n",volts);
+    return volts;
+}
+
+/* Function to output the parameter value to portA. This parameter is the return scaled value of analog_to_digital(). */
+void output_to_stm(int scaled_voltage){
+    out8(portAHandle, scaled_voltage);
+}
+
+/* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
+int scale_0_255(double converted_volts){
+	int scaled_value=0;
+    scaled_value=round((converted_volts+5.0)*25.5);
+    return scaled_value;
+}

@@ -18,12 +18,12 @@
 #define PORT_A_OUT                  (BASE_ADDRESS+0x8)
 #define DIRECTION_CONTROL           (BASE_ADDRESS+0xB)
 
-uintptr_t baseHandle;
-uintptr_t adMSBHandle;
-uintptr_t adChannelHandle;
-uintptr_t adGainStatusHandle;
-uintptr_t portAHandle;
-uintptr_t dataDirectionHandle;
+uintptr_t base_handle;
+uintptr_t a_d_msb_handle;
+uintptr_t a_d_channel_handle;
+uintptr_t a_d_gain_status_handle;
+uintptr_t port_a_handle;
+uintptr_t data_direction_handle;
 
 /* Request I/O access permission - needed for accessing registers. */
 void request_access_permission(void){
@@ -34,33 +34,33 @@ void request_access_permission(void){
 
 /* Map ports into address space so we can observer/write to them using handler pointers. */
 void map_ports(void){
-    baseHandle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
-    if(baseHandle == MAP_DEVICE_FAILED){
+	base_handle = mmap_device_io(IO_PORT_SIZE, BASE_ADDRESS);
+    if(base_handle == MAP_DEVICE_FAILED){
         perror("Failed to map base addr");
     }
 
-    adGainStatusHandle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS);
-    if(adGainStatusHandle == MAP_DEVICE_FAILED){
+    a_d_gain_status_handle = mmap_device_io(IO_PORT_SIZE, A_D_GAIN_STATUS);
+    if(a_d_gain_status_handle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D gain status register");
     }
 
-    adChannelHandle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL);
-    if(adChannelHandle == MAP_DEVICE_FAILED){
+    a_d_channel_handle = mmap_device_io(IO_PORT_SIZE, A_D_CHANNEL);
+    if(a_d_channel_handle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D channel register");
     }
 
-    adMSBHandle = mmap_device_io(IO_PORT_SIZE, A_D_MSB);
-    if(adMSBHandle == MAP_DEVICE_FAILED){
+    a_d_msb_handle = mmap_device_io(IO_PORT_SIZE, A_D_MSB);
+    if(a_d_msb_handle == MAP_DEVICE_FAILED){
         perror("Failed to map A/D MSB register");
     }
 
-    portAHandle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT);
-    if(portAHandle == MAP_DEVICE_FAILED){
+    port_a_handle = mmap_device_io(IO_PORT_SIZE,PORT_A_OUT);
+    if(port_a_handle == MAP_DEVICE_FAILED){
         perror("Failed to map port a register");
     }
 
-    dataDirectionHandle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
-    if(dataDirectionHandle == MAP_DEVICE_FAILED){
+    data_direction_handle = mmap_device_io(IO_PORT_SIZE,DIRECTION_CONTROL);
+    if(data_direction_handle == MAP_DEVICE_FAILED){
         perror("Failed to map data direction register");
     }
 }
@@ -68,14 +68,14 @@ void map_ports(void){
 /* Preliminary setup for a/d conversion. Set pins to search for signal and choosing input range for bipolar from -5V to 5V */
 void analog_to_digital_setup(void){
 	//Select input channel
-	out8(adChannelHandle,0x44); //respective channel vin
+	out8(a_d_channel_handle,0x44); //respective channel vin4
 
 	//Select input range
-	out8(adGainStatusHandle, 0x01); //0000 0001 bipolar +-5V gain of 2
+	out8(a_d_gain_status_handle, 0x01); //0000 0001 bipolar +-5V gain of 2
 
-	out8(baseHandle,0x10); //Reset fifo
+	out8(base_handle,0x10); //Reset fifo
 
-	out8(dataDirectionHandle, 0x00); //Direction dioa and diob output
+	out8(data_direction_handle, 0x00); //Direction dioa and diob output
 }
 
 /* Convert signal from analog to digital by writing proper values to registers. Scales A/D code back to voltage. Prints out
@@ -85,20 +85,20 @@ double analog_to_digital(void){
 	short a_d_val = 0;
 	double volts = 0.0;
 
-    while( (in8(adGainStatusHandle) & 0x20) ){ //Wait for analog circuit to settle
+    while( (in8(a_d_gain_status_handle) & 0x20) ){ //Wait for analog circuit to settle
         ; //A/D is setting new value
     }
 
     //Initiate conversion
-    out8(baseHandle,0x80); //1000 0000 STRTAD start A/D
+    out8(base_handle,0x80); //1000 0000 STRTAD start A/D
 
-    while( (in8(adGainStatusHandle) & 0x80) ){ //wait for conversion to finish
+    while( (in8(a_d_gain_status_handle) & 0x80) ){ //wait for conversion to finish
         ; //conversion still in progress
     }
 
     //Resolving adc value
-    LSB = in8(baseHandle);
-    MSB = in8(adMSBHandle);
+    LSB = in8(base_handle);
+    MSB = in8(a_d_msb_handle);
     a_d_val = (MSB * 256) + LSB; //shifts MSB over 8 bits and appends the lsb
     volts = (a_d_val/32768.0)*5.0; // convert a/d code to usable units
     printf("%f volts\n",volts);
@@ -107,13 +107,12 @@ double analog_to_digital(void){
 
 /* Function to output the parameter value to portA. This parameter is the return scaled value of analog_to_digital(). */
 void output_to_stm(int scaled_voltage){
-    out8(portAHandle, scaled_voltage);
+    out8(port_a_handle, scaled_voltage);
 }
 
 /* This function serves to scale the voltage so that no negative numbers are seen by the STM. Now ranges from 0V to 255. */
-int scale(double converted_volts){
+int scale_0_255(double converted_volts){
 	int scaled_value=0;
     scaled_value=round((converted_volts+5.0)*25.5);
-    //printf("Scaled value: %d\n",scaled_value); //between 0 and 255
     return scaled_value;
 }
