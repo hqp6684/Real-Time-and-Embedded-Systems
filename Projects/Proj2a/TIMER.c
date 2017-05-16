@@ -1,46 +1,43 @@
-// Z. Weeden Feb. 18, 2017
-#include "stm32l476xx.h"
-#include "input_pa0_pa1_test.h"
-#include "SysClock.h"    //Sysclock
-#include "TIMER.h"
-#include <string.h>
-#include <stdio.h>
+#include "timer.h"
 
-#define SYSTEM_CLK 8000   // STM 80MHZ
+/* Sets various registers properly to set up a PWM output on pina PA0 and PA1 */
+void pwmstart(uint32_t servo_null){
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;//enable clock
+    GPIOA->MODER &= ~(0xFFFFFFFF); //PA0 TIM2 CH1
+    GPIOA->MODER |= 10; //set PA0 AF
+    GPIOA->MODER |= 10<<2; //set PA1 AF
+    GPIOA->AFR[0] |= 1; //PA0/PA1 AF1 TIM2_CH1
+    GPIOA->AFR[0] |= 1<<4; //PA0/PA1 AF1 TIM2_CH2
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN; //timer2 enable
+    TIM2->PSC = 8000; //20ms period
+    TIM2->CCMR1 &= ~(0x303);
+    TIM2->CCMR1 |= 1 << 3; // preload enable
+    TIM2->CCMR1 |= 1 << 11; // preload enable 2
+    TIM2->CCMR1 |= 110 << 4; // pwm mode 1 OCM1
+    TIM2->CCMR1 |= 110 << 12; // pwm mode 1 OCM2
+    TIM2->CCMR1 &= ~(1 << 10);
+    TIM2->CCMR1 &= ~(11 << 8);
+    TIM2->CR1 |= 1 <<7;// preload auto reload
+    TIM2->CCER  |= 1; //cc1 output
+    //TIM2->CCER |= 1<<1; //output polarity active high
+    TIM2->CCER  |= 1<<4; //cc2 output
+    //TIM2->CCER |= 1<<5; // c2 polarit active high;
+    TIM2->ARR = 200; // auto reload register load with 200
+    TIM2->CCR1 |= servo_null;
+    TIM2->CCR2 |= servo_null;
+    TIM2->EGR |= TIM_EGR_UG; //load prescaler
+    TIM2->SR &= ~TIM_SR_UIF; // clear update flag
+    TIM2->CR1 = 0x1; //enable counter
+}
 
-/* This starts the timer by setting the enable flag of the control reg. */
-void start_timer( void ) {
-    TIM2->CR1 = 0x1;                        // control register counter enabled
-}
-/* This is the initial confiuguration of the timer. */
-void init_timer( void ) {
-    GPIOA->AFR[0] |= 0x11;                  // (0001 0001) PA0 and PA1 alternate function 1 (TIM2_CH1)
-    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;   // TIM2 timer clock enable
-    TIM2->PSC = SYSTEM_CLK;                 // Prescaler value
-    TIM2->CCMR1 &= ~(0xFFFFFFFF);           // clear 0011 0000 0011
-    TIM2->CCMR1 |= 0x6868;                  // CC1 and CC2 as outputs with preload enables and output compare mode in PWM (0110 1000 0110 1000)
-    TIM2->CR1 |= 0x80;                      // autoreload register is buffered (preload enabled) (1000 0000)
-    TIM2->CCER |= 0x11;                     // enable capture input cc1e and cc2e - signal is output on pin (0001 0001)
-    TIM2->ARR = 200;                        // 20 ms                      
-    TIM2->CCR1 = 4;                         // .4ms
-    TIM2->CCR2 = 4;                         // .4ms
-
-    //NEED TO MODIFY - initial conditions 
-    TIM2->EGR |= TIM_EGR_UG;                // create update event for prescale force
-    start_timer();
-
-}
-/* This fetches the value in the capt/compare reg (the timer's current value). The
-value returned is the time elapsed since enabled in microseconds. */
-unsigned int timer_now( void ) {
-    return (unsigned int)TIM2->CCR1;        // capture/compare register
-}
-/* This stops the timer by disabling the control register. */
-void stop_timer( void ) {
-    TIM2->CR1 = 0x0;                        // control register counter diabled
-}
-/* This determines if an edge/event has been seen. The return value is the 
-flag of the status registers bit 1. */
-int is_event( void ) {
-    return (TIM2->SR & 0x2);                // return flag indicating capture/compare interrupt flag
+/* This function is responsible for changing the duty cycle of the PWM
+   signal by adjsut the compare capture registers valule. Used to movedata
+   servos accordingly. */
+void changePWM(uint8_t pwm_num, uint32_t pwmrange){
+    if(pwm_num == PWM0){
+        TIM2->CCR1 = pwmrange;
+    }
+    if(pwm_num == PWM1){ 
+        TIM2->CCR2 = pwmrange; 
+    }
 }

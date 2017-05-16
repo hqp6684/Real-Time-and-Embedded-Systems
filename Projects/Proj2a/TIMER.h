@@ -1,7 +1,13 @@
-// Z. Weeden Feb. 12, 2017
-// function prototypes for Timer
-void start_timer( void ) ;
-void init_timer( void ) ;
-unsigned int timer_now( void ) ;
-void stop_timer( void ) ;
-int is_event( void ) ;
+#ifndef __TIMER_H
+#define __TIMER_H
+
+#include "stm32l476xx.h"
+#include "SysClock.h"
+
+#define PWM0 (0)
+#define PWM1 (1)
+
+void pwmstart(uint32_t servo_null);
+void changePWM(uint8_t pwm_num, uint32_t pwmrange);
+
+#endif
